@@ -9,6 +9,8 @@ public class PrefManager {
     private static final String IS_FIRST_TIME_LAUNCH = "IsFirstTimeLaunch";
     private static final String IS_LOGGED_IN = "IsLoggedIn";
     private static final String USER_EMAIL = "Email";
+    private static final String USER_Phone = "Phone";
+    private static final String USER_Name = "Name";
     private static final String USER_ACCESS_TOKEN = "access_token";
     private static final String USER_ID = "Id";
     private static final String WINNERS_IN_TIME = "WinnersInTime";
@@ -52,11 +54,30 @@ public class PrefManager {
         return pref.getString(USER_ACCESS_TOKEN, "");
 
     }
+    public String getUSER_Name() {
+
+        return pref.getString(USER_Name, "");
+
+    }
+    public int getUSER_Phone() {
+
+        return pref.getInt(USER_Phone, 200);
+
+    }
 
     public void setUserAccessToken(String apiToken) {
         editor.putString(USER_ACCESS_TOKEN, apiToken);
         editor.commit();
     }
+    public void setUserName(String name) {
+        editor.putString(USER_Name, name);
+        editor.commit();
+    }
+    public void setUSER_Phone(int phone) {
+        editor.putInt(USER_Phone, phone);
+        editor.commit();
+    }
+
 
     public String getUserEmail() {
         return pref.getString(USER_EMAIL, "");

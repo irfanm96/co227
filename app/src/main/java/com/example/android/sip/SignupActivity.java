@@ -38,7 +38,7 @@ public class SignupActivity extends AppCompatActivity implements TextWatcher {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signup);
         ButterKnife.bind(this);
-        validator=new Validator();
+        validator = new Validator();
         etNameSignup.addTextChangedListener(this);
         etEmailSigup.addTextChangedListener(this);
 
@@ -56,7 +56,6 @@ public class SignupActivity extends AppCompatActivity implements TextWatcher {
         // validation code goes here
 
 
-
     }
 
 
@@ -69,25 +68,25 @@ public class SignupActivity extends AppCompatActivity implements TextWatcher {
         String email = etEmailSigup.getText().toString();
         String name = etNameSignup.getText().toString();
 
-        int valid=0;
+        int valid = 0;
 
-        if(!validator.isNameValid(name)){
+        if (!validator.isNameValid(name)) {
             etNameSignup.setError("enter valid name");
             valid++;
 
         }
 
-        if(!validator.isEmailValid(email)){
+        if (!validator.isEmailValid(email)) {
             etEmailSigup.setError("enter valid email");
-          valid++;
+            valid++;
 
         }
 
-        if(!validator.isPasswordValid(password)){
+        if (!validator.isPasswordValid(password)) {
             etPasswordSignup.setError("enter strong password");
             valid++;
         }
-        if(valid!=0){
+        if (valid != 0) {
             return;
         }
 
@@ -100,23 +99,29 @@ public class SignupActivity extends AppCompatActivity implements TextWatcher {
 
             RestApi restApi = RetrofitClient.getClient().create(RestApi.class);
 
-            Call<ApiToken> call = restApi.register(new User(name, email, password));
+            Call<User> call = restApi.register(new User(name, email, password));
 
-            call.enqueue(new Callback<ApiToken>() {
+            call.enqueue(new Callback<User>() {
                 @Override
-                public void onResponse(Call<ApiToken> call, Response<ApiToken> response) {
+                public void onResponse(Call<User> call, Response<User> response) {
 
 
                     if (response.code() == 422) {
-                        Toast.makeText(getApplicationContext(),"The email has already been taken.",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), "The email has already been taken.", Toast.LENGTH_SHORT).show();
                         return;
-                    } else if(response.code()==200){
+                    } else if (response.code() == 200) {
 
+                        ((App) getApplication()).getPrefManager().setIsLoggedIn(true);
+                        ((App) getApplication()).getPrefManager().setUserAccessToken(response.body().getApi_token());
+                        ((App) getApplication()).getPrefManager().setUSER_Phone(response.body().getPhone());
+                        ((App) getApplication()).getPrefManager().setUserEmail(response.body().getEmail());
+                        ((App) getApplication()).getPrefManager().setUserName(response.body().getName());
                         Intent intent = new Intent(SignupActivity.this, WalkieTalkieActivity.class);
                         startActivity(intent);
+                        finish();
 
-                    }else {
-                        Toast.makeText(getApplicationContext(),"Something went wrong,Try again",Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(getApplicationContext(), "Something went wrong,Try again", Toast.LENGTH_SHORT).show();
 
                     }
 
@@ -124,7 +129,7 @@ public class SignupActivity extends AppCompatActivity implements TextWatcher {
                 }
 
                 @Override
-                public void onFailure(Call<ApiToken> call, Throwable t) {
+                public void onFailure(Call<User> call, Throwable t) {
 
                 }
             });
@@ -134,8 +139,6 @@ public class SignupActivity extends AppCompatActivity implements TextWatcher {
 
 
     }
-
-
 
 
 }

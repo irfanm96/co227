@@ -8,14 +8,10 @@ public interface RestApi {
 
 //    @Headers({"Content-Type: application/json", "Accept: application/json"})
     @POST("login")
-    Call<ApiToken> login(@Body UserCredentials user_credentials);
+    Call<User> login(@Body UserCredentials user_credentials);
     @POST("register")
-    Call<ApiToken> register(@Body User user);
-
+    Call<User> register(@Body User user);
     @POST("logout")
     Call<Void> logout();
-    @POST("broadcast/auth")
-    Call<String> auth(@Body channel c);
-
 
 }

@@ -1,6 +1,7 @@
 package com.example.android.sip;
 
 import android.content.Intent;
+import android.net.sip.SipManager;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -31,6 +32,9 @@ public class MainActivity extends AppCompatActivity {
     @BindView(R.id.tvError)
     TextView tvError;
 
+    @BindView(R.id.tvRegsiter)
+    TextView tvRegister;
+
     @BindView(R.id.btnLogin)
     Button btnLogin;
 
@@ -47,17 +51,28 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
         tvError.setVisibility(View.INVISIBLE);
-//        ((App) getApplication()).getPrefManager().setIsLoggedIn(false);
-//        if (((App) getApplication()).getPrefManager().isLoggedIn()) {
-//
-//            //check if session is valid and if valid
-//            Intent intent = new Intent(MainActivity.this, Main2Activity.class);
-//            startActivity(intent);
-//            finish();
-//
-//            //else login screen
-//
-//        }
+
+        if(!(SipManager.isVoipSupported(getApplicationContext()) && SipManager.isApiSupported(getApplicationContext()))){
+            tvError.setText("Your phone does not support SIP");
+            tvError.setVisibility(View.VISIBLE);
+            btnLogin.setEnabled(false);
+            tvRegister.setEnabled(false);
+
+        }else {
+
+            ((App) getApplication()).getPrefManager().setIsLoggedIn(false);
+            if (((App) getApplication()).getPrefManager().isLoggedIn()) {
+
+                //check if session is valid and if valid
+                Intent intent = new Intent(MainActivity.this, WalkieTalkieActivity.class);
+                startActivity(intent);
+                finish();
+
+                //else login screen
+
+            }
+        }
+
 
 
     }
@@ -80,10 +95,10 @@ public class MainActivity extends AppCompatActivity {
         String password = etPassword.getText().toString();
 
         UserCredentials user = new UserCredentials(email, password);
-        Call<ApiToken> call = restApi.login(user);
-        call.enqueue(new Callback<ApiToken>() {
+        Call<User> call = restApi.login(user);
+        call.enqueue(new Callback<User>() {
             @Override
-            public void onResponse(Call<ApiToken> call, Response<ApiToken> response) {
+            public void onResponse(Call<User> call, Response<User> response) {
 //
 
                 Log.d("APP_DEBUG", "RESPONSE IS " + response.code());
@@ -96,6 +111,9 @@ public class MainActivity extends AppCompatActivity {
 
                     ((App) getApplication()).getPrefManager().setIsLoggedIn(true);
                     ((App) getApplication()).getPrefManager().setUserAccessToken(response.body().getApi_token());
+                    ((App) getApplication()).getPrefManager().setUSER_Phone(response.body().getPhone());
+                    ((App) getApplication()).getPrefManager().setUserEmail(response.body().getEmail());
+                    ((App) getApplication()).getPrefManager().setUserName(response.body().getName());
                     Intent intent = new Intent(MainActivity.this, WalkieTalkieActivity.class);
                     startActivity(intent);
                     finish();
@@ -103,7 +121,7 @@ public class MainActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<ApiToken> call, Throwable t) {
+            public void onFailure(Call<User> call, Throwable t) {
 
                 Log.d("APP_DEBUG", "ERROR IS " + t.getMessage());
 
