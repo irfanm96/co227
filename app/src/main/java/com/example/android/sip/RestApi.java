@@ -14,6 +14,8 @@ public interface RestApi {
 
     @POST("logout")
     Call<Void> logout();
+    @POST("broadcast/auth")
+    Call<String> auth(@Body channel c);
 
 
 }
