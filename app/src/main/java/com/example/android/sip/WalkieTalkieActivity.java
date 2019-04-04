@@ -35,9 +35,14 @@ import android.view.*;
 import android.net.sip.*;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import java.text.ParseException;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * Handles all calling, receiving calls, and UI interaction in the WalkieTalkie app.
@@ -55,7 +60,7 @@ public class WalkieTalkieActivity extends Activity implements View.OnTouchListen
     public IncomingCallReceiver callReceiver;
 
     private static final int CALL_ADDRESS = 1;
-    private static final int SET_AUTH_INFO = 2;
+    private static final int LOGOUT = 2;
     private static final int UPDATE_SETTINGS_DIALOG = 3;
     private static final int HANG_UP = 4;
 
@@ -326,9 +331,10 @@ public class WalkieTalkieActivity extends Activity implements View.OnTouchListen
 
     public boolean onCreateOptionsMenu(Menu menu) {
         menu.add(0, CALL_ADDRESS, 0, "Call someone");
-        menu.add(0, SET_AUTH_INFO, 0, "Edit your SIP Info.");
         menu.add(0, USERS_ONLINE, 0, "Users online.");
         menu.add(0, HANG_UP, 0, "End Current Call.");
+        menu.add(0, LOGOUT, 0, "Logout");
+
 
 
         return true;
@@ -339,8 +345,8 @@ public class WalkieTalkieActivity extends Activity implements View.OnTouchListen
             case CALL_ADDRESS:
                 showDialog(CALL_ADDRESS);
                 break;
-            case SET_AUTH_INFO:
-                updatePreferences();
+            case LOGOUT:
+                logout();
                 break;
             case HANG_UP:
                 if(call != null) {
@@ -358,6 +364,43 @@ public class WalkieTalkieActivity extends Activity implements View.OnTouchListen
                 break;
         }
         return true;
+    }
+
+    private void logout() {
+        RestApi restApi = RetrofitClient.getClient().create(RestApi.class);
+
+        Call<Void> call = restApi.logout();
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+//
+
+                Log.d("APP_DEBUG", "RESPONSE IS " + response.code());
+                if (response.code()!=200) {
+                    Toast.makeText(getApplicationContext(),response.message(),Toast.LENGTH_SHORT).show();
+                    return;
+                } else {
+
+                    ((App) getApplication()).getPrefManager().setIsLoggedIn(false);
+                    ((App) getApplication()).getPrefManager().setUserAccessToken("");
+                    ((App) getApplication()).getPrefManager().setUSER_Phone(200);
+                    ((App) getApplication()).getPrefManager().setUserEmail("");
+                    ((App) getApplication()).getPrefManager().setUserName("");
+                    Intent intent = new Intent(WalkieTalkieActivity.this, MainActivity.class);
+                    startActivity(intent);
+                    finish();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+
+                Log.d("APP_DEBUG", "ERROR IS " + t.getMessage());
+                Toast.makeText(getApplicationContext(),t.getMessage(),Toast.LENGTH_SHORT).show();
+
+            }
+        });
+
     }
 
     @Override
