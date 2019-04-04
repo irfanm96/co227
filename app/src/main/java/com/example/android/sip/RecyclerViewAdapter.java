@@ -21,30 +21,30 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
     private static final String TAG = "RecyclerViewAdapter";
 
-    private ArrayList<Contact> contactList;
+    private ArrayList<User> contactList;
 
-    public void setContactList(ArrayList<Contact> contactList) {
+    public void setContactList(ArrayList<User> contactList) {
         this.contactList = contactList;
     }
 
-    public ArrayList<Contact> getContactList() {
+    public ArrayList<User> getContactList() {
         return contactList;
     }
 
-    public ArrayList<Contact> getContactListFull() {
+    public ArrayList<User> getContactListFull() {
         return contactListFull;
     }
 
-    private ArrayList<Contact> contactListFull;
+    private ArrayList<User> contactListFull;
     private Context mContext;
 
-    public RecyclerViewAdapter(Context mContext, ArrayList<Contact> contactList) {
+    public RecyclerViewAdapter(Context mContext, ArrayList<User> contactList) {
         this.contactList = contactList;
         contactListFull = new ArrayList<>(contactList);
         this.mContext = mContext;
     }
 
-    public void setContactListFull(ArrayList<Contact> contactListFull) {
+    public void setContactListFull(ArrayList<User> contactListFull) {
         this.contactListFull.clear();
         this.contactListFull.addAll(contactListFull);
     }
@@ -67,15 +67,15 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 //                .load(contactList.get(i).getImage())
 //                .into(viewHolder.image);
 //
-        viewHolder.imageName.setText(contactList.get(i).getImageName());
+        viewHolder.imageName.setText(contactList.get(i).getName());
 
 
 
         viewHolder.parentLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d(TAG, "onClick: cliked on " + contactList.get(i).getImageName());
-                Toast.makeText(mContext, contactList.get(i).getImageName(), Toast.LENGTH_SHORT).show();
+                Log.d(TAG, "onClick: cliked on " + contactList.get(i).getName());
+                Toast.makeText(mContext, contactList.get(i).getName(), Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -94,7 +94,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     private Filter exampleFilter = new Filter() {
         @Override
         protected FilterResults performFiltering(CharSequence constraint) {
-            ArrayList<Contact> filteredList = new ArrayList<>();
+            ArrayList<User> filteredList = new ArrayList<>();
 //            System.out.println("filter list size"+contactListFull.size());
 //            System.out.println("original list size"+contactListFull.size());
 
@@ -103,9 +103,9 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             } else {
                 String filterPatern = constraint.toString().toLowerCase().trim();
 
-                for (Contact c : contactListFull) {
+                for (User c : contactListFull) {
 
-                    if (c.getImageName().toLowerCase().contains(filterPatern)) {
+                    if (c.getName().toLowerCase().contains(filterPatern)) {
                         filteredList.add(c);
                     }
 
@@ -121,7 +121,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         protected void publishResults(CharSequence constraint, FilterResults results) {
 
             contactList.clear();
-            contactList.addAll((ArrayList<Contact>) results.values);
+            contactList.addAll((ArrayList<User>) results.values);
             notifyDataSetChanged();
 
         }

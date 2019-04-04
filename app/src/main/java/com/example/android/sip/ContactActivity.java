@@ -42,14 +42,19 @@ public class ContactActivity extends AppCompatActivity {
 
     private static final String TAG = "APP_DEBUG";
 
-    private ArrayList<Contact> contacts = new ArrayList<>();
+    private ArrayList<com.example.android.sip.User> contacts = new ArrayList<>();
 
     private RecyclerViewAdapter recyclerViewAdapter;
 
+
+    //    FirebaseDatabase database=FirebaseDatabase.getInstance();
+//    DatabaseReference mRootRef=database.getReference();
+//    DatabaseReference mConditionRef=mRootRef.child("contacts");
 //
     private RecyclerView recyclerView;
     //    Pusher pusher;
     private Pusher pusher;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,14 +63,13 @@ public class ContactActivity extends AppCompatActivity {
         Log.d(TAG, "onCreate: started");
 
 
-        contacts.add(new Contact("Irfan"));
         recyclerView = findViewById(R.id.rvView);
         recyclerViewAdapter = new RecyclerViewAdapter(this, contacts);
         recyclerView.setAdapter(recyclerViewAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         PusherOptions options = new PusherOptions();
-        options.setHost("192.168.8.105");
+        options.setHost(App.ip);
         options.setWsPort(6001);
         options.setEncrypted(false);
         options.buildUrl("ABCDEFG");
@@ -112,6 +116,11 @@ public class ContactActivity extends AppCompatActivity {
             public void userSubscribed(String s, User user) {
                 Log.d("APP_DEBUG_SUBSCRIBED", s);
                 Log.d(TAG, "userSubscribed: "+user.getInfo());
+                Gson g = new Gson();
+                com.example.android.sip.User p = g.fromJson(user.getInfo(), com.example.android.sip.User.class);
+                contacts.add(p);
+                recyclerViewAdapter.notifyDataSetChanged();
+                recyclerViewAdapter.setContactListFull(contacts);
 
             }
 
@@ -119,6 +128,13 @@ public class ContactActivity extends AppCompatActivity {
             public void userUnsubscribed(String s, User user) {
                 Log.d("APP_DEBUG_UNSUBSCRIBER", s);
                 Log.d(TAG, "userUnsubscribed: "+user.getInfo());
+                Gson g = new Gson();
+                com.example.android.sip.User p = g.fromJson(user.getInfo(), com.example.android.sip.User.class);
+                for (com.example.android.sip.User a:contacts) {
+                    if(a.getEmail().equals(p.getEmail())){
+                        contacts.remove(a);
+                    }
+                }
 
             }
 
@@ -132,6 +148,14 @@ public class ContactActivity extends AppCompatActivity {
             @Override
             public void onSubscriptionSucceeded(String s) {
                 Log.d("APP_DEBUG_SUB_SUCCESS", s);
+                String email=((App)getApplication()).getPrefManager().getUserEmail();
+                String name=((App)getApplication()).getPrefManager().getUSER_Name();
+                int phone=((App)getApplication()).getPrefManager().getUSER_Phone();
+                String api_token=((App)getApplication()).getPrefManager().getUserAccessToken();
+                com.example.android.sip.User p=new com.example.android.sip.User(name,email,phone,api_token);
+                contacts.add(p);
+                recyclerViewAdapter.notifyDataSetChanged();
+                recyclerViewAdapter.setContactListFull(contacts);
 
             }
 
@@ -288,8 +312,4 @@ public class ContactActivity extends AppCompatActivity {
         pusher.disconnect();
     }
 
-
-    private static void authorize(String channel, String socket_id) {
-
-    }
 }

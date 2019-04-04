@@ -106,8 +106,9 @@ public class MainActivity extends AppCompatActivity {
                     tvError.setVisibility(View.VISIBLE);
 //                    Toast.makeText(getApplicationContext(),response.message(),Toast.LENGTH_SHORT).show();
                     return;
-                } else if(response.code()==200) {
-                    Log.d("APP_DEBUG", "onResponse: ");
+                } else {
+
+
                     ((App) getApplication()).getPrefManager().setIsLoggedIn(true);
                     ((App) getApplication()).getPrefManager().setUserAccessToken(response.body().getApi_token());
                     ((App) getApplication()).getPrefManager().setUSER_Phone(response.body().getPhone());

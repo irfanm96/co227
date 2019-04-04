@@ -22,6 +22,14 @@ public class User {
         this.password = password;
     }
 
+    public User(String name, String email, int phone ,String api_token) {
+        this.name = name;
+        this.email = email;
+        this.phone = phone;
+        this.api_token=api_token;
+
+    }
+
     public String getName() {
         return name;
     }
