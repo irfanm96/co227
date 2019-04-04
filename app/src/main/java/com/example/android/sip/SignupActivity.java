@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -111,6 +112,7 @@ public class SignupActivity extends AppCompatActivity implements TextWatcher {
                         return;
                     } else if (response.code() == 200) {
 
+                        Log.d("APP_DEBUG", "onResponse: "+"response ok");
                         ((App) getApplication()).getPrefManager().setIsLoggedIn(true);
                         ((App) getApplication()).getPrefManager().setUserAccessToken(response.body().getApi_token());
                         ((App) getApplication()).getPrefManager().setUSER_Phone(response.body().getPhone());

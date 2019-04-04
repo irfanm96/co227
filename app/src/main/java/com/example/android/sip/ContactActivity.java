@@ -46,20 +46,10 @@ public class ContactActivity extends AppCompatActivity {
 
     private RecyclerViewAdapter recyclerViewAdapter;
 
-
-    //    FirebaseDatabase database=FirebaseDatabase.getInstance();
-//    DatabaseReference mRootRef=database.getReference();
-//    DatabaseReference mConditionRef=mRootRef.child("contacts");
 //
     private RecyclerView recyclerView;
     //    Pusher pusher;
     private Pusher pusher;
-
-    private static String auth = "\"{\"auth\":\"cde729701e7a414aee3e:dc2c800485b5d90000fdaea73f4d5c3f6560ea93aeb7e79c8a8c3101eda4d93e\",\"channel_data\":\"{\"user_id\":468,\"user_info\":{\"user_id\":468,\"email\":\"abcd@gmail.com\"}}\"}\"";
-
-    public static void setAuth(String auth) {
-        ContactActivity.auth = auth;
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,7 +71,7 @@ public class ContactActivity extends AppCompatActivity {
         options.buildUrl("ABCDEFG");
 
 
-        HttpAuthorizer authorizer = new HttpAuthorizer("http://192.168.8.105:8000/api/broadcast/auth");
+        HttpAuthorizer authorizer = new HttpAuthorizer(App.channelAuth);
         Map<String, String> headers = new HashMap<>();
         headers.put("Authorization",((App) getApplication()).getPrefManager().getUserAccessToken());
         authorizer.setHeaders(headers);
