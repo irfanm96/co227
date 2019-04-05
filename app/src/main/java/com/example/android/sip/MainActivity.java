@@ -95,10 +95,10 @@ public class MainActivity extends AppCompatActivity {
         String password = etPassword.getText().toString();
 
         UserCredentials user = new UserCredentials(email, password);
-        Call<User> call = restApi.login(user);
-        call.enqueue(new Callback<User>() {
+        Call<ApiToken> call = restApi.login(user);
+        call.enqueue(new Callback<ApiToken>() {
             @Override
-            public void onResponse(Call<User> call, Response<User> response) {
+            public void onResponse(Call<ApiToken> call, Response<ApiToken> response) {
 //
 
                 Log.d("APP_DEBUG", "RESPONSE IS " + response.code());
@@ -108,12 +108,9 @@ public class MainActivity extends AppCompatActivity {
                     return;
                 } else {
 
-
                     ((App) getApplication()).getPrefManager().setIsLoggedIn(true);
                     ((App) getApplication()).getPrefManager().setUserAccessToken(response.body().getApi_token());
                     ((App) getApplication()).getPrefManager().setUSER_Phone(response.body().getPhone());
-                    ((App) getApplication()).getPrefManager().setUserEmail(response.body().getEmail());
-                    ((App) getApplication()).getPrefManager().setUserName(response.body().getName());
                     Intent intent = new Intent(MainActivity.this, WalkieTalkieActivity.class);
                     startActivity(intent);
                     finish();
@@ -121,7 +118,7 @@ public class MainActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<User> call, Throwable t) {
+            public void onFailure(Call<ApiToken> call, Throwable t) {
 
                 Log.d("APP_DEBUG", "ERROR IS " + t.getMessage());
 

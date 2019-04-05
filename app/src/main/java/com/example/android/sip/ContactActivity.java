@@ -1,5 +1,6 @@
 package com.example.android.sip;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -42,7 +43,7 @@ public class ContactActivity extends AppCompatActivity {
 
     private static final String TAG = "APP_DEBUG";
 
-    private ArrayList<com.example.android.sip.User> contacts = new ArrayList<>();
+    private ArrayList<Contact> contacts = new ArrayList<>();
 
     private RecyclerViewAdapter recyclerViewAdapter;
 
@@ -77,11 +78,11 @@ public class ContactActivity extends AppCompatActivity {
 
         HttpAuthorizer authorizer = new HttpAuthorizer(App.channelAuth);
         Map<String, String> headers = new HashMap<>();
-        headers.put("Authorization",((App) getApplication()).getPrefManager().getUserAccessToken());
+        headers.put("Authorization", ((App) getApplication()).getPrefManager().getUserAccessToken());
         authorizer.setHeaders(headers);
         options.setAuthorizer(authorizer);
 
-        Pusher pusher = new Pusher("ABCDEFG", options);
+        pusher = new Pusher("ABCDEFG", options);
         pusher.connect(new ConnectionEventListener() {
             @Override
             public void onConnectionStateChange(ConnectionStateChange connectionStateChange) {
@@ -104,8 +105,6 @@ public class ContactActivity extends AppCompatActivity {
             }
         });
 
-
-
         PresenceChannel presenceChannel = pusher.subscribePresence("presence-chat", new PresenceChannelEventListener() {
             @Override
             public void onUsersInformationReceived(String s, Set<User> set) {
@@ -115,48 +114,39 @@ public class ContactActivity extends AppCompatActivity {
             @Override
             public void userSubscribed(String s, User user) {
                 Log.d("APP_DEBUG_SUBSCRIBED", s);
-                Log.d(TAG, "userSubscribed: "+user.getInfo());
+                Log.d(TAG, "userSubscribed: " + user.getInfo());
                 Gson g = new Gson();
-                com.example.android.sip.User p = g.fromJson(user.getInfo(), com.example.android.sip.User.class);
-                contacts.add(p);
-                recyclerViewAdapter.notifyDataSetChanged();
-                recyclerViewAdapter.setContactListFull(contacts);
+                Contact p = g.fromJson(user.getInfo(), Contact.class);
+                Log.d(TAG, "userSubscribed: " + p.getPhone());
+                Log.d(TAG, "userSubscribed: " + p.getName());
+//                        contacts.add(p);
+//                        recyclerViewAdapter.notifyDataSetChanged();
+//                        recyclerViewAdapter.setContactListFull(contacts);
+                updateContacts(p);
 
             }
 
             @Override
             public void userUnsubscribed(String s, User user) {
                 Log.d("APP_DEBUG_UNSUBSCRIBER", s);
-                Log.d(TAG, "userUnsubscribed: "+user.getInfo());
+                Log.d(TAG, "userUnsubscribed: ");
                 Gson g = new Gson();
-                com.example.android.sip.User p = g.fromJson(user.getInfo(), com.example.android.sip.User.class);
-                for (com.example.android.sip.User a:contacts) {
-                    if(a.getEmail().equals(p.getEmail())){
-                        contacts.remove(a);
-                    }
-                }
-
+                Contact p = g.fromJson(user.getInfo(), Contact.class);
+                removeContacts(p);
+                Log.d(TAG, "userUnsubscribed: " + p.getPhone());
+                Log.d(TAG, "userUnsubscribed: " + p.getName());
             }
 
             @Override
             public void onAuthenticationFailure(String s, Exception e) {
                 Log.d("APP_DEBUG_AUTH_FAIL", s);
-                Log.d(TAG, "onAuthenticationFailure: "+e.getMessage());
+                Log.d(TAG, "onAuthenticationFailure: " + e.getMessage());
 
             }
 
             @Override
             public void onSubscriptionSucceeded(String s) {
                 Log.d("APP_DEBUG_SUB_SUCCESS", s);
-                String email=((App)getApplication()).getPrefManager().getUserEmail();
-                String name=((App)getApplication()).getPrefManager().getUSER_Name();
-                int phone=((App)getApplication()).getPrefManager().getUSER_Phone();
-                String api_token=((App)getApplication()).getPrefManager().getUserAccessToken();
-                com.example.android.sip.User p=new com.example.android.sip.User(name,email,phone,api_token);
-                contacts.add(p);
-                recyclerViewAdapter.notifyDataSetChanged();
-                recyclerViewAdapter.setContactListFull(contacts);
-
             }
 
             @Override
@@ -164,9 +154,6 @@ public class ContactActivity extends AppCompatActivity {
 
             }
         });
-
-
-
 
 
 //        PusherOptions options = new PusherOptions();
@@ -244,39 +231,43 @@ public class ContactActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-//
-//        PresenceChannel channel = pusher.subscribePresence("presence-chat", new PresenceChannelEventListener() {
-//            @Override
-//            public void onUsersInformationReceived(String s, Set<User> set) {
-//                Log.d(TAG, "onUsersInformationReceived: ");
-//            }
-//
-//            @Override
-//            public void userSubscribed(String s, User user) {
-//                Log.d(TAG, "userSubscribed: ");
-//            }
-//
-//            @Override
-//            public void userUnsubscribed(String s, User user) {
-//                Log.d(TAG, "userUnsubscribed: ");
-//            }
-//
-//            @Override
-//            public void onAuthenticationFailure(String s, Exception e) {
-//                Log.d(TAG, "onAuthenticationFailure: " + e.getMessage());
-//            }
-//
-//            @Override
-//            public void onSubscriptionSucceeded(String s) {
-//                Log.d(TAG, "onSubscriptionSucceeded: ");
-//            }
-//
-//            @Override
-//            public void onEvent(String s, String s1, String s2) {
-//                Log.d(TAG, "onEvent: ");
-//            }
-//        });
 
+
+    }
+
+    private void updateContacts(final Contact c) {
+
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                contacts.add(c);
+                recyclerViewAdapter.notifyDataSetChanged();
+                recyclerViewAdapter.setContactListFull(contacts);
+            }
+        });
+    }
+
+    private void removeContacts(final Contact c) {
+
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+
+                int i=0;
+
+                for (Contact p:contacts) {
+                    if(p.getEmail().equals(c.getEmail())){
+                        contacts.remove(i);
+                        recyclerViewAdapter.notifyDataSetChanged();
+                        recyclerViewAdapter.setContactListFull(contacts);
+                        Log.d(TAG, "run: "+"removed");
+                        break;
+                    }
+                    i++;
+                }
+
+            }
+        });
     }
 
 

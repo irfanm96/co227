@@ -100,11 +100,11 @@ public class SignupActivity extends AppCompatActivity implements TextWatcher {
 
             RestApi restApi = RetrofitClient.getClient().create(RestApi.class);
 
-            Call<User> call = restApi.register(new User(name, email, password));
+            Call<ApiToken> call = restApi.register(new User(name, email, password));
 
-            call.enqueue(new Callback<User>() {
+            call.enqueue(new Callback<ApiToken>() {
                 @Override
-                public void onResponse(Call<User> call, Response<User> response) {
+                public void onResponse(Call<ApiToken> call, Response<ApiToken> response) {
 
 
                     if (response.code() == 422) {
@@ -116,8 +116,6 @@ public class SignupActivity extends AppCompatActivity implements TextWatcher {
                         ((App) getApplication()).getPrefManager().setIsLoggedIn(true);
                         ((App) getApplication()).getPrefManager().setUserAccessToken(response.body().getApi_token());
                         ((App) getApplication()).getPrefManager().setUSER_Phone(response.body().getPhone());
-                        ((App) getApplication()).getPrefManager().setUserEmail(response.body().getEmail());
-                        ((App) getApplication()).getPrefManager().setUserName(response.body().getName());
                         Intent intent = new Intent(SignupActivity.this, WalkieTalkieActivity.class);
                         startActivity(intent);
                         finish();
@@ -131,7 +129,7 @@ public class SignupActivity extends AppCompatActivity implements TextWatcher {
                 }
 
                 @Override
-                public void onFailure(Call<User> call, Throwable t) {
+                public void onFailure(Call<ApiToken> call, Throwable t) {
 
                 }
             });

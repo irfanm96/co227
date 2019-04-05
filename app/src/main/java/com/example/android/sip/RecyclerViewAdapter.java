@@ -21,30 +21,30 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
     private static final String TAG = "RecyclerViewAdapter";
 
-    private ArrayList<User> contactList;
+    private ArrayList<Contact> contactList;
 
-    public void setContactList(ArrayList<User> contactList) {
+    public void setContactList(ArrayList<Contact> contactList) {
         this.contactList = contactList;
     }
 
-    public ArrayList<User> getContactList() {
+    public ArrayList<Contact> getContactList() {
         return contactList;
     }
 
-    public ArrayList<User> getContactListFull() {
+    public ArrayList<Contact> getContactListFull() {
         return contactListFull;
     }
 
-    private ArrayList<User> contactListFull;
+    private ArrayList<Contact> contactListFull;
     private Context mContext;
 
-    public RecyclerViewAdapter(Context mContext, ArrayList<User> contactList) {
+    public RecyclerViewAdapter(Context mContext, ArrayList<Contact> contactList) {
         this.contactList = contactList;
         contactListFull = new ArrayList<>(contactList);
         this.mContext = mContext;
     }
 
-    public void setContactListFull(ArrayList<User> contactListFull) {
+    public void setContactListFull(ArrayList<Contact> contactListFull) {
         this.contactListFull.clear();
         this.contactListFull.addAll(contactListFull);
     }
@@ -94,7 +94,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     private Filter exampleFilter = new Filter() {
         @Override
         protected FilterResults performFiltering(CharSequence constraint) {
-            ArrayList<User> filteredList = new ArrayList<>();
+            ArrayList<Contact> filteredList = new ArrayList<>();
 //            System.out.println("filter list size"+contactListFull.size());
 //            System.out.println("original list size"+contactListFull.size());
 
@@ -103,7 +103,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             } else {
                 String filterPatern = constraint.toString().toLowerCase().trim();
 
-                for (User c : contactListFull) {
+                for (Contact c : contactListFull) {
 
                     if (c.getName().toLowerCase().contains(filterPatern)) {
                         filteredList.add(c);
@@ -121,7 +121,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         protected void publishResults(CharSequence constraint, FilterResults results) {
 
             contactList.clear();
-            contactList.addAll((ArrayList<User>) results.values);
+            contactList.addAll((ArrayList<Contact>) results.values);
             notifyDataSetChanged();
 
         }

@@ -1,21 +1,25 @@
 package com.example.android.sip;
 
 public class Contact {
+    private  String name;
+  private  String email;
+  private  int phone;
 
-
-    public Contact(String imageName) {
-//        this.image = image;
-        this.imageName = imageName;
+    public Contact(String name, String email, int phone) {
+        this.name = name;
+        this.email = email;
+        this.phone = phone;
     }
 
-//    private  String image;
-    private  String imageName;
+    public String getName() {
+        return name;
+    }
 
-//    public String getImage() {
-//        return image;
-//    }
+    public String getEmail() {
+        return email;
+    }
 
-    public String getImageName() {
-        return imageName;
+    public int getPhone() {
+        return phone;
     }
 }
