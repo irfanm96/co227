@@ -1,8 +1,12 @@
 package com.example.android.sip;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.sip.SipManager;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -23,6 +27,7 @@ import retrofit2.Response;
 public class MainActivity extends AppCompatActivity {
 
 
+    private static final int MODIFY_AUDIO_SEETINGS =10 ;
     @BindView(R.id.etEmail)
     EditText etEmail;
 
@@ -63,10 +68,26 @@ public class MainActivity extends AppCompatActivity {
             ((App) getApplication()).getPrefManager().setIsLoggedIn(false);
             if (((App) getApplication()).getPrefManager().isLoggedIn()) {
 
-                //check if session is valid and if valid
+
+
+
+                int permissionCheck = ContextCompat.checkSelfPermission(this, Manifest.permission.MODIFY_AUDIO_SETTINGS);
+
+                if (permissionCheck != PackageManager.PERMISSION_GRANTED) {
+
+                    Log.d("APP_DEBUG", "onCreate: no permission given");
+                    ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.USE_SIP}, MODIFY_AUDIO_SEETINGS);
+                } else {
+                    //TODO
+//
+//                //check if session is valid and if valid
                 Intent intent = new Intent(MainActivity.this, WalkieTalkieActivity.class);
                 startActivity(intent);
                 finish();
+                }
+
+
+
 
                 //else login screen
 
@@ -127,6 +148,33 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String[] permissions, int[] grantResults) {
+        switch (requestCode) {
+            case MODIFY_AUDIO_SEETINGS: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    // permission was granted, yay! Do the
+                    Log.d("APP_DEBUG", "onRequestPermissionsResult: permission granted");
+//                    make();
+
+                    Intent intent = new Intent(MainActivity.this, WalkieTalkieActivity.class);
+                    startActivity(intent);
+                    finish();
+                } else {
+                    // permission denied, boo! Disable the
+                    // functionality that depends on this permission.
+                }
+                return;
+            }
+
+            // other 'case' lines to check for other
+            // permissions this app might request.
+        }
     }
 
 
