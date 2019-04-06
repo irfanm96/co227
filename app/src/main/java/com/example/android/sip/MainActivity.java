@@ -27,7 +27,8 @@ import retrofit2.Response;
 public class MainActivity extends AppCompatActivity {
 
 
-    private static final int MODIFY_AUDIO_SEETINGS =10 ;
+    private static final int MODIFY_AUDIO_SETTINGS =10 ;
+    private static final String TAG = "APP_DEBUG";
     @BindView(R.id.etEmail)
     EditText etEmail;
 
@@ -75,11 +76,13 @@ public class MainActivity extends AppCompatActivity {
 
                 if (permissionCheck != PackageManager.PERMISSION_GRANTED) {
 
-                    Log.d("APP_DEBUG", "onCreate: no permission given");
-                    ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.USE_SIP}, MODIFY_AUDIO_SEETINGS);
+                    Log.d("APP_DEBUG", "onCreate: no permission given for audio");
+                    ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.MODIFY_AUDIO_SETTINGS}, MODIFY_AUDIO_SETTINGS);
                 } else {
                     //TODO
 //
+                    Log.d("APP_DEBUG", "onCreate: audio permission is there for the app");
+
 //                //check if session is valid and if valid
                 Intent intent = new Intent(MainActivity.this, WalkieTalkieActivity.class);
                 startActivity(intent);
@@ -154,12 +157,12 @@ public class MainActivity extends AppCompatActivity {
     public void onRequestPermissionsResult(int requestCode,
                                            String[] permissions, int[] grantResults) {
         switch (requestCode) {
-            case MODIFY_AUDIO_SEETINGS: {
+            case MODIFY_AUDIO_SETTINGS: {
                 // If request is cancelled, the result arrays are empty.
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     // permission was granted, yay! Do the
-                    Log.d("APP_DEBUG", "onRequestPermissionsResult: permission granted");
+                    Log.d("APP_DEBUG", "onRequestPermissionsResult: permission granted for audio");
 //                    make();
 
                     Intent intent = new Intent(MainActivity.this, WalkieTalkieActivity.class);
@@ -168,6 +171,7 @@ public class MainActivity extends AppCompatActivity {
                 } else {
                     // permission denied, boo! Disable the
                     // functionality that depends on this permission.
+                    Log.d(TAG, "onRequestPermissionsResult: permission denied for audio");
                 }
                 return;
             }
