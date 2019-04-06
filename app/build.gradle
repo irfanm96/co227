@@ -52,4 +52,8 @@ dependencies {
     //stetho
     implementation 'com.facebook.stetho:stetho:1.5.1'
 
+    //permission
+    implementation 'com.karumi:dexter:5.0.0'
+
+
 }

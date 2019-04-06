@@ -65,7 +65,7 @@ public class MainActivity extends AppCompatActivity {
 
         }else {
 
-            ((App) getApplication()).getPrefManager().setIsLoggedIn(false);
+            ((App) getApplication()).getPrefManager().setIsLoggedIn(true);
             if (((App) getApplication()).getPrefManager().isLoggedIn()) {
 
 

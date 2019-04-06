@@ -38,7 +38,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
+import com.karumi.dexter.Dexter;
+import com.karumi.dexter.MultiplePermissionsReport;
+import com.karumi.dexter.PermissionToken;
+import com.karumi.dexter.listener.PermissionRequest;
+import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
+
 import java.text.ParseException;
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -81,7 +88,6 @@ public class WalkieTalkieActivity extends Activity implements View.OnTouchListen
             //TODO
             make();
         }
-
 
 
     }
@@ -166,9 +172,9 @@ public class WalkieTalkieActivity extends Activity implements View.OnTouchListen
 //        String domain = prefs.getString("domainPref", "");
 //        String password = prefs.getString("passPref", "");
 
-         String username = "3007";
+         String username = "8002";
 
-        String domain = "j.veg.lv";
+            String domain = "j.veg.lv";
 
         String password = "aaaa";
 
@@ -230,7 +236,7 @@ public class WalkieTalkieActivity extends Activity implements View.OnTouchListen
                 manager.close(me.getUriString());
             }
         } catch (Exception ee) {
-            Log.d("WalkieTalkieActivity", "Failed to close local profile.", ee);
+            Log.d(TAG, "Failed to close local profile.", ee);
         }
     }
 
@@ -251,6 +257,7 @@ public class WalkieTalkieActivity extends Activity implements View.OnTouchListen
                     call.startAudio();
                     call.setSpeakerMode(true);
                     if(call.isMuted()){
+                        Log.d(TAG, "onCallEstablished: call was muted");
                         call.toggleMute();
                     }
                     updateStatus(call);
@@ -263,18 +270,68 @@ public class WalkieTalkieActivity extends Activity implements View.OnTouchListen
                     updateStatus("Ready.");
                     Log.d("APP_DEBUG", "onCallEnded: ");
                 }
+
+                @Override
+                public void onError(SipAudioCall call, int errorCode, String errorMessage) {
+                    super.onError(call, errorCode, errorMessage);
+                    Log.d(TAG, "onError: "+errorMessage+" code "+errorCode);
+                }
+
+                @Override
+                public void onRinging(SipAudioCall call, SipProfile caller) {
+                    super.onRinging(call, caller);
+                    Log.d(TAG, "onRinging: ringing ");
+                }
+
+                @Override
+                public void onCalling(SipAudioCall call) {
+                    super.onCalling(call);
+                    Log.d(TAG, "onCalling: ");
+
+                }
+
+                @Override
+                public void onCallBusy(SipAudioCall call) {
+                    super.onCallBusy(call);
+                    Log.d(TAG, "onCallBusy: ");
+                }
+
+                @Override
+                public void onReadyToCall(SipAudioCall call) {
+                    super.onReadyToCall(call);
+                    Log.d(TAG, "onReadyToCall: ");
+                }
+
+                @Override
+                public void onCallHeld(SipAudioCall call) {
+                    super.onCallHeld(call);
+                    Log.d(TAG, "onCallHeld: ");
+                }
+
+                @Override
+                public void onChanged(SipAudioCall call) {
+                    super.onChanged(call);
+                    Log.d(TAG, "onChanged: ");
+                }
+
+                @Override
+                public void onRingingBack(SipAudioCall call) {
+                    super.onRingingBack(call);
+                    Log.d(TAG, "onRingingBack: ");
+                }
+
             };
 
             call = manager.makeAudioCall(me.getUriString(), sipAddress, listener, 30);
 
         }
         catch (Exception e) {
-            Log.i("WalkieTalkieActivity", "Error when trying to close manager.", e);
+            Log.i(TAG, "Error when trying to close manager.", e);
             if (me != null) {
                 try {
                     manager.close(me.getUriString());
                 } catch (Exception ee) {
-                    Log.i("WalkieTalkieActivity",
+                    Log.i(TAG,
                             "Error when trying to close manager.", ee);
                     ee.printStackTrace();
                 }
@@ -353,14 +410,15 @@ public class WalkieTalkieActivity extends Activity implements View.OnTouchListen
                     try {
                       call.endCall();
                     } catch (SipException se) {
-                        Log.d("WalkieTalkieActivity",
+                        Log.d(TAG,
                                 "Error ending call.", se);
                     }
                     call.close();
                 };
-                case USERS_ONLINE:
-                    Intent intent=new Intent(WalkieTalkieActivity.this,ContactActivity.class);
-                    startActivity(intent);
+                break;
+            case USERS_ONLINE:
+                Intent intent=new Intent(WalkieTalkieActivity.this,ContactActivity.class);
+                startActivity(intent);
                 break;
         }
         return true;
