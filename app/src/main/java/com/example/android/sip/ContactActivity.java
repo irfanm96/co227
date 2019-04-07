@@ -47,12 +47,8 @@ public class ContactActivity extends AppCompatActivity {
 
     private RecyclerViewAdapter recyclerViewAdapter;
 
-
-    //    FirebaseDatabase database=FirebaseDatabase.getInstance();
-//    DatabaseReference mRootRef=database.getReference();
-//    DatabaseReference mConditionRef=mRootRef.child("contacts");
-//
     private RecyclerView recyclerView;
+
     //    Pusher pusher;
     private Pusher pusher;
 
@@ -155,84 +151,6 @@ public class ContactActivity extends AppCompatActivity {
             }
         });
 
-
-//        PusherOptions options = new PusherOptions();
-//        options.setHost("192.168.8.105");
-//        options.setWsPort(6001);
-//        options.setEncrypted(false);
-//        options.buildUrl("ABCDEFG");
-////
-//        HttpAuthorizer authorizer = new HttpAuthorizer("http://192.168.8.105:8000/api/broadcast/auth");
-//        HashMap<String, String> defaultHeaders = new HashMap<String, String>();
-//        defaultHeaders.put("Content-Type", "application/x-www-form-urlencoded");
-//        defaultHeaders.put("Accept", "application/json");
-//        defaultHeaders.put("Authorization", "Bearer " + ((App) getApplication()).getPrefManager().getUserAccessToken());
-//        authorizer.setHeaders(defaultHeaders);
-////        options.setAuthorizer(authorizer);
-//
-//
-//        RestApi restApi = RetrofitClient.getClient().create(RestApi.class);
-//        Call<String> call = restApi.auth(new channel(channel,socket_id));
-//        call.enqueue(new Callback<String>() {
-//            @Override
-//            public void onResponse(Call<String> call, Response<String> response) {
-////
-//
-//                Log.d("APP_DEBUG", "RESPONSE IS " + response.code());
-//                if (response.code() != 200) {
-////                    Toast.makeText(getApplicationContext(),response.message(),Toast.LENGTH_SHORT).show();
-//                    return;
-//                } else {
-//                    Log.d(TAG, "onResponse: "+response.body());
-////                    setAuth(response.body());
-//
-//                }
-//            }
-//
-//            @Override
-//            public void onFailure(Call<String> call, Throwable t) {
-//
-//                Log.d("APP_DEBUG", "ERROR IS " + t.getMessage());
-//
-//            }
-//        });
-//
-//        options.setAuthorizer(new Authorizer() {
-//            @Override
-//            public String authorize(String s, String s1) throws AuthorizationFailureException {
-//                Log.d(TAG, "authorize: " + s);
-//                Log.d(TAG, "authorize: " + s1);
-//                ContactActivity.authorize(s,s1);
-//
-//                return ContactActivity.auth;
-//            }
-//        });
-//        pusher = new Pusher("ABCDEFG", options);
-//
-//        pusher.connect(new ConnectionEventListener() {
-//            @Override
-//            public void onConnectionStateChange(ConnectionStateChange change) {
-//                System.out.println("State changed to " + change.getCurrentState() +
-//                        " from " + change.getPreviousState());
-//
-//            }
-//
-//            @Override
-//            public void onError(String message, String code, Exception e) {
-//                System.out.println(e.getMessage());
-//                Log.d(TAG, "onError: connectionn error");
-//            }
-//        });
-//
-
-    }
-
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-
-
     }
 
     private void updateContacts(final Contact c) {
@@ -295,12 +213,6 @@ public class ContactActivity extends AppCompatActivity {
         });
 
         return true;
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        pusher.disconnect();
     }
 
 }

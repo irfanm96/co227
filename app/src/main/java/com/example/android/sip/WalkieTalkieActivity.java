@@ -28,11 +28,16 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.util.Log;
 import android.view.*;
 import android.net.sip.*;
+import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -45,6 +50,7 @@ import com.karumi.dexter.listener.PermissionRequest;
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
 
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
@@ -72,11 +78,78 @@ public class WalkieTalkieActivity extends Activity implements View.OnTouchListen
     private static final int HANG_UP = 4;
 
 
+    private ArrayList<Contact> contacts = new ArrayList<>();
+
+    private RecyclerViewAdapter recyclerViewAdapter;
+
+    private RecyclerView recyclerView;
+
+
+
+    private void createRecyclerView(){
+        contacts.add(new Contact("Server","j.veg.lv",200));
+        contacts.add(new Contact("Dummy1","j.veg.lv",200));
+        contacts.add(new Contact("Dummy2","j.veg.lv",200));
+        contacts.add(new Contact("Dummy3","j.veg.lv",200));
+        contacts.add(new Contact("Server","j.veg.lv",200));
+        contacts.add(new Contact("Dummy1","j.veg.lv",200));
+        contacts.add(new Contact("Dummy2","j.veg.lv",200));
+        contacts.add(new Contact("Dummy3","j.veg.lv",200));
+        contacts.add(new Contact("Server","j.veg.lv",200));
+        contacts.add(new Contact("Dummy1","j.veg.lv",200));
+        contacts.add(new Contact("Dummy2","j.veg.lv",200));
+        contacts.add(new Contact("Dummy3","j.veg.lv",200));
+
+        recyclerView = findViewById(R.id.rvView);
+        recyclerViewAdapter = new RecyclerViewAdapter(this, contacts);
+        recyclerView.setAdapter(recyclerViewAdapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+    }
+
+
+    private void updateContacts(final Contact c) {
+
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                contacts.add(c);
+                recyclerViewAdapter.notifyDataSetChanged();
+                recyclerViewAdapter.setContactListFull(contacts);
+            }
+        });
+    }
+
+    private void removeContacts(final Contact c) {
+
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+
+                int i=0;
+
+                for (Contact p:contacts) {
+                    if(p.getEmail().equals(c.getEmail())){
+                        contacts.remove(i);
+                        recyclerViewAdapter.notifyDataSetChanged();
+                        recyclerViewAdapter.setContactListFull(contacts);
+                        Log.d(TAG, "run: "+"removed");
+                        break;
+                    }
+                    i++;
+                }
+
+            }
+        });
+    }
+
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.walkietalkie);
+        createRecyclerView();
 
         int permissionCheck = ContextCompat.checkSelfPermission(this, Manifest.permission.USE_SIP);
 
@@ -93,8 +166,8 @@ public class WalkieTalkieActivity extends Activity implements View.OnTouchListen
     }
 
     private void make() {
-        ToggleButton pushToTalkButton = (ToggleButton) findViewById(R.id.pushToTalk);
-        pushToTalkButton.setOnTouchListener(this);
+//        ToggleButton pushToTalkButton = (ToggleButton) findViewById(R.id.pushToTalk);
+//        pushToTalkButton.setOnTouchListener(this);
 
         // Set up the intent filter.  This will be used to fire an
         // IncomingCallReceiver when someone calls the SIP address used by this
@@ -352,9 +425,17 @@ public class WalkieTalkieActivity extends Activity implements View.OnTouchListen
             public void run() {
                 TextView labelView = (TextView) findViewById(R.id.sipLabel);
                 labelView.setText(status);
+//                Snackbar snackbar = Snackbar.make(findViewById(android.R.id.content),status,Snackbar.LENGTH_SHORT);
+//                snackbar.show();
+
+//                Toast.makeText(getApplicationContext(),status,Toast.LENGTH_SHORT).show();
             }
         });
+
+        Log.d(TAG, "updateStatus to: "+status);
     }
+
+
 
     /**
      * Updates the status box with the SIP address of the current call.
@@ -392,8 +473,26 @@ public class WalkieTalkieActivity extends Activity implements View.OnTouchListen
         menu.add(0, HANG_UP, 0, "End Current Call.");
         menu.add(0, LOGOUT, 0, "Logout");
 
-
-
+//        MenuInflater inflater = getMenuInflater();
+//        inflater.inflate(R.menu.search_menu, menu);
+//        MenuItem searchItem = menu.findItem(R.id.action_search);
+//
+//        SearchView searchView = (SearchView) searchItem.getActionView();
+//        searchView.setImeOptions(EditorInfo.IME_ACTION_DONE);
+//
+//        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+//            @Override
+//            public boolean onQueryTextSubmit(String s) {
+//                return false;
+//            }
+//
+//            @Override
+//            public boolean onQueryTextChange(String s) {
+//
+//                recyclerViewAdapter.getFilter().filter(s);
+//                return true;
+//            }
+//        });
         return true;
     }
 
