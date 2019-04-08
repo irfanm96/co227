@@ -644,6 +644,7 @@ public class WalkieTalkieActivity extends Activity implements View.OnTouchListen
 
 
     private void connectToPusher(){
+        Log.d(TAG, "connectToPusher: starting");
         PusherOptions options = new PusherOptions();
         options.setHost(App.ip);
         options.setWsPort(6001);
@@ -661,13 +662,13 @@ public class WalkieTalkieActivity extends Activity implements View.OnTouchListen
         pusher.connect(new ConnectionEventListener() {
             @Override
             public void onConnectionStateChange(ConnectionStateChange connectionStateChange) {
-                Log.d("APP_DEBUG", "Changed to " + connectionStateChange.getCurrentState());
+                Log.d(TAG, "Changed to " + connectionStateChange.getCurrentState());
             }
 
             @Override
             public void onError(String s, String s1, Exception e) {
 
-                Log.d("APP_DEBUG", "Failed " + s + " " + s1);
+                Log.d(TAG, "Failed " + s + " " + s1);
             }
         });
 
@@ -684,6 +685,19 @@ public class WalkieTalkieActivity extends Activity implements View.OnTouchListen
             @Override
             public void onUsersInformationReceived(String s, Set<com.pusher.client.channel.User> set) {
                 Log.d(TAG, "onUsersInformationReceived: ");
+
+                contacts.clear();
+                contacts.add(new Contact("demo","demo@j.veg.lv",200));
+                for (User u:set) {
+                    Gson g = new Gson();
+                    Contact p = g.fromJson(u.getInfo(), Contact.class);
+                    Log.d(TAG, "userSubscribed: " + p.getPhone());
+                    Log.d(TAG, "userSubscribed: " + p.getName());
+                        contacts.add(p);
+                }
+
+                recyclerViewAdapter.notifyDataSetChanged();
+                recyclerViewAdapter.setContactListFull(contacts);
             }
 
             @Override
