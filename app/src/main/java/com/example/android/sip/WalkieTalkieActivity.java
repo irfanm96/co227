@@ -43,15 +43,29 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
+import com.google.gson.Gson;
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.MultiplePermissionsReport;
 import com.karumi.dexter.PermissionToken;
 import com.karumi.dexter.listener.PermissionRequest;
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
+import com.pusher.client.Pusher;
+import com.pusher.client.PusherOptions;
+import com.pusher.client.channel.Channel;
+import com.pusher.client.channel.PresenceChannel;
+import com.pusher.client.channel.PresenceChannelEventListener;
+import com.pusher.client.channel.SubscriptionEventListener;
+import com.pusher.client.channel.User;
+import com.pusher.client.connection.ConnectionEventListener;
+import com.pusher.client.connection.ConnectionStateChange;
+import com.pusher.client.util.HttpAuthorizer;
 
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -84,21 +98,12 @@ public class WalkieTalkieActivity extends Activity implements View.OnTouchListen
 
     private RecyclerView recyclerView;
 
+    private  Pusher pusher;
+
 
 
     private void createRecyclerView(){
         contacts.add(new Contact("Server","j.veg.lv",200));
-        contacts.add(new Contact("Dummy1","j.veg.lv",200));
-        contacts.add(new Contact("Dummy2","j.veg.lv",200));
-        contacts.add(new Contact("Dummy3","j.veg.lv",200));
-        contacts.add(new Contact("Server","j.veg.lv",200));
-        contacts.add(new Contact("Dummy1","j.veg.lv",200));
-        contacts.add(new Contact("Dummy2","j.veg.lv",200));
-        contacts.add(new Contact("Dummy3","j.veg.lv",200));
-        contacts.add(new Contact("Server","j.veg.lv",200));
-        contacts.add(new Contact("Dummy1","j.veg.lv",200));
-        contacts.add(new Contact("Dummy2","j.veg.lv",200));
-        contacts.add(new Contact("Dummy3","j.veg.lv",200));
 
         recyclerView = findViewById(R.id.rvView);
         recyclerViewAdapter = new RecyclerViewAdapter(this, contacts);
@@ -160,6 +165,7 @@ public class WalkieTalkieActivity extends Activity implements View.OnTouchListen
         } else {
             //TODO
             make();
+            connectToPusher();
         }
 
 
@@ -245,7 +251,7 @@ public class WalkieTalkieActivity extends Activity implements View.OnTouchListen
 //        String domain = prefs.getString("domainPref", "");
 //        String password = prefs.getString("passPref", "");
 
-         String username = "8002";
+         String username = "3006";
 
             String domain = "j.veg.lv";
 
@@ -635,4 +641,148 @@ public class WalkieTalkieActivity extends Activity implements View.OnTouchListen
             // permissions this app might request.
         }
     }
+
+
+    private void connectToPusher(){
+        PusherOptions options = new PusherOptions();
+        options.setHost(App.ip);
+        options.setWsPort(6001);
+        options.setEncrypted(false);
+        options.buildUrl("ABCDEFG");
+
+
+        HttpAuthorizer authorizer = new HttpAuthorizer(App.channelAuth);
+        Map<String, String> headers = new HashMap<>();
+        headers.put("Authorization", ((App) getApplication()).getPrefManager().getUserAccessToken());
+        authorizer.setHeaders(headers);
+        options.setAuthorizer(authorizer);
+
+        pusher = new Pusher("ABCDEFG", options);
+        pusher.connect(new ConnectionEventListener() {
+            @Override
+            public void onConnectionStateChange(ConnectionStateChange connectionStateChange) {
+                Log.d("APP_DEBUG", "Changed to " + connectionStateChange.getCurrentState());
+            }
+
+            @Override
+            public void onError(String s, String s1, Exception e) {
+
+                Log.d("APP_DEBUG", "Failed " + s + " " + s1);
+            }
+        });
+
+        Channel channel = pusher.subscribe("ch");
+
+        channel.bind("App\\Events\\ContactCreated", new SubscriptionEventListener() {
+            @Override
+            public void onEvent(String s, String s1, String s2) {
+                Log.d("APP_DEBUG", "Event " + s + " " + s2);
+            }
+        });
+
+        PresenceChannel presenceChannel = pusher.subscribePresence("presence-chat", new PresenceChannelEventListener() {
+            @Override
+            public void onUsersInformationReceived(String s, Set<com.pusher.client.channel.User> set) {
+                Log.d(TAG, "onUsersInformationReceived: ");
+            }
+
+            @Override
+            public void userSubscribed(String s, com.pusher.client.channel.User user) {
+                Log.d("APP_DEBUG_SUBSCRIBED", s);
+                Log.d(TAG, "userSubscribed: " + user.getInfo());
+                Gson g = new Gson();
+                Contact p = g.fromJson(user.getInfo(), Contact.class);
+                Log.d(TAG, "userSubscribed: " + p.getPhone());
+                Log.d(TAG, "userSubscribed: " + p.getName());
+//                        contacts.add(p);
+//                        recyclerViewAdapter.notifyDataSetChanged();
+//                        recyclerViewAdapter.setContactListFull(contacts);
+                updateContacts(p);
+
+            }
+
+            @Override
+            public void userUnsubscribed(String s, User user) {
+                Log.d("APP_DEBUG_UNSUBSCRIBER", s);
+                Log.d(TAG, "userUnsubscribed: ");
+                Gson g = new Gson();
+                Contact p = g.fromJson(user.getInfo(), Contact.class);
+                removeContacts(p);
+                Log.d(TAG, "userUnsubscribed: " + p.getPhone());
+                Log.d(TAG, "userUnsubscribed: " + p.getName());
+            }
+
+            @Override
+            public void onAuthenticationFailure(String s, Exception e) {
+                Log.d("APP_DEBUG_AUTH_FAIL", s);
+                Log.d(TAG, "onAuthenticationFailure: " + e.getMessage());
+
+            }
+
+            @Override
+            public void onSubscriptionSucceeded(String s) {
+                Log.d("APP_DEBUG_SUB_SUCCESS", s);
+            }
+
+            @Override
+            public void onEvent(String s, String s1, String s2) {
+
+            }
+        });
+    }
+
+    private SipAudioCall incCall=null;
+
+    public void incomingCall(SipAudioCall c){
+        if(c==null){
+            return;
+        }
+        if(c.isInCall()){
+            return;
+        }
+        if(incCall!=null){
+            return;
+        }
+        incCall=c;
+
+        SipProfile caller=incCall.getPeerProfile();
+
+        AlertDialog.Builder builder=new AlertDialog.Builder(this);
+
+        builder.setTitle("Incoming Call from")
+                .setMessage(caller.getUriString())
+                .setPositiveButton("Accept", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                        try {
+                            incCall.answerCall(30);
+                            incCall.startAudio();
+                            incCall.setSpeakerMode(true);
+
+                            if(incCall.isMuted()){
+                                Log.d(TAG, "call was muted ");
+                                incCall.toggleMute();
+                            }
+                        } catch (SipException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                })
+                .setNegativeButton("Decline", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        try {
+                            incCall.endCall();
+                        } catch (SipException e) {
+                            e.printStackTrace();
+                        }
+                        incCall.close();
+                        incCall=null;
+                    }
+                });
+        builder.show();
+
+    }
+
 }

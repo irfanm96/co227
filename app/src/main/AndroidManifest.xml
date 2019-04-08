@@ -30,7 +30,7 @@
           android:configChanges="orientation|keyboardHidden"></activity>
         <activity android:name=".SipSettings" android:label="set_preferences"/>
 
-        <activity android:name=".ContactActivity" android:theme="@style/Theme.AppCompat">
+        <activity android:name=".ContactActivity">
         </activity>
 
         <activity android:name=".SignupActivity" android:theme="@style/Theme.AppCompat.NoActionBar" />

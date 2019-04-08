@@ -12,7 +12,7 @@ public class App extends Application {
     public static boolean isLoggedIn;
     public static String accessToken;
     public PrefManager prefManager;
-    public static String ip="192.168.8.106";
+    public static String ip="10.30.7.43";
     public static String restApi="http://"+ip+":8000/api/";
     public static String channelAuth="http://"+ip+":8000/api/broadcast/auth";
 //    public Snackbar mSnackBar;

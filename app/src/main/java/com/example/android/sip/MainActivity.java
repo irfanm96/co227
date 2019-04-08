@@ -114,6 +114,11 @@ public class MainActivity extends AppCompatActivity {
 
     @OnClick(R.id.btnLogin)
     public void loginClicked(View view) {
+
+        Intent intent = new Intent(MainActivity.this, WalkieTalkieActivity.class);
+        startActivity(intent);
+        finish();
+
         RestApi restApi = RetrofitClient.getClient().create(RestApi.class);
         String email = etEmail.getText().toString();
         String password = etPassword.getText().toString();
