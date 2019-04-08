@@ -78,7 +78,7 @@ public class WalkieTalkieActivity extends Activity implements View.OnTouchListen
 
     private static final int REQUEST_SIP = 10;
     private static final int USERS_ONLINE =5 ;
-    public String sipAddress = null;
+    public static String sipAddress = null;
 
     private static final String TAG = "APP_DEBUG";
     public SipManager manager = null;

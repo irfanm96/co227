@@ -74,8 +74,14 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         viewHolder.parentLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d(TAG, "onClick: cliked on " + contactList.get(i).getName());
-                Toast.makeText(mContext, contactList.get(i).getName(), Toast.LENGTH_SHORT).show();
+//                Log.d(TAG, "onClick: cliked on " + contactList.get(i).getName());
+
+                String sipAddress=contactList.get(i).getPhone()+"@j.veg.lv";
+//                WalkieTalkieActivity.sipAddress=sipAddress;
+                Toast.makeText(mContext, sipAddress, Toast.LENGTH_SHORT).show();
+
+                //                sipAddress = textField.getText().toString();
+//                initiateCall();
             }
         });
 
