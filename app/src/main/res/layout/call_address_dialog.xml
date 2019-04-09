@@ -40,7 +40,7 @@
         android:capitalize="none"
         android:gravity="fill_horizontal"
         android:scrollHorizontally="true"
-        android:text="200@j.veg.lv"
+        android:text="200@10.30.7.43"
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
 </LinearLayout>
