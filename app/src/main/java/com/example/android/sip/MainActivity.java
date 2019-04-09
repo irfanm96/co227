@@ -13,6 +13,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.pusher.client.Pusher;
 import com.pusher.client.PusherOptions;
@@ -27,7 +28,7 @@ import retrofit2.Response;
 public class MainActivity extends AppCompatActivity {
 
 
-    private static final int MODIFY_AUDIO_SETTINGS =10 ;
+    private static final int MODIFY_AUDIO_SETTINGS = 10;
     private static final String TAG = "APP_DEBUG";
     private static final int RECORD_AUDIO = 20;
     @BindView(R.id.etEmail)
@@ -59,54 +60,37 @@ public class MainActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         tvError.setVisibility(View.INVISIBLE);
 
-        if(!(SipManager.isVoipSupported(getApplicationContext()) && SipManager.isApiSupported(getApplicationContext()))){
+
+        int permissionCheck1 = ContextCompat.checkSelfPermission(this, Manifest.permission.MODIFY_AUDIO_SETTINGS);
+        int permissionCheck2 = ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO);
+
+        if (permissionCheck1 != PackageManager.PERMISSION_GRANTED) {
+
+            Log.d("APP_DEBUG", "onCreate: no permission given for audio");
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.MODIFY_AUDIO_SETTINGS}, MODIFY_AUDIO_SETTINGS);
+        } else if (permissionCheck2 != PackageManager.PERMISSION_GRANTED) {
+            Log.d("APP_DEBUG", "onCreate: no permission given for mic");
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.RECORD_AUDIO}, RECORD_AUDIO);
+
+        }
+        if (!(SipManager.isVoipSupported(getApplicationContext()) && SipManager.isApiSupported(getApplicationContext()))) {
             tvError.setText("Your phone does not support SIP");
             tvError.setVisibility(View.VISIBLE);
             btnLogin.setEnabled(false);
             tvRegister.setEnabled(false);
 
-        }else {
-
-            ((App) getApplication()).getPrefManager().setIsLoggedIn(true);
-            if (((App) getApplication()).getPrefManager().isLoggedIn()) {
-
-
-
-
-                int permissionCheck1 = ContextCompat.checkSelfPermission(this, Manifest.permission.MODIFY_AUDIO_SETTINGS);
-                int permissionCheck2 = ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO);
-
-                if (permissionCheck1 != PackageManager.PERMISSION_GRANTED) {
-
-                    Log.d("APP_DEBUG", "onCreate: no permission given for audio");
-                    ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.MODIFY_AUDIO_SETTINGS}, MODIFY_AUDIO_SETTINGS);
-                }else if(permissionCheck2 != PackageManager.PERMISSION_GRANTED){
-                    Log.d("APP_DEBUG", "onCreate: no permission given for mic");
-                    ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.RECORD_AUDIO}, RECORD_AUDIO);
-
-                } else {
-                    //TODO
-//
-                    Log.d("APP_DEBUG", "onCreate: audio permission is there for the app");
-
-//                //check if session is valid and if valid
-                Intent intent = new Intent(MainActivity.this, WalkieTalkieActivity.class);
-                startActivity(intent);
-                finish();
-                }
-
-
-
-
-                //else login screen
-
-            }
+            finish();
         }
 
+//        ((App) getApplication()).getPrefManager().setIsLoggedIn(false);
+        if (((App) getApplication()).getPrefManager().isLoggedIn()) {
+            //check if session is valid and if valid
+            Intent intent = new Intent(MainActivity.this, WalkieTalkieActivity.class);
+            startActivity(intent);
+            finish();
 
-
+        }
     }
-
 
     @OnClick(R.id.tvRegsiter)
     public void signUpClicked() {
@@ -120,13 +104,8 @@ public class MainActivity extends AppCompatActivity {
 
     @OnClick(R.id.btnLogin)
     public void loginClicked(View view) {
-
-        Intent intent = new Intent(MainActivity.this, WalkieTalkieActivity.class);
-        startActivity(intent);
-        finish();
-
         RestApi restApi = RetrofitClient.getClient().create(RestApi.class);
-        String email = etEmail.getText().toString();
+        final String email = etEmail.getText().toString();
         final String password = etPassword.getText().toString();
 
         UserCredentials user = new UserCredentials(email, password);
@@ -137,7 +116,7 @@ public class MainActivity extends AppCompatActivity {
 //
 
                 Log.d("APP_DEBUG", "RESPONSE IS " + response.code());
-                if (response.code()!=200) {
+                if (response.code() != 200) {
                     tvError.setVisibility(View.VISIBLE);
 //                    Toast.makeText(getApplicationContext(),response.message(),Toast.LENGTH_SHORT).show();
                     return;
@@ -146,8 +125,9 @@ public class MainActivity extends AppCompatActivity {
                     ((App) getApplication()).getPrefManager().setIsLoggedIn(true);
                     ((App) getApplication()).getPrefManager().setUserAccessToken(response.body().getApi_token());
                     ((App) getApplication()).getPrefManager().setUSER_Phone(response.body().getPhone());
+                    ((App) getApplication()).getPrefManager().setUSER_Password(password);
+                    ((App) getApplication()).getPrefManager().setUserEmail(email);
                     Intent intent = new Intent(MainActivity.this, WalkieTalkieActivity.class);
-                    intent.putExtra("PASSWORD", password);
                     startActivity(intent);
                     finish();
                 }
@@ -165,7 +145,7 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private int p;
+//    private int p;
 
     @Override
     public void onRequestPermissionsResult(int requestCode,
@@ -178,19 +158,13 @@ public class MainActivity extends AppCompatActivity {
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     // permission was granted, yay! Do the
                     Log.d("APP_DEBUG", "onRequestPermissionsResult: permission granted for audio");
-//                    make();
-//
-//                    Intent intent = new Intent(MainActivity.this, WalkieTalkieActivity.class);
-//                    startActivity(intent);
-//                    finish();
 
-                    p++;
                 } else {
                     // permission denied, boo! Disable the
                     // functionality that depends on this permission.
                     Log.d(TAG, "onRequestPermissionsResult: permission denied for audio");
+//                    finish();
                 }
-//                return;
             }
             case RECORD_AUDIO: {
                 // If request is cancelled, the result arrays are empty.
@@ -198,30 +172,15 @@ public class MainActivity extends AppCompatActivity {
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     // permission was granted, yay! Do the
                     Log.d("APP_DEBUG", "onRequestPermissionsResult: permission granted for mic");
-//                    make();
-//
-//                    Intent intent = new Intent(MainActivity.this, WalkieTalkieActivity.class);
-//                    startActivity(intent);
-//                    finish();
-                    p++;
                 } else {
                     // permission denied, boo! Disable the
                     // functionality that depends on this permission.
                     Log.d(TAG, "onRequestPermissionsResult: permission denied for mic");
+//                    finish();
                 }
-//                return;
             }
-
-            // other 'case' lines to check for other
-            // permissions this app might request.
         }
 
-        if(p==2){
-            Intent intent = new Intent(MainActivity.this, WalkieTalkieActivity.class);
-                    startActivity(intent);
-                    finish();
-
-        }
     }
 
 

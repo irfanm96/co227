@@ -154,7 +154,7 @@ public class WalkieTalkieActivity extends Activity implements View.OnTouchListen
         super.onCreate(savedInstanceState);
         setContentView(R.layout.walkietalkie);
         createRecyclerView();
-
+        contacts.clear();
         int permissionCheck = ContextCompat.checkSelfPermission(this, Manifest.permission.USE_SIP);
 
         if (permissionCheck != PackageManager.PERMISSION_GRANTED) {
@@ -221,7 +221,10 @@ public class WalkieTalkieActivity extends Activity implements View.OnTouchListen
         if (callReceiver != null) {
             this.unregisterReceiver(callReceiver);
         }
+        pusher.disconnect();
+        contacts.clear();
     }
+
 
     public void initializeManager() {
         if (manager == null) {
@@ -246,13 +249,16 @@ public class WalkieTalkieActivity extends Activity implements View.OnTouchListen
         }
 
         String username = ((App)getApplication()).getPrefManager().getUSER_Phone();
+//        Log.d(TAG, "initializeLocalProfile: username "+username);
         String domain = "10.30.7.43";
-        String password = getIntent().getStringExtra("PASSWORD");
-
-        if (username.length() == 0 || domain.length() == 0 || password.length() == 0) {
-            showDialog(UPDATE_SETTINGS_DIALOG);
-            return;
-        }
+//        String username="3006";
+//        String password="aaaa";
+        String password = ((App)getApplication()).getPrefManager().getUSER_Password();
+//        Log.d(TAG, "initializeLocalProfile: password "+password);
+//        if (username.length() == 0 || domain.length() == 0 || password.length() == 0) {
+//            showDialog(UPDATE_SETTINGS_DIALOG);
+//            return;
+//        }
 
         try {
             SipProfile.Builder builder = new SipProfile.Builder(username, domain);
@@ -542,6 +548,10 @@ public class WalkieTalkieActivity extends Activity implements View.OnTouchListen
                     ((App) getApplication()).getPrefManager().setUSER_Phone("200");
                     ((App) getApplication()).getPrefManager().setUserEmail("");
                     ((App) getApplication()).getPrefManager().setUserName("");
+                    contacts.clear();
+                    recyclerViewAdapter.notifyDataSetChanged();
+                    recyclerViewAdapter.setContactListFull(contacts);
+                    pusher.disconnect();
                     Intent intent = new Intent(WalkieTalkieActivity.this, MainActivity.class);
                     startActivity(intent);
                     finish();
@@ -612,6 +622,8 @@ public class WalkieTalkieActivity extends Activity implements View.OnTouchListen
         startActivity(settingsActivity);
     }
 
+
+
     @Override
     public void onRequestPermissionsResult(int requestCode,
                                            String[] permissions, int[] grantResults) {
@@ -678,18 +690,18 @@ public class WalkieTalkieActivity extends Activity implements View.OnTouchListen
         PresenceChannel presenceChannel = pusher.subscribePresence("presence-chat", new PresenceChannelEventListener() {
             @Override
             public void onUsersInformationReceived(String s, Set<com.pusher.client.channel.User> set) {
-                Log.d(TAG, "onUsersInformationReceived: ");
-
                 contacts.clear();
                 contacts.add(new Contact("demo", "demo@j.veg.lv", 200));
                 for (User u : set) {
                     Gson g = new Gson();
                     Contact p = g.fromJson(u.getInfo(), Contact.class);
-                    Log.d(TAG, "userSubscribed: " + p.getPhone());
-                    Log.d(TAG, "userSubscribed: " + p.getName());
-                    contacts.add(p);
-                }
+                    if(!p.getEmail().equalsIgnoreCase(((App)getApplication()).getPrefManager().getUserEmail())){
+                        contacts.add(p);
+                        Log.d(TAG, "onUsersInformationReceived: someine else subsribed "+p.getEmail() + " "+((App)getApplication()).getPrefManager().getUserEmail());
+                    }
 
+                }
+//
                 recyclerViewAdapter.notifyDataSetChanged();
                 recyclerViewAdapter.setContactListFull(contacts);
             }
@@ -697,15 +709,14 @@ public class WalkieTalkieActivity extends Activity implements View.OnTouchListen
             @Override
             public void userSubscribed(String s, com.pusher.client.channel.User user) {
                 Log.d("APP_DEBUG_SUBSCRIBED", s);
-                Log.d(TAG, "userSubscribed: " + user.getInfo());
-                Gson g = new Gson();
-                Contact p = g.fromJson(user.getInfo(), Contact.class);
-                Log.d(TAG, "userSubscribed: " + p.getPhone());
-                Log.d(TAG, "userSubscribed: " + p.getName());
-//                        contacts.add(p);
-//                        recyclerViewAdapter.notifyDataSetChanged();
-//                        recyclerViewAdapter.setContactListFull(contacts);
-                updateContacts(p);
+                if(user.getInfo()!=null) {
+                    Gson g = new Gson();
+                    Contact p = g.fromJson(user.getInfo(), Contact.class);
+                    if (!p.getEmail().equalsIgnoreCase(((App) getApplication()).getPrefManager().getUserEmail())) {
+                        Log.d(TAG, "userSubscribed: its not me");
+                        updateContacts(p);
+                    }
+                }
 
             }
 
@@ -714,10 +725,13 @@ public class WalkieTalkieActivity extends Activity implements View.OnTouchListen
                 Log.d("APP_DEBUG_UNSUBSCRIBER", s);
                 Log.d(TAG, "userUnsubscribed: ");
                 Gson g = new Gson();
-                Contact p = g.fromJson(user.getInfo(), Contact.class);
-                removeContacts(p);
-                Log.d(TAG, "userUnsubscribed: " + p.getPhone());
-                Log.d(TAG, "userUnsubscribed: " + p.getName());
+                if(user.getInfo()!=null){
+                    Contact p = g.fromJson(user.getInfo(), Contact.class);
+                    removeContacts(p);
+                    Log.d(TAG, "userUnsubscribed: " + p.getPhone());
+                    Log.d(TAG, "userUnsubscribed: " + p.getName());
+
+                }
             }
 
             @Override
@@ -792,5 +806,6 @@ public class WalkieTalkieActivity extends Activity implements View.OnTouchListen
         builder.show();
 
     }
+
 
 }
