@@ -127,7 +127,7 @@ public class MainActivity extends AppCompatActivity {
 
         RestApi restApi = RetrofitClient.getClient().create(RestApi.class);
         String email = etEmail.getText().toString();
-        String password = etPassword.getText().toString();
+        final String password = etPassword.getText().toString();
 
         UserCredentials user = new UserCredentials(email, password);
         Call<ApiToken> call = restApi.login(user);
@@ -147,6 +147,7 @@ public class MainActivity extends AppCompatActivity {
                     ((App) getApplication()).getPrefManager().setUserAccessToken(response.body().getApi_token());
                     ((App) getApplication()).getPrefManager().setUSER_Phone(response.body().getPhone());
                     Intent intent = new Intent(MainActivity.this, WalkieTalkieActivity.class);
+                    intent.putExtra("PASSWORD", password);
                     startActivity(intent);
                     finish();
                 }

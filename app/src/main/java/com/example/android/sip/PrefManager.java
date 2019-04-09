@@ -59,9 +59,9 @@ public class PrefManager {
         return pref.getString(USER_Name, "");
 
     }
-    public int getUSER_Phone() {
+    public String getUSER_Phone() {
 
-        return pref.getInt(USER_Phone, 200);
+        return pref.getString(USER_Phone, "200");
 
     }
 
@@ -73,8 +73,8 @@ public class PrefManager {
         editor.putString(USER_Name, name);
         editor.commit();
     }
-    public void setUSER_Phone(int phone) {
-        editor.putInt(USER_Phone, phone);
+    public void setUSER_Phone(String phone) {
+        editor.putString(USER_Phone, phone);
         editor.commit();
     }
 

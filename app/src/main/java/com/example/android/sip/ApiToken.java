@@ -8,13 +8,13 @@ public class ApiToken {
     private  String api_token;
 
     @SerializedName("phone")
-    private  int phone;
+    private  String phone;
 
     public String getApi_token() {
         return api_token;
     }
 
-    public int getPhone() {
+    public String getPhone() {
         return phone;
     }
 }

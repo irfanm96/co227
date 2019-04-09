@@ -77,7 +77,7 @@ import retrofit2.Response;
 public class WalkieTalkieActivity extends Activity implements View.OnTouchListener {
 
     private static final int REQUEST_SIP = 10;
-    private static final int USERS_ONLINE =5 ;
+    private static final int USERS_ONLINE = 5;
     public static String sipAddress = null;
 
     private static final String TAG = "APP_DEBUG";
@@ -98,12 +98,11 @@ public class WalkieTalkieActivity extends Activity implements View.OnTouchListen
 
     private RecyclerView recyclerView;
 
-    private  Pusher pusher;
+    private Pusher pusher;
 
 
-
-    private void createRecyclerView(){
-        contacts.add(new Contact("Server","j.veg.lv",200));
+    private void createRecyclerView() {
+        contacts.add(new Contact("Server", "j.veg.lv", 200));
 
         recyclerView = findViewById(R.id.rvView);
         recyclerViewAdapter = new RecyclerViewAdapter(this, contacts);
@@ -131,14 +130,14 @@ public class WalkieTalkieActivity extends Activity implements View.OnTouchListen
             @Override
             public void run() {
 
-                int i=0;
+                int i = 0;
 
-                for (Contact p:contacts) {
-                    if(p.getEmail().equals(c.getEmail())){
+                for (Contact p : contacts) {
+                    if (p.getEmail().equals(c.getEmail())) {
                         contacts.remove(i);
                         recyclerViewAdapter.notifyDataSetChanged();
                         recyclerViewAdapter.setContactListFull(contacts);
-                        Log.d(TAG, "run: "+"removed");
+                        Log.d(TAG, "run: " + "removed");
                         break;
                     }
                     i++;
@@ -225,8 +224,8 @@ public class WalkieTalkieActivity extends Activity implements View.OnTouchListen
     }
 
     public void initializeManager() {
-        if(manager == null) {
-          manager = SipManager.newInstance(this);
+        if (manager == null) {
+            manager = SipManager.newInstance(this);
             Log.d(TAG, "initializeManager: manager initialiased");
         }
 
@@ -246,17 +245,9 @@ public class WalkieTalkieActivity extends Activity implements View.OnTouchListen
             closeLocalProfile();
         }
 
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
-//        String username = prefs.getString("namePref", "");
-//        String domain = prefs.getString("domainPref", "");
-//        String password = prefs.getString("passPref", "");
-
-         String username = "3006";
-
-            String domain = "10.30.7.43";
-
-        String password = "aaaa";
-
+        String username = ((App)getApplication()).getPrefManager().getUSER_Phone();
+        String domain = "10.30.7.43";
+        String password = getIntent().getStringExtra("PASSWORD");
 
         if (username.length() == 0 || domain.length() == 0 || password.length() == 0) {
             showDialog(UPDATE_SETTINGS_DIALOG);
@@ -279,22 +270,22 @@ public class WalkieTalkieActivity extends Activity implements View.OnTouchListen
             // Otherwise the methods aren't guaranteed to fire.
 
             manager.setRegistrationListener(me.getUriString(), new SipRegistrationListener() {
-                    public void onRegistering(String localProfileUri) {
-                        Log.d("APP_DEBUG", "onRegistering: ");
-                        updateStatus("Registering with SIP Server...");
-                    }
+                public void onRegistering(String localProfileUri) {
+                    Log.d("APP_DEBUG", "onRegistering: ");
+                    updateStatus("Registering with SIP Server...");
+                }
 
-                    public void onRegistrationDone(String localProfileUri, long expiryTime) {
-                        Log.d("APP_DEBUG", "onRegistrationDone: ");
-                        updateStatus("Ready");
-                    }
+                public void onRegistrationDone(String localProfileUri, long expiryTime) {
+                    Log.d("APP_DEBUG", "onRegistrationDone: ");
+                    updateStatus("Ready");
+                }
 
-                    public void onRegistrationFailed(String localProfileUri, int errorCode,
-                            String errorMessage) {
-                        Log.d("APP_DEBUG", "onRegistrationFailed: "+errorMessage+" "+errorCode);
-                        updateStatus("Registration failed.  Please check settings.");
-                    }
-                });
+                public void onRegistrationFailed(String localProfileUri, int errorCode,
+                                                 String errorMessage) {
+                    Log.d("APP_DEBUG", "onRegistrationFailed: " + errorMessage + " " + errorCode);
+                    updateStatus("Registration failed.  Please check settings.");
+                }
+            });
         } catch (ParseException pe) {
             updateStatus("Connection Error.");
         } catch (SipException se) {
@@ -335,7 +326,7 @@ public class WalkieTalkieActivity extends Activity implements View.OnTouchListen
                 public void onCallEstablished(SipAudioCall call) {
                     call.startAudio();
                     call.setSpeakerMode(true);
-                    if(call.isMuted()){
+                    if (call.isMuted()) {
                         Log.d(TAG, "onCallEstablished: call was muted");
                         call.toggleMute();
                     }
@@ -353,7 +344,7 @@ public class WalkieTalkieActivity extends Activity implements View.OnTouchListen
                 @Override
                 public void onError(SipAudioCall call, int errorCode, String errorMessage) {
                     super.onError(call, errorCode, errorMessage);
-                    Log.d(TAG, "onError: "+errorMessage+" code "+errorCode);
+                    Log.d(TAG, "onError: " + errorMessage + " code " + errorCode);
                 }
 
                 @Override
@@ -403,8 +394,7 @@ public class WalkieTalkieActivity extends Activity implements View.OnTouchListen
 
             call = manager.makeAudioCall(me.getUriString(), sipAddress, listener, 30);
 
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             Log.i(TAG, "Error when trying to close manager.", e);
             if (me != null) {
                 try {
@@ -423,6 +413,7 @@ public class WalkieTalkieActivity extends Activity implements View.OnTouchListen
 
     /**
      * Updates the status box at the top of the UI with a messege of your choice.
+     *
      * @param status The String to display in the status box.
      */
     public void updateStatus(final String status) {
@@ -438,26 +429,27 @@ public class WalkieTalkieActivity extends Activity implements View.OnTouchListen
             }
         });
 
-        Log.d(TAG, "updateStatus to: "+status);
+        Log.d(TAG, "updateStatus to: " + status);
     }
-
 
 
     /**
      * Updates the status box with the SIP address of the current call.
+     *
      * @param call The current, active call.
      */
     public void updateStatus(SipAudioCall call) {
         String useName = call.getPeerProfile().getDisplayName();
-        if(useName == null) {
-          useName = call.getPeerProfile().getUserName();
+        if (useName == null) {
+            useName = call.getPeerProfile().getUserName();
         }
         updateStatus(useName + "@" + call.getPeerProfile().getSipDomain());
     }
 
     /**
      * Updates whether or not the user's voice is muted, depending on whether the button is pressed.
-     * @param v The View where the touch event is being fired.
+     *
+     * @param v     The View where the touch event is being fired.
      * @param event The motion to act on.
      * @return boolean Returns false to indicate that the parent view should handle the touch event
      * as it normally would.
@@ -511,18 +503,19 @@ public class WalkieTalkieActivity extends Activity implements View.OnTouchListen
                 logout();
                 break;
             case HANG_UP:
-                if(call != null) {
+                if (call != null) {
                     try {
-                      call.endCall();
+                        call.endCall();
                     } catch (SipException se) {
                         Log.d(TAG,
                                 "Error ending call.", se);
                     }
                     call.close();
-                };
+                }
+                ;
                 break;
             case USERS_ONLINE:
-                Intent intent=new Intent(WalkieTalkieActivity.this,ContactActivity.class);
+                Intent intent = new Intent(WalkieTalkieActivity.this, ContactActivity.class);
                 startActivity(intent);
                 break;
         }
@@ -539,14 +532,14 @@ public class WalkieTalkieActivity extends Activity implements View.OnTouchListen
 //
 
                 Log.d("APP_DEBUG", "RESPONSE IS " + response.code());
-                if (response.code()!=200) {
-                    Toast.makeText(getApplicationContext(),response.message(),Toast.LENGTH_SHORT).show();
+                if (response.code() != 200) {
+                    Toast.makeText(getApplicationContext(), response.message(), Toast.LENGTH_SHORT).show();
                     return;
                 } else {
 
                     ((App) getApplication()).getPrefManager().setIsLoggedIn(false);
                     ((App) getApplication()).getPrefManager().setUserAccessToken("");
-                    ((App) getApplication()).getPrefManager().setUSER_Phone(200);
+                    ((App) getApplication()).getPrefManager().setUSER_Phone("200");
                     ((App) getApplication()).getPrefManager().setUserEmail("");
                     ((App) getApplication()).getPrefManager().setUserName("");
                     Intent intent = new Intent(WalkieTalkieActivity.this, MainActivity.class);
@@ -559,7 +552,7 @@ public class WalkieTalkieActivity extends Activity implements View.OnTouchListen
             public void onFailure(Call<Void> call, Throwable t) {
 
                 Log.d("APP_DEBUG", "ERROR IS " + t.getMessage());
-                Toast.makeText(getApplicationContext(),t.getMessage(),Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), t.getMessage(), Toast.LENGTH_SHORT).show();
 
             }
         });
@@ -585,13 +578,13 @@ public class WalkieTalkieActivity extends Activity implements View.OnTouchListen
                                         initiateCall();
 
                                     }
-                        })
+                                })
                         .setNegativeButton(
                                 android.R.string.cancel, new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int whichButton) {
                                         // Noop.
                                     }
-                        })
+                                })
                         .create();
 
             case UPDATE_SETTINGS_DIALOG:
@@ -607,7 +600,7 @@ public class WalkieTalkieActivity extends Activity implements View.OnTouchListen
                                     public void onClick(DialogInterface dialog, int whichButton) {
                                         // Noop.
                                     }
-                        })
+                                })
                         .create();
         }
         return null;
@@ -618,6 +611,7 @@ public class WalkieTalkieActivity extends Activity implements View.OnTouchListen
                 SipSettings.class);
         startActivity(settingsActivity);
     }
+
     @Override
     public void onRequestPermissionsResult(int requestCode,
                                            String[] permissions, int[] grantResults) {
@@ -643,7 +637,7 @@ public class WalkieTalkieActivity extends Activity implements View.OnTouchListen
     }
 
 
-    private void connectToPusher(){
+    private void connectToPusher() {
         Log.d(TAG, "connectToPusher: starting");
         PusherOptions options = new PusherOptions();
         options.setHost(App.ip);
@@ -687,13 +681,13 @@ public class WalkieTalkieActivity extends Activity implements View.OnTouchListen
                 Log.d(TAG, "onUsersInformationReceived: ");
 
                 contacts.clear();
-                contacts.add(new Contact("demo","demo@j.veg.lv",200));
-                for (User u:set) {
+                contacts.add(new Contact("demo", "demo@j.veg.lv", 200));
+                for (User u : set) {
                     Gson g = new Gson();
                     Contact p = g.fromJson(u.getInfo(), Contact.class);
                     Log.d(TAG, "userSubscribed: " + p.getPhone());
                     Log.d(TAG, "userSubscribed: " + p.getName());
-                        contacts.add(p);
+                    contacts.add(p);
                 }
 
                 recyclerViewAdapter.notifyDataSetChanged();
@@ -745,23 +739,23 @@ public class WalkieTalkieActivity extends Activity implements View.OnTouchListen
         });
     }
 
-    private SipAudioCall incCall=null;
+    private SipAudioCall incCall = null;
 
-    public void incomingCall(SipAudioCall c){
-        if(c==null){
+    public void incomingCall(SipAudioCall c) {
+        if (c == null) {
             return;
         }
-        if(c.isInCall()){
+        if (c.isInCall()) {
             return;
         }
-        if(incCall!=null){
+        if (incCall != null) {
             return;
         }
-        incCall=c;
+        incCall = c;
 
-        SipProfile caller=incCall.getPeerProfile();
+        SipProfile caller = incCall.getPeerProfile();
 
-        AlertDialog.Builder builder=new AlertDialog.Builder(this);
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
         builder.setTitle("Incoming Call from")
                 .setMessage(caller.getUriString())
@@ -774,7 +768,7 @@ public class WalkieTalkieActivity extends Activity implements View.OnTouchListen
                             incCall.startAudio();
                             incCall.setSpeakerMode(true);
 
-                            if(incCall.isMuted()){
+                            if (incCall.isMuted()) {
                                 Log.d(TAG, "call was muted ");
                                 incCall.toggleMute();
                             }
@@ -792,7 +786,7 @@ public class WalkieTalkieActivity extends Activity implements View.OnTouchListen
                             e.printStackTrace();
                         }
                         incCall.close();
-                        incCall=null;
+                        incCall = null;
                     }
                 });
         builder.show();

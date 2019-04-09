@@ -5,9 +5,9 @@ public class User {
     private String name;
     private  String email;
     private  String password;
-    private int phone;
+    private String phone;
 
-    public User(String name, String email, String password , int phone ) {
+    public User(String name, String email, String password , String phone ) {
         this.name = name;
         this.email = email;
         this.password = password;
@@ -18,13 +18,6 @@ public class User {
         this.name = name;
         this.email = email;
         this.password = password;
-    }
-
-    public User(String name, String email, int phone ,String api_token) {
-        this.name = name;
-        this.email = email;
-        this.phone = phone;
-
     }
 
     public String getName() {
@@ -39,7 +32,7 @@ public class User {
         return password;
     }
 
-    public int getPhone() {
+    public String getPhone() {
         return phone;
     }
 }
