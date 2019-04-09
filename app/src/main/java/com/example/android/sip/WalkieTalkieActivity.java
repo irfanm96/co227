@@ -253,7 +253,7 @@ public class WalkieTalkieActivity extends Activity implements View.OnTouchListen
 
          String username = "3006";
 
-            String domain = "j.veg.lv";
+            String domain = "10.30.7.43";
 
         String password = "aaaa";
 
