@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Filter;
 import android.widget.Filterable;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -53,7 +54,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
 
-        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.layout_listitem, viewGroup, false);
+        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.contact_item, viewGroup, false);
 
         return new ViewHolder(view);
     }
@@ -67,23 +68,24 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 //                .load(contactList.get(i).getImage())
 //                .into(viewHolder.image);
 //
-        viewHolder.imageName.setText(contactList.get(i).getName());
+        viewHolder.tv_name.setText(contactList.get(i).getName());
+        viewHolder.tv_phone.setText(contactList.get(i).getEmail());
 
-
-
-        viewHolder.parentLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-//                Log.d(TAG, "onClick: cliked on " + contactList.get(i).getName());
-
-                String sipAddress=contactList.get(i).getPhone()+"@j.veg.lv";
-//                WalkieTalkieActivity.sipAddress=sipAddress;
-                Toast.makeText(mContext, sipAddress, Toast.LENGTH_SHORT).show();
-
-                //                sipAddress = textField.getText().toString();
-//                initiateCall();
-            }
-        });
+//
+//
+//        viewHolder.parentLayout.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+////                Log.d(TAG, "onClick: cliked on " + contactList.get(i).getName());
+//
+//                String sipAddress=contactList.get(i).getPhone()+"@j.veg.lv";
+////                WalkieTalkieActivity.sipAddress=sipAddress;
+//                Toast.makeText(mContext, sipAddress, Toast.LENGTH_SHORT).show();
+//
+//                //                sipAddress = textField.getText().toString();
+////                initiateCall();
+//            }
+//        });
 
     }
 
@@ -139,17 +141,19 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     public class ViewHolder extends RecyclerView.ViewHolder {
 
 
-        CircleImageView image;
-        TextView imageName;
-        RelativeLayout parentLayout;
+        ImageView image;
+        TextView tv_name;
+        TextView tv_phone;
+//        RelativeLayout parentLayout;
 
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
 
-            image = itemView.findViewById(R.id.image);
-            imageName = itemView.findViewById(R.id.tvImageName);
-            parentLayout = itemView.findViewById(R.id.parent_layout);
+            image = itemView.findViewById(R.id.iv_contact);
+            tv_name = itemView.findViewById(R.id.tv_name);
+            tv_phone = itemView.findViewById(R.id.tv_phone);
+//            parentLayout = itemView.findViewById(R.id.parent_layout);
 
         }
     }
