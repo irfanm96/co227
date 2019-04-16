@@ -1,6 +1,9 @@
 package com.example.android.sip;
 
+import android.app.Dialog;
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -10,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -23,6 +27,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     private static final String TAG = "RecyclerViewAdapter";
 
     private ArrayList<Contact> contactList;
+    Dialog myDialog;
 
     public void setContactList(ArrayList<Contact> contactList) {
         this.contactList = contactList;
@@ -56,7 +61,26 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
         View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.contact_item, viewGroup, false);
 
-        return new ViewHolder(view);
+        final ViewHolder viewHolder=new ViewHolder(view);
+        myDialog=new Dialog(mContext);
+        myDialog.setContentView(R.layout.dialog_contact);
+        myDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+        viewHolder.linearLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                TextView dialog_name=myDialog.findViewById(R.id.tv_dialog_name);
+                TextView dialog_phone=myDialog.findViewById(R.id.tv_dialog_phone);
+                dialog_name.setText(contactList.get(viewHolder.getAdapterPosition()).getName());
+                dialog_phone.setText(contactList.get(viewHolder.getAdapterPosition()).getEmail());
+                myDialog.show();
+            }
+        });
+
+
+
+        return viewHolder;
     }
 
     @Override
@@ -146,6 +170,8 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         TextView tv_phone;
 //        RelativeLayout parentLayout;
 
+        LinearLayout linearLayout;
+
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -154,6 +180,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             tv_name = itemView.findViewById(R.id.tv_name);
             tv_phone = itemView.findViewById(R.id.tv_phone);
 //            parentLayout = itemView.findViewById(R.id.parent_layout);
+            linearLayout=itemView.findViewById(R.id.item_contact);
 
         }
     }
