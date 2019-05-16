@@ -24,7 +24,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder> implements Filterable {
 
-    private static final String TAG = "RecyclerViewAdapter";
+    private static final String TAG = "APP_DEBUG";
 
     private ArrayList<Contact> contactList;
     Dialog myDialog;
@@ -66,15 +66,25 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         myDialog.setContentView(R.layout.dialog_contact);
         myDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
+        Context context=viewGroup.getContext();
+        final BaseActivity baseActivity=(BaseActivity)context;
+
         viewHolder.linearLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                TextView dialog_name=myDialog.findViewById(R.id.tv_dialog_name);
-                TextView dialog_phone=myDialog.findViewById(R.id.tv_dialog_phone);
-                dialog_name.setText(contactList.get(viewHolder.getAdapterPosition()).getName());
-                dialog_phone.setText(contactList.get(viewHolder.getAdapterPosition()).getEmail());
-                myDialog.show();
+//                TextView dialog_name=myDialog.findViewById(R.id.tv_dialog_name);
+//                TextView dialog_phone=myDialog.findViewById(R.id.tv_dialog_phone);
+//                dialog_name.setText(contactList.get(viewHolder.getAdapterPosition()).getName());
+//                dialog_phone.setText(contactList.get(viewHolder.getAdapterPosition()).getEmail());
+//                myDialog.show();
+//
+
+                Log.d(TAG, "onClick: clicked");
+                //TODO make this as the sip number which has this
+                BaseActivity.setSipAddress("4001@192.168.43.229");
+                baseActivity.initiateCall();
+
             }
         });
 
