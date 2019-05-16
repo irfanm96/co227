@@ -45,6 +45,7 @@ public class ContactFragment extends Fragment {
             public void onClick(View v) {
                 Intent intent = new Intent(getContext(), ContactDetails.class);
                 intent.putExtra("STATUS", "NEW");
+                intent.putExtra("PHONE", "");
                 getActivity().startActivity(intent);
             }
         });

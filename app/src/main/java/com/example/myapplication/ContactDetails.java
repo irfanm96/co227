@@ -46,12 +46,17 @@ public class ContactDetails extends AppCompatActivity {
         //existing contact
         if (getIntent().getStringExtra("STATUS").equalsIgnoreCase("existing")) {
             String name = getIntent().getStringExtra("NAME");
-            String phone = getIntent().getStringExtra("PHONE");
             etContactName.setText(name);
+            String phone = getIntent().getStringExtra("PHONE");
             etContactPhone.setText(phone);
+
 
         } else {//new contact
             btnDeleteContact.setVisibility(View.INVISIBLE);
+            String phone1 = getIntent().getStringExtra("PHONE");
+            if  (!phone1.isEmpty()) {
+                etContactPhone.setText(phone1);
+            }
 
         }
 
