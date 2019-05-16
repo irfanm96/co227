@@ -48,7 +48,7 @@ public class PrefManager {
     }
 
     public String getDomain() {
-        return pref.getString(Domain, "");
+        return pref.getString(Domain, "192.168.1.3");
     }
 
 
