@@ -37,8 +37,8 @@
 
     <EditText
         android:id="@+id/editText"
-        android:layout_width="396dp"
-        android:layout_height="55dp"
+        android:layout_width="189dp"
+        android:layout_height="52dp"
         android:layout_marginStart="99dp"
         android:layout_marginLeft="99dp"
         android:layout_marginTop="75dp"
@@ -46,11 +46,15 @@
         android:layout_marginRight="99dp"
         android:background="@color/btn_color"
         android:ems="10"
-        android:hint="  Seaching..."
+        android:hint="..."
         android:inputType="phone"
         android:textColor="@android:color/black"
+        android:textSize="30sp"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        android:textAlignment="center"
+        android:gravity="center"/>
 
 </android.support.constraint.ConstraintLayout>
