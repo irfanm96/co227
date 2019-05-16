@@ -24,7 +24,7 @@ public class ContactDetails extends AppCompatActivity {
         setContentView(R.layout.activity_contact_details);
 
         etContactName = (EditText) findViewById(R.id.etContactName);
-        etContactName = (EditText) findViewById(R.id.etContactPhone);
+        etContactPhone = (EditText) findViewById(R.id.etContactPhone);
         btnDeleteContact = (Button) findViewById(R.id.btnDeleteContact);
         btnSaveContact = (Button) findViewById(R.id.btnSaveContact);
 
@@ -43,18 +43,14 @@ public class ContactDetails extends AppCompatActivity {
         });
 
 
-
-
-        String status = "NEW";
-
+        //existing contact
         if (getIntent().getStringExtra("STATUS").equalsIgnoreCase("existing")) {
-            status = "EXISTING";
             String name = getIntent().getStringExtra("NAME");
             String phone = getIntent().getStringExtra("PHONE");
             etContactName.setText(name);
             etContactPhone.setText(phone);
 
-        } else {
+        } else {//new contact
             btnDeleteContact.setVisibility(View.INVISIBLE);
 
         }

@@ -12,6 +12,7 @@ public class PrefManager {
     private static final String USER_EMAIL = "Email";
     private static final String USER_Phone = "Phone";
     private static final String USER_Name = "Name";
+    private static final String Domain = "Domain";
     private static final String USER_Password = "Password";
     private static final String USER_ACCESS_TOKEN = "access_token";
     private static final String USER_ID = "Id";
@@ -43,12 +44,24 @@ public class PrefManager {
     public void setIsLoggedIn(boolean isLoggedIn) {
         editor.putBoolean(IS_LOGGED_IN, isLoggedIn);
         editor.commit();
-        Log.d(TAG, "setIsLoggedIn: "+isLoggedIn);
+        Log.d(TAG, "setIsLoggedIn: " + isLoggedIn);
     }
+
+    public String getDomain() {
+        return pref.getString(Domain, "");
+    }
+
+
     public void setUSER_Password(String password) {
         editor.putString(USER_Password, password);
         editor.commit();
-        Log.d(TAG, "setUSER_Password: "+password);
+        Log.d(TAG, "setUSER_Password: " + password);
+    }
+
+    public void setDomain(String domain) {
+        editor.putString(Domain, domain);
+        editor.commit();
+        Log.d(TAG, "domain: " + domain);
     }
 
     public boolean isLoggedIn() {
@@ -62,7 +75,8 @@ public class PrefManager {
         return pref.getString(USER_ACCESS_TOKEN, "");
 
     }
-     public String getUSER_Password() {
+
+    public String getUSER_Password() {
 
         return pref.getString(USER_Password, "");
 
@@ -73,6 +87,7 @@ public class PrefManager {
         return pref.getString(USER_Name, "");
 
     }
+
     public String getUSER_Phone() {
 
         return pref.getString(USER_Phone, "200");
@@ -82,17 +97,19 @@ public class PrefManager {
     public void setUserAccessToken(String apiToken) {
         editor.putString(USER_ACCESS_TOKEN, apiToken);
         editor.commit();
-        Log.d(TAG, "setUserAccessToken: "+apiToken);
+        Log.d(TAG, "setUserAccessToken: " + apiToken);
     }
+
     public void setUserName(String name) {
         editor.putString(USER_Name, name);
         editor.commit();
-        Log.d(TAG, "setUserName: "+name);
+        Log.d(TAG, "setUserName: " + name);
     }
+
     public void setUSER_Phone(String phone) {
         editor.putString(USER_Phone, phone);
         editor.commit();
-        Log.d(TAG, "setUSER_Phone: "+phone);
+        Log.d(TAG, "setUSER_Phone: " + phone);
     }
 
 
@@ -103,7 +120,7 @@ public class PrefManager {
     public void setUserEmail(String email) {
         editor.putString(USER_EMAIL, email);
         editor.commit();
-        Log.d(TAG, "setUserEmail: "+email);
+        Log.d(TAG, "setUserEmail: " + email);
     }
 
     public String getUserId() {
@@ -113,7 +130,7 @@ public class PrefManager {
     public void setUserId(String id) {
         editor.putString(USER_ID, id);
         editor.commit();
-        Log.d(TAG, "setUserId: "+id);
+        Log.d(TAG, "setUserId: " + id);
     }
 
 }

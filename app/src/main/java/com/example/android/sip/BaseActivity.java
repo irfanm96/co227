@@ -324,6 +324,10 @@ public class BaseActivity extends AppCompatActivity {
      */
     public void initiateCall() {
 
+
+        sipAddress += "@" + ((App) getApplication()).getPrefManager().getDomain();
+
+
         updateStatus(sipAddress);
 
         try {
@@ -457,6 +461,6 @@ public class BaseActivity extends AppCompatActivity {
 
 
     public static void setSipAddress(String sipAddress) {
-        BaseActivity.sipAddress = sipAddress;
+        BaseActivity.sipAddress = sipAddress + "@";
     }
 }
