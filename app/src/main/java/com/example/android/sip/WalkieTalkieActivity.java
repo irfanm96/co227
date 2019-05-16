@@ -177,6 +177,7 @@ public class WalkieTalkieActivity extends Activity implements View.OnTouchListen
         // Set up the intent filter.  This will be used to fire an
         // IncomingCallReceiver when someone calls the SIP address used by this
         // application.
+        Log.d(TAG, "make: function is called");
         IntentFilter filter = new IntentFilter();
         filter.addAction("android.SipDemo.INCOMING_CALL");
         callReceiver = new IncomingCallReceiver();
