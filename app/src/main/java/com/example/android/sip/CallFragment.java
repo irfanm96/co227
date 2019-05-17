@@ -53,9 +53,11 @@ public class CallFragment extends Fragment {
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
 
-        if (getActivity() != null) {
+
+        if (getActivity() != null && getView()!=null) {
             if (!isVisibleToUser) {
                 final InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+
                 imm.hideSoftInputFromWindow(getView().getWindowToken(), 0);
 
             } else {
