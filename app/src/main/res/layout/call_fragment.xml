@@ -8,7 +8,7 @@
     android:background="@color/backgroundFragment">
 
     <ImageButton
-        android:id="@+id/imageButton"
+        android:id="@+id/imgbtnNewCall"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="72dp"
@@ -33,7 +33,7 @@
         android:background="@drawable/rounded_btn_blue"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/imageButton"
+        app:layout_constraintStart_toEndOf="@+id/imgbtnNewCall"
         app:layout_constraintTop_toBottomOf="@+id/etPhoneNumber"
         app:srcCompat="@drawable/ic_person_add" />
 
