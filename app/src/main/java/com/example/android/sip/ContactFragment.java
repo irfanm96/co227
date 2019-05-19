@@ -29,7 +29,7 @@ public class ContactFragment extends Fragment {
     private FloatingActionButton floatingActionButton;
 
     private RecyclerView recyclerView;
-    private ArrayList<Contact> contactList;
+    private ArrayList<Contact> contactList =new ArrayList<>();
 
 
     public ContactFragment() {
@@ -77,18 +77,12 @@ public class ContactFragment extends Fragment {
         return view;
     }
 
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-        contactList = new ArrayList<>();
-        contactList.add(new Contact("demo", "200@ping.com", "200"));
-        contactList.add(new Contact("Irfan", "3000@ping.com", "3000"));
-        contactList.add(new Contact("Wishma", "3001@ping.com", "3001"));
-        contactList.add(new Contact("Rishi", "3002@ping.com", "3002"));
-    }
-
     public  void  test(){
         Log.d(TAG, "test: ok");
+    }
+
+    public void setContactList(ArrayList<Contact> contactList) {
+        this.contactList.clear();
+        this.contactList.addAll(contactList);
     }
 }

@@ -30,11 +30,12 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
     private static final String TAG = "APP_DEBUG";
 
-    private ArrayList<Contact> contactList;
+    private ArrayList<Contact> contactList = new ArrayList<>();
     Dialog myDialog;
 
     public void setContactList(ArrayList<Contact> contactList) {
-        this.contactList = contactList;
+        this.contactList.clear();
+        this.contactList.addAll(contactList);
     }
 
     public ArrayList<Contact> getContactList() {
@@ -233,11 +234,18 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
     };
 
-
-    public Filter getPhoneFilter(){
-        return phoneFilter;
+    public Contact getMatch() {
+        return contactList.get(0);
     }
 
+    public boolean isMatching(){
+//        Log.d(TAG, "isMatching: size is"+contactListFull.size());
+        return contactList.size()==1;
+    }
+
+    public Filter getPhoneFilter() {
+        return phoneFilter;
+    }
 
 
     public class ViewHolder extends RecyclerView.ViewHolder {

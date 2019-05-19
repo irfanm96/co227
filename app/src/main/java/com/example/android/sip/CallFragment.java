@@ -34,9 +34,10 @@ public class CallFragment extends Fragment {
     private Dialog dialog;
     private ImageButton hangUp;
     Dialog mydialog;
+    private Contact toBeCalled=new Contact("","","");
 
     private RecyclerView recyclerView;
-    private ArrayList<Contact> contactList;
+    private ArrayList<Contact> contactList=new ArrayList<>();
 
 
     public CallFragment() {
@@ -87,14 +88,13 @@ public class CallFragment extends Fragment {
             }
         });
 
-        ContactFragment contactFragment;
-
-        contactFragment = ((ContactFragment) getActivity()
-                .getSupportFragmentManager().getFragments().get(1)
-        );
-
-        contactFragment.test();
-
+//        ContactFragment contactFragment;
+//
+//        contactFragment = ((ContactFragment) getActivity()
+//                .getSupportFragmentManager().getFragments().get(1)
+//        );
+//
+//        contactFragment.test();
 
 
         recyclerView = (RecyclerView) view.findViewById(R.id.rv_contact_call);
@@ -102,7 +102,7 @@ public class CallFragment extends Fragment {
 
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setAdapter(recyclerViewAdapter);
-        editText.setText("----------sds");
+        recyclerViewAdapter.getPhoneFilter().filter("---");
         editText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -112,11 +112,15 @@ public class CallFragment extends Fragment {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
 
-                Log.d(TAG, "onTextChanged: "+s);
-                if(s.toString().isEmpty()){
-                    s="*-------------";
+                Log.d(TAG, "onTextChanged: " + s);
+                if (s.toString().isEmpty()) {
+                    s = "*-------------";
                 }
                 recyclerViewAdapter.getPhoneFilter().filter(s);
+                if(recyclerViewAdapter.isMatching()){
+                    toBeCalled=recyclerViewAdapter.getMatch();
+                    Log.d(TAG, "got the match "+toBeCalled.getPhone());
+                }
 
             }
 
@@ -149,16 +153,8 @@ public class CallFragment extends Fragment {
 
     }
 
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-        contactList = new ArrayList<>();
-        contactList.add(new Contact("demo", "200@ping.com", "200"));
-        contactList.add(new Contact("Irfan", "3000@ping.com", "3000"));
-        contactList.add(new Contact("Wishma", "3001@ping.com", "3001"));
-        contactList.add(new Contact("Rishi", "3002@ping.com", "3002"));
+    public void setContactList(ArrayList<Contact> contactList) {
+        this.contactList.clear();
+        this.contactList.addAll(contactList);
     }
-
-
 }
