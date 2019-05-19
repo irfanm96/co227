@@ -45,7 +45,7 @@ public class CallFragment extends Fragment {
 
             @Override
             public void onClick(View v) {
-                mydialog = new Dialog(v.getContext(), android.R.style.Theme_Black_NoTitleBar_Fullscreen);
+                mydialog = new Dialog(v.getContext(), android.R.style.Widget_DeviceDefault_ActionBar);
                 mydialog.setContentView(R.layout.outgoing_call);
                 mydialog.show();
                 hangUp = (Button) mydialog.findViewById(R.id.btnHangUp);
