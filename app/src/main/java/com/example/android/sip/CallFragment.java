@@ -26,7 +26,7 @@ public class CallFragment extends Fragment {
     private static final String TAG = "APP_DEBUG";
     private ImageButton callButton;
     private Dialog dialog;
-    private Button hangUp;
+    private ImageButton hangUp;
     Dialog mydialog;
 
     public CallFragment() {
@@ -48,7 +48,7 @@ public class CallFragment extends Fragment {
                 mydialog = new Dialog(v.getContext(), android.R.style.Widget_DeviceDefault_ActionBar);
                 mydialog.setContentView(R.layout.outgoing_call);
                 mydialog.show();
-                hangUp = (Button) mydialog.findViewById(R.id.btnHangUp);
+                hangUp = (ImageButton) mydialog.findViewById(R.id.btnHangUp);
 
                 hangUp.setOnClickListener(new View.OnClickListener() {
                     private static final String TAG = "APP_DEBUG";

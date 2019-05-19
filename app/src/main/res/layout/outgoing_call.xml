@@ -24,20 +24,18 @@
         tools:layout_conversion_wrapHeight="129"
         tools:layout_conversion_wrapWidth="363" />
 
-    <Button
+    <ImageButton
         android:id="@+id/btnHangUp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="140dp"
+        android:layout_marginTop="100dp"
         android:background="@drawable/rounded_btn_red"
-        android:foreground="@drawable/ic_call_hangup"
-        android:foregroundGravity="center"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView4"
-        tools:layout_conversion_wrapHeight="210"
-        tools:layout_conversion_wrapWidth="231" />
+        app:srcCompat="@drawable/ic_call_hangup"
+        tools:ignore="MissingConstraints" />
 
     <ImageView
         android:id="@+id/imageView4"
