@@ -155,6 +155,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         return exampleFilter;
     }
 
+
     private Filter exampleFilter = new Filter() {
         @Override
         protected FilterResults performFiltering(CharSequence constraint) {
@@ -192,6 +193,51 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
 
     };
+
+    //filter used to seacrh
+    private Filter phoneFilter = new Filter() {
+        @Override
+        protected FilterResults performFiltering(CharSequence constraint) {
+            ArrayList<Contact> filteredList = new ArrayList<>();
+//            System.out.println("filter list size"+contactListFull.size());
+//            System.out.println("original list size"+contactListFull.size());
+
+            if (constraint == null || constraint.length() == 0) {
+                filteredList.addAll(contactListFull);
+            } else {
+                String filterPatern = constraint.toString().toLowerCase().trim();
+
+                for (Contact c : contactListFull) {
+
+                    if (c.getPhone().toLowerCase().contains(filterPatern)) {
+                        filteredList.add(c);
+                    }
+
+                }
+            }
+            FilterResults results = new FilterResults();
+            results.values = filteredList;
+            return results;
+
+        }
+
+        @Override
+        protected void publishResults(CharSequence constraint, FilterResults results) {
+
+            contactList.clear();
+            contactList.addAll((ArrayList<Contact>) results.values);
+            notifyDataSetChanged();
+
+        }
+
+
+    };
+
+
+    public Filter getPhoneFilter(){
+        return phoneFilter;
+    }
+
 
 
     public class ViewHolder extends RecyclerView.ViewHolder {

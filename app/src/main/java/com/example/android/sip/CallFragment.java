@@ -7,6 +7,10 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,6 +22,8 @@ import android.widget.ImageButton;
 
 import com.example.myapplication.ContactDetails;
 
+import java.util.ArrayList;
+
 public class CallFragment extends Fragment {
 
     View view;
@@ -28,6 +34,10 @@ public class CallFragment extends Fragment {
     private Dialog dialog;
     private ImageButton hangUp;
     Dialog mydialog;
+
+    private RecyclerView recyclerView;
+    private ArrayList<Contact> contactList;
+
 
     public CallFragment() {
     }
@@ -76,7 +86,48 @@ public class CallFragment extends Fragment {
                 v.getContext().startActivity(intent);
             }
         });
+
+        ContactFragment contactFragment;
+
+        contactFragment = ((ContactFragment) getActivity()
+                .getSupportFragmentManager().getFragments().get(1)
+        );
+
+        contactFragment.test();
+
+
+
+        recyclerView = (RecyclerView) view.findViewById(R.id.rv_contact_call);
+        final RecyclerViewAdapter recyclerViewAdapter = new RecyclerViewAdapter(getContext(), contactList);
+
+        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        recyclerView.setAdapter(recyclerViewAdapter);
+        editText.setText("----------sds");
+        editText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                Log.d(TAG, "onTextChanged: "+s);
+                if(s.toString().isEmpty()){
+                    s="*-------------";
+                }
+                recyclerViewAdapter.getPhoneFilter().filter(s);
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
         return view;
+
+
     }
 
     @Override
@@ -97,4 +148,17 @@ public class CallFragment extends Fragment {
         }
 
     }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        contactList = new ArrayList<>();
+        contactList.add(new Contact("demo", "200@ping.com", "200"));
+        contactList.add(new Contact("Irfan", "3000@ping.com", "3000"));
+        contactList.add(new Contact("Wishma", "3001@ping.com", "3001"));
+        contactList.add(new Contact("Rishi", "3002@ping.com", "3002"));
+    }
+
+
 }
