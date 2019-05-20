@@ -279,6 +279,7 @@ public class BaseActivity extends AppCompatActivity {
                         break;
                     case ON_CALL_ESTABLISHED:
                         c.setText("On Call..");
+                        chronometer.setVisibility(View.VISIBLE);
                         chronometer.start();
                         Log.d(TAG, "on call established ");
                         break;
@@ -539,8 +540,11 @@ public class BaseActivity extends AppCompatActivity {
         TextView tvCallName = (TextView) mydialog.findViewById(R.id.tvCallNameOutgoing);
         TextView tvCallNumber = (TextView) mydialog.findViewById(R.id.tvCallNumberOutgoing);
 
+
         tvCallName.setText("to : " + c.getName());
         tvCallNumber.setText(c.getPhone());
+        Chronometer chronometer = (Chronometer) mydialog.findViewById(R.id.cmTimerOutgoing);
+         chronometer.setVisibility(View.INVISIBLE);
 
         hangUp = (ImageButton) mydialog.findViewById(R.id.btnHangUp);
 
@@ -551,6 +555,11 @@ public class BaseActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Log.d(TAG, "onClick: hang up clikced");
                 mydialog.dismiss();
+                try {
+                    call.endCall();
+                } catch (SipException e) {
+                    e.printStackTrace();
+                }
                 call.close();
 
             }
