@@ -36,10 +36,12 @@ public class CallFragment extends Fragment {
     private Dialog dialog;
     private ImageButton hangUp;
     Dialog mydialog;
-    private Contact toBeCalled=new Contact("","","");
+    private Contact toBeCalled = new Contact("Unknown", "", "");
 
     private RecyclerView recyclerView;
-    private ArrayList<Contact> contactList=new ArrayList<>();
+    private ArrayList<Contact> contactList = new ArrayList<>();
+    private BaseActivity baseActivity;
+    private RecyclerViewAdapter recyclerViewAdapter;
 
 
     public CallFragment() {
@@ -53,46 +55,25 @@ public class CallFragment extends Fragment {
         newContact = (TextView) view.findViewById(R.id.tvNewContcat);
         callButton = (ImageButton) view.findViewById(R.id.imgbtnNewCall);
         editText = (EditText) view.findViewById(R.id.etPhoneNumber);
+        baseActivity = (BaseActivity) getActivity();
+
+
+        recyclerView = (RecyclerView) view.findViewById(R.id.rv_contact_call);
+         recyclerViewAdapter = new RecyclerViewAdapter(getContext(), contactList);
+
+        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        recyclerView.setAdapter(recyclerViewAdapter);
+
 
         callButton.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
-                mydialog = new Dialog(v.getContext(), android.R.style.Widget_DeviceDefault_ActionBar);
-                mydialog.setContentView(R.layout.outgoing_call);
-                mydialog.show();
-                hangUp = (ImageButton) mydialog.findViewById(R.id.btnHangUp);
-
-                hangUp.setOnClickListener(new View.OnClickListener() {
-                    private static final String TAG = "APP_DEBUG";
-
-                    @Override
-                    public void onClick(View v) {
-                        Log.d(TAG, "onClick: hang up clikced");
-                        mydialog.dismiss();
-
-                    }
-                });
-
-
+                if(!editText.getText().toString().isEmpty()){
+                    baseActivity.initiateCall(recyclerViewAdapter.getMatch(editText.getText().toString()));
+                }
             }
         });
-
-
-//        ContactFragment contactFragment;
-//
-//        contactFragment = ((ContactFragment) getActivity()
-//                .getSupportFragmentManager().getFragments().get(1)
-//        );
-//
-//        contactFragment.test();
-
-
-        recyclerView = (RecyclerView) view.findViewById(R.id.rv_contact_call);
-        final RecyclerViewAdapter recyclerViewAdapter = new RecyclerViewAdapter(getContext(), contactList);
-
-        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        recyclerView.setAdapter(recyclerViewAdapter);
 
 
         //edited
@@ -101,7 +82,7 @@ public class CallFragment extends Fragment {
             public void onClick(View v) {
 
 
-                if(!recyclerViewAdapter.isInList(editText.getText().toString())){
+                if (!recyclerViewAdapter.isInList(editText.getText().toString())) {
 
                     Log.d(TAG, "in contact ");
                     Intent intent = new Intent(v.getContext(), ContactDetails.class);
@@ -109,11 +90,10 @@ public class CallFragment extends Fragment {
                     intent.putExtra("PHONE", editText.getText().toString());
                     v.getContext().startActivity(intent);
 
-                }else {
+                } else {
                     Log.d(TAG, "not in contact");
-                    Toast.makeText(getContext(),"Already in contacts ",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "Already in contacts ", Toast.LENGTH_SHORT).show();
                 }
-
 
 
             }
@@ -136,10 +116,10 @@ public class CallFragment extends Fragment {
                     s = "*-------------";
                 }
                 recyclerViewAdapter.getPhoneFilter().filter(s);
-                if(recyclerViewAdapter.isMatching()){
-                    toBeCalled=recyclerViewAdapter.getMatch();
-                    Log.d(TAG, "got the match "+toBeCalled.getPhone());
-                }
+//                if (recyclerViewAdapter.isMatching()) {
+//                    toBeCalled = recyclerViewAdapter.getMatch(s.toString());
+//                    Log.d(TAG, "got the match " + toBeCalled.getPhone());
+//                }
 
 
             }
@@ -176,5 +156,9 @@ public class CallFragment extends Fragment {
     public void setContactList(ArrayList<Contact> contactList) {
         this.contactList.clear();
         this.contactList.addAll(contactList);
+    }
+
+    public RecyclerViewAdapter getRecyclerViewAdapter() {
+        return recyclerViewAdapter;
     }
 }
