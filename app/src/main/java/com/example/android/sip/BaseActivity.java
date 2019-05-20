@@ -283,9 +283,9 @@ public class BaseActivity extends AppCompatActivity {
                         break;
                     case ON_CALL_ESTABLISHED:
                         c.setText("On Call..");
-                        mic.setVisibility(View.INVISIBLE);
-                        speaker.setVisibility(View.INVISIBLE);
-                        pause.setVisibility(View.INVISIBLE);
+                        mic.setVisibility(View.VISIBLE);
+                        speaker.setVisibility(View.VISIBLE);
+                        pause.setVisibility(View.VISIBLE);
                         chronometer.setVisibility(View.VISIBLE);
                         chronometer.start();
                         Log.d(TAG, "on call established ");
