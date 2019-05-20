@@ -320,44 +320,6 @@ public class BaseActivity extends AppCompatActivity {
         Contact contact = callFragment.getRecyclerViewAdapter().getMatch(caller.getUserName());
 
         showIncomingCallDialog(contact);
-//
-
-//        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-//
-//        builder.setTitle("Incoming Call from")
-//                .setMessage(caller.getUriString())
-//                .setPositiveButton("Accept", new DialogInterface.OnClickListener() {
-//                    @Override
-//                    public void onClick(DialogInterface dialog, int which) {
-//
-//                        try {
-//                            incCall.answerCall(30);
-//                            incCall.startAudio();
-//                            incCall.setSpeakerMode(true);
-//
-//                            if (incCall.isMuted()) {
-//                                Log.d(TAG, "call was muted ");
-//                                incCall.toggleMute();
-//                            }
-//                        } catch (SipException e) {
-//                            e.printStackTrace();
-//                        }
-//                    }
-//                })
-//                .setNegativeButton("Decline", new DialogInterface.OnClickListener() {
-//                    @Override
-//                    public void onClick(DialogInterface dialog, int which) {
-//                        try {
-//                            incCall.endCall();
-//                        } catch (SipException e) {
-//                            e.printStackTrace();
-//                        }
-//                        incCall.close();
-//                        incCall = null;
-//                    }
-//                });
-//        builder.show();
-
     }
 
 
