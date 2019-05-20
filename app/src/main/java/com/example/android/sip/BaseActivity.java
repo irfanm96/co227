@@ -538,11 +538,10 @@ public class BaseActivity extends AppCompatActivity {
         mydialog.setContentView(R.layout.outgoing_call);
         mydialog.show();
         TextView tvCallName = (TextView) mydialog.findViewById(R.id.tvCallNameOutgoing);
-        TextView tvCallNumber = (TextView) mydialog.findViewById(R.id.tvCallNumberOutgoing);
 
 
-        tvCallName.setText("to : " + c.getName());
-        tvCallNumber.setText(c.getPhone());
+
+        tvCallName.setText("to : " + c.getName() + " -> "+c.getPhone());
         Chronometer chronometer = (Chronometer) mydialog.findViewById(R.id.cmTimerOutgoing);
          chronometer.setVisibility(View.INVISIBLE);
 

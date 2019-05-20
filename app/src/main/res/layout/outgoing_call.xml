@@ -33,7 +33,7 @@
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.288"
+        app:layout_constraintHorizontal_bias="0.262"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/cmTimerOutgoing"
         app:srcCompat="@drawable/microphone_on"
@@ -48,11 +48,26 @@
         android:layout_marginTop="36dp"
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.157"
+        app:layout_constraintEnd_toEndOf="@+id/cmTimerOutgoing"
         app:layout_constraintStart_toEndOf="@+id/ivMicOut"
         app:layout_constraintTop_toBottomOf="@+id/cmTimerOutgoing"
         app:srcCompat="@drawable/speaker_mode_off"
+        tools:ignore="MissingConstraints" />
+
+    <ImageView
+        android:id="@+id/ivPauseOut"
+        android:layout_width="48dp"
+        android:layout_height="56dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="36dp"
+        android:layout_marginEnd="88dp"
+        android:layout_marginRight="88dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.523"
+        app:layout_constraintStart_toEndOf="@+id/ivSpeakerOut"
+        app:layout_constraintTop_toBottomOf="@+id/cmTimerOutgoing"
+        app:srcCompat="@drawable/ic_pause_off"
         tools:ignore="MissingConstraints" />
 
 
@@ -60,13 +75,14 @@
         android:id="@+id/btnHangUp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="44dp"
         android:background="@drawable/rounded_btn_red"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/ivSpeakerOut"
         app:srcCompat="@drawable/ic_call_hangup"
-        tools:ignore="MissingConstraints"
-        tools:layout_editor_absoluteY="468dp" />
+        tools:ignore="MissingConstraints" />
 
     <ImageView
         android:id="@+id/imageView4"
