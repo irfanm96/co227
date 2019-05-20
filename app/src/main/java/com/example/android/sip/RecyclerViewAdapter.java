@@ -2,6 +2,7 @@ package com.example.android.sip;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.support.annotation.NonNull;
@@ -10,6 +11,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.ImageView;
@@ -18,19 +20,22 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.myapplication.ContactDetails;
+
 import java.util.ArrayList;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder> implements Filterable {
 
-    private static final String TAG = "RecyclerViewAdapter";
+    private static final String TAG = "APP_DEBUG";
 
-    private ArrayList<Contact> contactList;
+    private ArrayList<Contact> contactList = new ArrayList<>();
     Dialog myDialog;
 
     public void setContactList(ArrayList<Contact> contactList) {
-        this.contactList = contactList;
+        this.contactList.clear();
+        this.contactList.addAll(contactList);
     }
 
     public ArrayList<Contact> getContactList() {
@@ -61,23 +66,51 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
         View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.contact_item, viewGroup, false);
 
-        final ViewHolder viewHolder=new ViewHolder(view);
-        myDialog=new Dialog(mContext);
+        final ViewHolder viewHolder = new ViewHolder(view);
+        myDialog = new Dialog(mContext);
         myDialog.setContentView(R.layout.dialog_contact);
         myDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+        final Context context = viewGroup.getContext();
+        final BaseActivity baseActivity = (BaseActivity) context;
 
         viewHolder.linearLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                TextView dialog_name=myDialog.findViewById(R.id.tv_dialog_name);
-                TextView dialog_phone=myDialog.findViewById(R.id.tv_dialog_phone);
+                TextView dialog_name = myDialog.findViewById(R.id.tv_dialog_name);
+                TextView dialog_phone = myDialog.findViewById(R.id.tv_dialog_phone);
+
+                Button btnDialogCall = myDialog.findViewById(R.id.btnDialogCall);
+                Button btnDialogDetails = myDialog.findViewById(R.id.btnDialogDetails);
+
+                btnDialogCall.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Log.d(TAG, "onClick: clicked call icon");
+                        //TODO make this as the sip number which has this
+                        BaseActivity.setSipAddress(contactList.get(viewHolder.getAdapterPosition()).getPhone());
+                        baseActivity.initiateCall(contactList.get(viewHolder.getAdapterPosition()));
+                    }
+                });
+
+                btnDialogDetails.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(context, ContactDetails.class);
+                        intent.putExtra("STATUS", "EXISTING");
+                        intent.putExtra("NAME", contactList.get(viewHolder.getAdapterPosition()).getName());
+                        intent.putExtra("PHONE", contactList.get(viewHolder.getAdapterPosition()).getPhone());
+                        context.startActivity(intent);
+                    }
+                });
+//
                 dialog_name.setText(contactList.get(viewHolder.getAdapterPosition()).getName());
-                dialog_phone.setText(contactList.get(viewHolder.getAdapterPosition()).getEmail());
+                dialog_phone.setText(contactList.get(viewHolder.getAdapterPosition()).getPhone());
                 myDialog.show();
+
             }
         });
-
 
 
         return viewHolder;
@@ -93,7 +126,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 //                .into(viewHolder.image);
 //
         viewHolder.tv_name.setText(contactList.get(i).getName());
-        viewHolder.tv_phone.setText(contactList.get(i).getEmail());
+        viewHolder.tv_phone.setText(contactList.get(i).getPhone());
 
 //
 //
@@ -122,6 +155,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     public Filter getFilter() {
         return exampleFilter;
     }
+
 
     private Filter exampleFilter = new Filter() {
         @Override
@@ -161,6 +195,91 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
     };
 
+    //filter used to seacrh
+    private Filter phoneFilter = new Filter() {
+        @Override
+        protected FilterResults performFiltering(CharSequence constraint) {
+            ArrayList<Contact> filteredList = new ArrayList<>();
+//            System.out.println("filter list size"+contactListFull.size());
+//            System.out.println("original list size"+contactListFull.size());
+
+            if (constraint == null || constraint.length() == 0) {
+                filteredList.addAll(contactListFull);
+            } else {
+                String filterPatern = constraint.toString().toLowerCase().trim();
+
+                for (Contact c : contactListFull) {
+
+                    if (c.getPhone().toLowerCase().contains(filterPatern)) {
+                        filteredList.add(c);
+                    }
+
+                }
+            }
+            FilterResults results = new FilterResults();
+            results.values = filteredList;
+            return results;
+
+        }
+
+        @Override
+        protected void publishResults(CharSequence constraint, FilterResults results) {
+
+            contactList.clear();
+            contactList.addAll((ArrayList<Contact>) results.values);
+            notifyDataSetChanged();
+
+        }
+
+
+
+
+
+    };
+
+    public  boolean isInList(String s){
+
+        for (Contact c:contactListFull) {
+            if(c.getPhone().equalsIgnoreCase(s)){
+                return  true;
+            }
+        }
+        for (Contact c:contactList) {
+            if(c.getPhone().equalsIgnoreCase(s)){
+                return  true;
+            }
+        }
+        return false;
+    };
+
+
+    public Contact getMatch(String s) {
+
+        for (Contact c:contactListFull) {
+            if(c.getPhone().equalsIgnoreCase(s)){
+                return c;
+            }
+        }
+        for (Contact c:contactList) {
+            if(c.getPhone().equalsIgnoreCase(s)){
+                return c;
+            }
+        }
+        return new Contact("Unkown","",s);
+    }
+
+    public boolean isMatching(){
+//        Log.d(TAG, "isMatching: size is"+contactListFull.size());
+        return contactList.size()==1;
+    }
+
+    public Filter getPhoneFilter() {
+        return phoneFilter;
+    }
+
+    public boolean isEmpty(){
+        return this.contactList.size()==0;
+    }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
@@ -180,7 +299,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             tv_name = itemView.findViewById(R.id.tv_name);
             tv_phone = itemView.findViewById(R.id.tv_phone);
 //            parentLayout = itemView.findViewById(R.id.parent_layout);
-            linearLayout=itemView.findViewById(R.id.item_contact);
+            linearLayout = itemView.findViewById(R.id.item_contact);
 
         }
     }
