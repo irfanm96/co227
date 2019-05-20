@@ -24,7 +24,7 @@
         tools:layout_conversion_wrapWidth="363" />
 
     <ImageView
-        android:id="@+id/ivMicOut"
+        android:id="@+id/ivMicIn"
         android:layout_width="48dp"
         android:layout_height="56dp"
         android:layout_marginStart="8dp"
@@ -40,7 +40,7 @@
         tools:ignore="MissingConstraints" />
 
     <ImageView
-        android:id="@+id/ivSpeakerOut"
+        android:id="@+id/ivSpeakerIn"
         android:layout_width="48dp"
         android:layout_height="56dp"
         android:layout_marginStart="8dp"
@@ -49,7 +49,7 @@
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
         app:layout_constraintEnd_toEndOf="@+id/cmTimerOutgoing"
-        app:layout_constraintStart_toEndOf="@+id/ivMicOut"
+        app:layout_constraintStart_toEndOf="@+id/ivMicIn"
         app:layout_constraintTop_toBottomOf="@+id/cmTimerOutgoing"
         app:srcCompat="@drawable/speaker_mode_off"
         tools:ignore="MissingConstraints" />
@@ -65,7 +65,7 @@
         android:layout_marginRight="88dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.523"
-        app:layout_constraintStart_toEndOf="@+id/ivSpeakerOut"
+        app:layout_constraintStart_toEndOf="@+id/ivSpeakerIn"
         app:layout_constraintTop_toBottomOf="@+id/cmTimerOutgoing"
         app:srcCompat="@drawable/ic_pause_off"
         tools:ignore="MissingConstraints" />
@@ -80,7 +80,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/ivSpeakerOut"
+        app:layout_constraintTop_toBottomOf="@+id/ivSpeakerIn"
         app:srcCompat="@drawable/ic_call_hangup"
         tools:ignore="MissingConstraints" />
 
