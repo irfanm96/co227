@@ -232,7 +232,26 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         }
 
 
+
+
+
     };
+
+    public  boolean isInList(String s){
+
+        for (Contact c:contactListFull) {
+            if(c.getPhone().equalsIgnoreCase(s)){
+                return  true;
+            }
+        }
+        for (Contact c:contactList) {
+            if(c.getPhone().equalsIgnoreCase(s)){
+                return  true;
+            }
+        }
+        return false;
+    };
+
 
     public Contact getMatch() {
         return contactList.get(0);
@@ -247,6 +266,9 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         return phoneFilter;
     }
 
+    public boolean isEmpty(){
+        return this.contactList.size()==0;
+    }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 

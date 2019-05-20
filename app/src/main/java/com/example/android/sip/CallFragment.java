@@ -19,6 +19,8 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.myapplication.ContactDetails;
 
@@ -27,7 +29,7 @@ import java.util.ArrayList;
 public class CallFragment extends Fragment {
 
     View view;
-    ImageButton imageButton;
+    TextView newContact;
     EditText editText;
     private static final String TAG = "APP_DEBUG";
     private ImageButton callButton;
@@ -48,7 +50,7 @@ public class CallFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         view = inflater.inflate(R.layout.call_fragment, container, false);
-        imageButton = (ImageButton) view.findViewById(R.id.imgbtnNewContact);
+        newContact = (TextView) view.findViewById(R.id.tvNewContcat);
         callButton = (ImageButton) view.findViewById(R.id.imgbtnNewCall);
         editText = (EditText) view.findViewById(R.id.etPhoneNumber);
 
@@ -77,17 +79,6 @@ public class CallFragment extends Fragment {
         });
 
 
-        //edited
-        imageButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(v.getContext(), ContactDetails.class);
-                intent.putExtra("STATUS", "NEW");
-                intent.putExtra("PHONE", editText.getText().toString());
-                v.getContext().startActivity(intent);
-            }
-        });
-
 //        ContactFragment contactFragment;
 //
 //        contactFragment = ((ContactFragment) getActivity()
@@ -102,7 +93,35 @@ public class CallFragment extends Fragment {
 
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setAdapter(recyclerViewAdapter);
+
+
+        //edited
+        newContact.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+
+                if(!recyclerViewAdapter.isInList(editText.getText().toString())){
+
+                    Log.d(TAG, "in contact ");
+                    Intent intent = new Intent(v.getContext(), ContactDetails.class);
+                    intent.putExtra("STATUS", "NEW");
+                    intent.putExtra("PHONE", editText.getText().toString());
+                    v.getContext().startActivity(intent);
+
+                }else {
+                    Log.d(TAG, "not in contact");
+                    Toast.makeText(getContext(),"Already in contacts ",Toast.LENGTH_SHORT).show();
+                }
+
+
+
+            }
+        });
+
+
         recyclerViewAdapter.getPhoneFilter().filter("---");
+
         editText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -121,6 +140,7 @@ public class CallFragment extends Fragment {
                     toBeCalled=recyclerViewAdapter.getMatch();
                     Log.d(TAG, "got the match "+toBeCalled.getPhone());
                 }
+
 
             }
 
