@@ -36,10 +36,10 @@ public class CallFragment extends Fragment {
     private Dialog dialog;
     private ImageButton hangUp;
     Dialog mydialog;
-    private Contact toBeCalled=new Contact("Unknown","","");
+    private Contact toBeCalled = new Contact("Unknown", "", "");
 
     private RecyclerView recyclerView;
-    private ArrayList<Contact> contactList=new ArrayList<>();
+    private ArrayList<Contact> contactList = new ArrayList<>();
     private BaseActivity baseActivity;
 
 
@@ -54,7 +54,7 @@ public class CallFragment extends Fragment {
         newContact = (TextView) view.findViewById(R.id.tvNewContcat);
         callButton = (ImageButton) view.findViewById(R.id.imgbtnNewCall);
         editText = (EditText) view.findViewById(R.id.etPhoneNumber);
-         baseActivity=(BaseActivity)getActivity();
+        baseActivity = (BaseActivity) getActivity();
 
 
         recyclerView = (RecyclerView) view.findViewById(R.id.rv_contact_call);
@@ -84,7 +84,7 @@ public class CallFragment extends Fragment {
 //                    }
 //                });
 
-                baseActivity.initiateCall(toBeCalled);
+                baseActivity.initiateCall(recyclerViewAdapter.getMatch(editText.getText().toString()));
 
             }
         });
@@ -96,7 +96,7 @@ public class CallFragment extends Fragment {
             public void onClick(View v) {
 
 
-                if(!recyclerViewAdapter.isInList(editText.getText().toString())){
+                if (!recyclerViewAdapter.isInList(editText.getText().toString())) {
 
                     Log.d(TAG, "in contact ");
                     Intent intent = new Intent(v.getContext(), ContactDetails.class);
@@ -104,11 +104,10 @@ public class CallFragment extends Fragment {
                     intent.putExtra("PHONE", editText.getText().toString());
                     v.getContext().startActivity(intent);
 
-                }else {
+                } else {
                     Log.d(TAG, "not in contact");
-                    Toast.makeText(getContext(),"Already in contacts ",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "Already in contacts ", Toast.LENGTH_SHORT).show();
                 }
-
 
 
             }
@@ -131,10 +130,10 @@ public class CallFragment extends Fragment {
                     s = "*-------------";
                 }
                 recyclerViewAdapter.getPhoneFilter().filter(s);
-                if(recyclerViewAdapter.isMatching()){
-                    toBeCalled=recyclerViewAdapter.getMatch(s.toString());
-                    Log.d(TAG, "got the match "+toBeCalled.getPhone());
-                }
+//                if (recyclerViewAdapter.isMatching()) {
+//                    toBeCalled = recyclerViewAdapter.getMatch(s.toString());
+//                    Log.d(TAG, "got the match " + toBeCalled.getPhone());
+//                }
 
 
             }
