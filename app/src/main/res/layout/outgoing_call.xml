@@ -9,7 +9,7 @@
     android:background="@color/backgroundFragment">
 
     <TextView
-        android:id="@+id/tvStatusIncoming"
+        android:id="@+id/tvStatusOutgoing"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="40dp"
@@ -28,12 +28,12 @@
         android:id="@+id/btnHangUp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="56dp"
+        android:layout_marginTop="16dp"
         android:background="@drawable/rounded_btn_red"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvCallNumberIncoming"
+        app:layout_constraintTop_toBottomOf="@+id/cmTimerOutgoing"
         app:srcCompat="@drawable/ic_call_hangup"
         tools:ignore="MissingConstraints" />
 
@@ -52,7 +52,7 @@
         tools:layout_conversion_wrapWidth="305" />
 
     <TextView
-        android:id="@+id/tvCallNameIncoming"
+        android:id="@+id/tvCallNameOutgoing"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
@@ -61,10 +61,10 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvStatusIncoming" />
+        app:layout_constraintTop_toBottomOf="@+id/tvStatusOutgoing" />
 
     <TextView
-        android:id="@+id/tvCallNumberIncoming"
+        android:id="@+id/tvCallNumberOutgoing"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="12dp"
@@ -72,6 +72,19 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvCallNameIncoming" />
+        app:layout_constraintTop_toBottomOf="@+id/tvCallNameOutgoing"
+        android:textSize="30dp"/>
+
+    <Chronometer
+        android:id="@+id/cmTimerOutgoing"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvCallNumberOutgoing" 
+        android:textColor="@color/cardview_light_background"
+        android:textSize="30dp"/>
 
 </android.support.constraint.ConstraintLayout>

@@ -41,6 +41,7 @@ public class CallFragment extends Fragment {
     private RecyclerView recyclerView;
     private ArrayList<Contact> contactList = new ArrayList<>();
     private BaseActivity baseActivity;
+    private RecyclerViewAdapter recyclerViewAdapter;
 
 
     public CallFragment() {
@@ -58,7 +59,7 @@ public class CallFragment extends Fragment {
 
 
         recyclerView = (RecyclerView) view.findViewById(R.id.rv_contact_call);
-        final RecyclerViewAdapter recyclerViewAdapter = new RecyclerViewAdapter(getContext(), contactList);
+         recyclerViewAdapter = new RecyclerViewAdapter(getContext(), contactList);
 
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setAdapter(recyclerViewAdapter);
@@ -68,24 +69,9 @@ public class CallFragment extends Fragment {
 
             @Override
             public void onClick(View v) {
-//                mydialog = new Dialog(v.getContext(), android.R.style.Widget_DeviceDefault_ActionBar);
-//                mydialog.setContentView(R.layout.outgoing_call);
-//                mydialog.show();
-//                hangUp = (ImageButton) mydialog.findViewById(R.id.btnHangUp);
-//
-//                hangUp.setOnClickListener(new View.OnClickListener() {
-//                    private static final String TAG = "APP_DEBUG";
-//
-//                    @Override
-//                    public void onClick(View v) {
-//                        Log.d(TAG, "onClick: hang up clikced");
-//                        mydialog.dismiss();
-//
-//                    }
-//                });
-
-                baseActivity.initiateCall(recyclerViewAdapter.getMatch(editText.getText().toString()));
-
+                if(!editText.getText().toString().isEmpty()){
+                    baseActivity.initiateCall(recyclerViewAdapter.getMatch(editText.getText().toString()));
+                }
             }
         });
 
@@ -170,5 +156,9 @@ public class CallFragment extends Fragment {
     public void setContactList(ArrayList<Contact> contactList) {
         this.contactList.clear();
         this.contactList.addAll(contactList);
+    }
+
+    public RecyclerViewAdapter getRecyclerViewAdapter() {
+        return recyclerViewAdapter;
     }
 }
