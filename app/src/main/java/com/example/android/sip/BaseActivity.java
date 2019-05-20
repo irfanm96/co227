@@ -50,7 +50,10 @@ public class BaseActivity extends AppCompatActivity {
     public SipProfile me = null;
     public SipAudioCall call = null;
     public IncomingCallReceiver callReceiver;
-
+    private ArrayList<Contact> contactList;
+    private CallFragment callFragment;
+    private ContactFragment contactFragment;
+    private SettingsFragment settingsFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,9 +64,12 @@ public class BaseActivity extends AppCompatActivity {
         viewPager = findViewById(R.id.view_pager);
         adapter = new ViewPageAdapter(getSupportFragmentManager());
 
-        adapter.addFragment(new CallFragment(), "");
-        adapter.addFragment(new ContactFragment(), "");
-        adapter.addFragment(new SettingsFragment(), "");
+         callFragment=new CallFragment();
+         contactFragment=new ContactFragment();
+         settingsFragment=new SettingsFragment();
+        adapter.addFragment(callFragment, "");
+        adapter.addFragment(contactFragment, "");
+        adapter.addFragment(settingsFragment, "");
 
         viewPager.setAdapter(adapter);
         tabLayout.setupWithViewPager(viewPager);
@@ -83,9 +89,22 @@ public class BaseActivity extends AppCompatActivity {
         } else {
             //TODO
             make();
+            fetchContacts();
 //            connectToPusher();
         }
 
+
+    }
+
+    public void fetchContacts(){
+
+        contactList = new ArrayList<>();
+        contactList.add(new Contact("demo", "200@ping.com", "200"));
+        contactList.add(new Contact("Irfan", "3000@ping.com", "3000"));
+        contactList.add(new Contact("Wishma", "3001@ping.com", "3001"));
+        contactList.add(new Contact("Rishi", "3002@ping.com", "3002"));
+        callFragment.setContactList(contactList);
+        contactFragment.setContactList(contactList);
 
     }
 

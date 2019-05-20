@@ -10,6 +10,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,12 +23,13 @@ import java.util.List;
 
 public class ContactFragment extends Fragment {
 
+    private static final String TAG = "APP_DEBUG";
     private View view;
     private EditText etSearch;
     private FloatingActionButton floatingActionButton;
 
     private RecyclerView recyclerView;
-    private ArrayList<Contact> contactList;
+    private ArrayList<Contact> contactList =new ArrayList<>();
 
 
     public ContactFragment() {
@@ -75,14 +77,12 @@ public class ContactFragment extends Fragment {
         return view;
     }
 
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public  void  test(){
+        Log.d(TAG, "test: ok");
+    }
 
-        contactList = new ArrayList<>();
-        contactList.add(new Contact("demo", "200@ping.com", "200"));
-        contactList.add(new Contact("Irfan", "3000@ping.com", "3000"));
-        contactList.add(new Contact("Wishma", "3001@ping.com", "3001"));
-        contactList.add(new Contact("Rishi", "3002@ping.com", "3002"));
+    public void setContactList(ArrayList<Contact> contactList) {
+        this.contactList.clear();
+        this.contactList.addAll(contactList);
     }
 }

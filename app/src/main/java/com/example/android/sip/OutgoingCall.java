@@ -25,15 +25,13 @@ public class OutgoingCall extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         view=inflater.inflate(R.layout.outgoing_call,container,false);
-        endButton=(Button)view.findViewById(R.id.end_button);
+//        endButton=(Button)view.findViewById(R.id.end_button);
 
 
         endButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                dialog = new Dialog(v.getContext());
-                dialog.setContentView(R.layout.call_ended);
-                dialog.show();
+
             }
         });
 

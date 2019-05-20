@@ -1,25 +1,28 @@
 package com.example.android.sip;
 
-
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.view.ViewPager;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 
 import com.example.myapplication.ContactDetails;
+
+import java.util.ArrayList;
 
 public class CallFragment extends Fragment {
 
@@ -27,10 +30,14 @@ public class CallFragment extends Fragment {
     ImageButton imageButton;
     EditText editText;
     private static final String TAG = "APP_DEBUG";
-
     private ImageButton callButton;
     private Dialog dialog;
+    private ImageButton hangUp;
+    Dialog mydialog;
+    private Contact toBeCalled=new Contact("","","");
 
+    private RecyclerView recyclerView;
+    private ArrayList<Contact> contactList=new ArrayList<>();
 
 
     public CallFragment() {
@@ -40,40 +47,36 @@ public class CallFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-
-        view=inflater.inflate(R.layout.call_fragment,container,false);
-        imageButton=(ImageButton)view.findViewById(R.id.imgbtnNewContact);
-        callButton=(ImageButton)view.findViewById(R.id.imgbtnNewCall);
-        editText=(EditText) view.findViewById(R.id.etPhoneNumber);
-
+        view = inflater.inflate(R.layout.call_fragment, container, false);
+        imageButton = (ImageButton) view.findViewById(R.id.imgbtnNewContact);
+        callButton = (ImageButton) view.findViewById(R.id.imgbtnNewCall);
+        editText = (EditText) view.findViewById(R.id.etPhoneNumber);
 
         callButton.setOnClickListener(new View.OnClickListener() {
+
             @Override
             public void onClick(View v) {
-                dialog = new Dialog(v.getContext());
-                dialog.setContentView(R.layout.outgoing_call); //add here to get updated
-                dialog.show();
+                mydialog = new Dialog(v.getContext(), android.R.style.Widget_DeviceDefault_ActionBar);
+                mydialog.setContentView(R.layout.outgoing_call);
+                mydialog.show();
+                hangUp = (ImageButton) mydialog.findViewById(R.id.btnHangUp);
 
-                //"callended xml should be poped up when press the end_button in outgoing call"
+                hangUp.setOnClickListener(new View.OnClickListener() {
+                    private static final String TAG = "APP_DEBUG";
 
+                    @Override
+                    public void onClick(View v) {
+                        Log.d(TAG, "onClick: hang up clikced");
+                        mydialog.dismiss();
 
-//        view = inflater.inflate(R.layout.call_fragment, container, false);
-//        imageButton = (ImageButton) view.findViewById(R.id.imgbtnNewContact);
-//        editText = (EditText) view.findViewById(R.id.etPhoneNumber);
-//
-//        Log.d(TAG, "onCreateView: ");
+                    }
+                });
 
 
             }
         });
-        //edited
-//        callButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Intent intent = new Intent(v.getContext(), OutgoingCall.class);
-//                v.getContext().startActivity(intent);
-//            }
-//        });
+
+
         //edited
         imageButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -84,7 +87,51 @@ public class CallFragment extends Fragment {
                 v.getContext().startActivity(intent);
             }
         });
+
+//        ContactFragment contactFragment;
+//
+//        contactFragment = ((ContactFragment) getActivity()
+//                .getSupportFragmentManager().getFragments().get(1)
+//        );
+//
+//        contactFragment.test();
+
+
+        recyclerView = (RecyclerView) view.findViewById(R.id.rv_contact_call);
+        final RecyclerViewAdapter recyclerViewAdapter = new RecyclerViewAdapter(getContext(), contactList);
+
+        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        recyclerView.setAdapter(recyclerViewAdapter);
+        recyclerViewAdapter.getPhoneFilter().filter("---");
+        editText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                Log.d(TAG, "onTextChanged: " + s);
+                if (s.toString().isEmpty()) {
+                    s = "*-------------";
+                }
+                recyclerViewAdapter.getPhoneFilter().filter(s);
+                if(recyclerViewAdapter.isMatching()){
+                    toBeCalled=recyclerViewAdapter.getMatch();
+                    Log.d(TAG, "got the match "+toBeCalled.getPhone());
+                }
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
         return view;
+
+
     }
 
     @Override
@@ -92,7 +139,7 @@ public class CallFragment extends Fragment {
         super.setUserVisibleHint(isVisibleToUser);
 
 
-        if (getActivity() != null && getView()!=null) {
+        if (getActivity() != null && getView() != null) {
             if (!isVisibleToUser) {
                 final InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
 
@@ -104,5 +151,10 @@ public class CallFragment extends Fragment {
             }
         }
 
+    }
+
+    public void setContactList(ArrayList<Contact> contactList) {
+        this.contactList.clear();
+        this.contactList.addAll(contactList);
     }
 }
