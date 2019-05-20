@@ -244,11 +244,11 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                 return  true;
             }
         }
-        for (Contact c:contactList) {
-            if(c.getPhone().equalsIgnoreCase(s)){
-                return  true;
-            }
-        }
+//        for (Contact c:contactList) {
+//            if(c.getPhone().equalsIgnoreCase(s)){
+//                return  true;
+//            }
+//        }
         return false;
     };
 
@@ -260,11 +260,11 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                 return c;
             }
         }
-        for (Contact c:contactList) {
-            if(c.getPhone().equalsIgnoreCase(s)){
-                return c;
-            }
-        }
+//        for (Contact c:contactList) {
+//            if(c.getPhone().equalsIgnoreCase(s)){
+//                return c;
+//            }
+//        }
         return new Contact("Unkown","",s);
     }
 
