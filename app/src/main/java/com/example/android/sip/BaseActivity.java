@@ -21,16 +21,11 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageButton;
-import android.widget.TableLayout;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import com.pusher.client.Pusher;
 
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -493,27 +488,27 @@ public class BaseActivity extends AppCompatActivity {
 
         Log.d(TAG, "call to  "+c.getPhone() + " name "+c.getName());
         mydialog = new Dialog(this, android.R.style.Widget_DeviceDefault_ActionBar);
-        mydialog.setContentView(R.layout.outgoing_call);
+        mydialog.setContentView(R.layout.incoming_call);
         mydialog.show();
-        TextView tvCallName=(TextView)mydialog.findViewById(R.id.tvCallName);
-        TextView tvCallNumber=(TextView)mydialog.findViewById(R.id.tvCallNumber);
-
-        tvCallName.setText(c.getName());
-        tvCallNumber.setText(c.getPhone());
-
-        hangUp = (ImageButton) mydialog.findViewById(R.id.btnHangUp);
-
-        hangUp.setOnClickListener(new View.OnClickListener() {
-            private static final String TAG = "APP_DEBUG";
-
-            @Override
-            public void onClick(View v) {
-                Log.d(TAG, "onClick: hang up clikced");
-                mydialog.dismiss();
-                    call.close();
-
-            }
-        });
+//        TextView tvCallName=(TextView)mydialog.findViewById(R.id.tvCallNameIncoming);
+//        TextView tvCallNumber=(TextView)mydialog.findViewById(R.id.tvCallNumberIncoming);
+//
+//        tvCallName.setText(c.getName());
+//        tvCallNumber.setText(c.getPhone());
+//
+//        hangUp = (ImageButton) mydialog.findViewById(R.id.btnHangUp);
+//
+//        hangUp.setOnClickListener(new View.OnClickListener() {
+//            private static final String TAG = "APP_DEBUG";
+//
+//            @Override
+//            public void onClick(View v) {
+//                Log.d(TAG, "onClick: hang up clikced");
+//                mydialog.dismiss();
+//                    call.close();
+//
+//            }
+//        });
 
 
     }

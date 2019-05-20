@@ -9,7 +9,7 @@
     android:background="@color/backgroundFragment">
 
     <TextView
-        android:id="@+id/textView4"
+        android:id="@+id/tvStatusIncoming"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="40dp"
@@ -33,7 +33,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvCallNumber"
+        app:layout_constraintTop_toBottomOf="@+id/tvCallNumberIncoming"
         app:srcCompat="@drawable/ic_call_hangup"
         tools:ignore="MissingConstraints" />
 
@@ -52,7 +52,7 @@
         tools:layout_conversion_wrapWidth="305" />
 
     <TextView
-        android:id="@+id/tvCallName"
+        android:id="@+id/tvCallNameIncoming"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
@@ -61,10 +61,10 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView4" />
+        app:layout_constraintTop_toBottomOf="@+id/tvStatusIncoming" />
 
     <TextView
-        android:id="@+id/tvCallNumber"
+        android:id="@+id/tvCallNumberIncoming"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="12dp"
@@ -72,6 +72,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvCallName" />
+        app:layout_constraintTop_toBottomOf="@+id/tvCallNameIncoming" />
 
 </android.support.constraint.ConstraintLayout>
