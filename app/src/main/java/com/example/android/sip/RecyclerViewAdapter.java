@@ -236,16 +236,14 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
     public  boolean isInList(String s){
 
+        if(s.isEmpty()){
+            return true;
+        }
         for (Contact c:contactListFull) {
             if(c.getPhone().equalsIgnoreCase(s)){
                 return  true;
             }
         }
-//        for (Contact c:contactList) {
-//            if(c.getPhone().equalsIgnoreCase(s)){
-//                return  true;
-//            }
-//        }
         return false;
     };
 

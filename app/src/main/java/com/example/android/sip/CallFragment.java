@@ -75,12 +75,17 @@ public class CallFragment extends Fragment {
             }
         });
 
+        newContact.setVisibility(View.INVISIBLE);
 
         //edited
         newContact.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
+
+                if(editText.getText().toString().isEmpty()){
+                    return;
+                }
 
                 if (!recyclerViewAdapter.isInList(editText.getText().toString())) {
 
@@ -121,6 +126,11 @@ public class CallFragment extends Fragment {
 //                    Log.d(TAG, "got the match " + toBeCalled.getPhone());
 //                }
 
+               if(!recyclerViewAdapter.isInList(s.toString()) && !s.toString().equalsIgnoreCase("*-------------")){
+                   newContact.setVisibility(View.VISIBLE);
+               }else {
+                   newContact.setVisibility(View.INVISIBLE);
+               }
 
             }
 
