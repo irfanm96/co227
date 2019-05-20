@@ -102,7 +102,7 @@ public class WalkieTalkieActivity extends Activity implements View.OnTouchListen
 
 
     private void createRecyclerView() {
-        contacts.add(new Contact("Server", "j.veg.lv", 200));
+        contacts.add(new Contact("Server", "j.veg.lv", "200"));
 
         recyclerView = findViewById(R.id.rvView);
         recyclerViewAdapter = new RecyclerViewAdapter(this, contacts);
@@ -177,6 +177,7 @@ public class WalkieTalkieActivity extends Activity implements View.OnTouchListen
         // Set up the intent filter.  This will be used to fire an
         // IncomingCallReceiver when someone calls the SIP address used by this
         // application.
+        Log.d(TAG, "make: function is called");
         IntentFilter filter = new IntentFilter();
         filter.addAction("android.SipDemo.INCOMING_CALL");
         callReceiver = new IncomingCallReceiver();
@@ -691,7 +692,7 @@ public class WalkieTalkieActivity extends Activity implements View.OnTouchListen
             @Override
             public void onUsersInformationReceived(String s, Set<com.pusher.client.channel.User> set) {
                 contacts.clear();
-                contacts.add(new Contact("demo", "demo@j.veg.lv", 200));
+                contacts.add(new Contact("demo", "demo@j.veg.lv", "200"));
                 for (User u : set) {
                     Gson g = new Gson();
                     Contact p = g.fromJson(u.getInfo(), Contact.class);

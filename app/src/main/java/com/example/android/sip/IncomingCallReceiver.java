@@ -52,7 +52,7 @@ public class IncomingCallReceiver extends BroadcastReceiver {
 
 
 
-            WalkieTalkieActivity va=(WalkieTalkieActivity) context;
+            BaseActivity va=(BaseActivity) context;
             try {
                 incomingCall=va.manager.takeAudioCall(intent,listener);
                 va.incomingCall(incomingCall);
@@ -62,7 +62,7 @@ public class IncomingCallReceiver extends BroadcastReceiver {
             }
 
 
-            WalkieTalkieActivity wtActivity = (WalkieTalkieActivity) context;
+            BaseActivity wtActivity = (BaseActivity) context;
 
             incomingCall = wtActivity.manager.takeAudioCall(intent, listener);
 //            incomingCall.answerCall(30);

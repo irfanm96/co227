@@ -1,6 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+<<<<<<< HEAD
     <color name="colorPrimary">#008577</color>
     <color name="colorPrimaryDark">#62A99F</color>
     <color name="colorAccent">#D81B60</color>
+=======
+    <color name="colorPrimary">#393939</color>
+    <color name="colorPrimaryDark">#2f2f2f</color>
+    <color name="colorAccent">#52b7f8</color>
+    <color name="backgroundFragment">#2B2B2B</color>
+    <color name="btn_color">#C0C0C0</color>
+    <color name="call_ans">#7DEC7D</color>
+    <color name="call_end">#A4304B</color>
+>>>>>>> master
 </resources>

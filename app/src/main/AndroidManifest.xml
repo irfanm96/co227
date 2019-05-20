@@ -23,11 +23,10 @@
         android:name=".App"
         android:icon="@mipmap/ic_launcher_round"
         android:label="Ping">
+        <activity android:name="com.example.myapplication.ContactDetails" android:theme="@style/Theme.AppCompat"></activity>
         <activity
-            android:name=".NavigationActivity"
-            android:label="@string/title_activity_navigation"
+            android:name=".BaseActivity"
             android:theme="@style/Theme.AppCompat">
-
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -40,14 +39,13 @@
         <activity
             android:name=".SipSettings"
             android:label="set_preferences" />
-        <activity android:name=".ContactActivity"></activity>
+        <activity android:name=".ContactActivity" />
         <activity
             android:name=".SignupActivity"
             android:theme="@style/Theme.AppCompat.NoActionBar" />
         <activity
             android:name=".MainActivity"
-            android:theme="@style/Theme.AppCompat.NoActionBar">
-        </activity>
+            android:theme="@style/Theme.AppCompat.NoActionBar" />
 
         <receiver
             android:name=".IncomingCallReceiver"

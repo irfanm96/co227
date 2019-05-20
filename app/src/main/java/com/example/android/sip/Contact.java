@@ -3,9 +3,9 @@ package com.example.android.sip;
 public class Contact {
     private  String name;
   private  String email;
-  private  int phone;
+  private  String  phone;
 
-    public Contact(String name, String email, int phone) {
+    public Contact(String name, String email, String phone) {
         this.name = name;
         this.email = email;
         this.phone = phone;
@@ -19,7 +19,7 @@ public class Contact {
         return email;
     }
 
-    public int getPhone() {
+    public String getPhone() {
         return phone;
     }
 }
