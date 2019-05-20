@@ -9,12 +9,16 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
+import android.media.Ringtone;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.net.sip.SipAudioCall;
 import android.net.sip.SipException;
 import android.net.sip.SipManager;
 import android.net.sip.SipProfile;
 import android.net.sip.SipRegistrationListener;
 import android.os.Handler;
+import android.provider.Settings;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.ActivityCompat;
@@ -39,7 +43,7 @@ public class BaseActivity extends AppCompatActivity {
     private TabLayout tabLayout;
     private ViewPager viewPager;
     private ViewPageAdapter adapter;
-
+    private Ringtone mRingtone;
 
     private static final int REQUEST_SIP = 10;
     private static final int USERS_ONLINE = 5;
@@ -282,7 +286,15 @@ public class BaseActivity extends AppCompatActivity {
                         mydialog.dismiss();
                         break;
                     case ON_CALL_ERROR:
-                        mydialog.dismiss();
+
+                        final Handler h = new Handler();
+                        h.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                mydialog.dismiss();
+                            }
+                        }, 5000);
+
                         break;
                     case ON_CALL_BUSY:
                         final Handler handler = new Handler();
@@ -291,7 +303,7 @@ public class BaseActivity extends AppCompatActivity {
                             public void run() {
                                 mydialog.dismiss();
                             }
-                        }, 2000);
+                        }, 5000);
                         break;
 
                 }
@@ -313,6 +325,11 @@ public class BaseActivity extends AppCompatActivity {
             return;
         }
         incCall = c;
+        String ringtoneUri =
+                Settings.System.DEFAULT_RINGTONE_URI.toString();
+        mRingtone = RingtoneManager.getRingtone(getBaseContext(),
+                Uri.parse(ringtoneUri));
+        mRingtone.play();
 
         SipProfile caller = incCall.getPeerProfile();
 
@@ -366,13 +383,13 @@ public class BaseActivity extends AppCompatActivity {
      */
     public void initiateCall(Contact c) {
 
-        showOutgoingCallDialog(c);
-
         sipAddress = c.getPhone() + "@" + ((App) getApplication()).getPrefManager().getDomain();
 
 //        updateStatus(sipAddress);
 
         try {
+
+            showOutgoingCallDialog(c);
             SipAudioCall.Listener listener = new SipAudioCall.Listener() {
                 // Much of the client's interaction with the SIP Stack will
                 // happen via listeners.  Even making an outgoing call, don't
@@ -393,7 +410,7 @@ public class BaseActivity extends AppCompatActivity {
 
                 @Override
                 public void onCallEnded(SipAudioCall call) {
-                   updateOutgoingCallDialog(ON_CALL_ENDED);
+                    updateOutgoingCallDialog(ON_CALL_ENDED);
                     Log.d("APP_DEBUG", "onCallEnded: ");
                 }
 
@@ -567,6 +584,7 @@ public class BaseActivity extends AppCompatActivity {
 
                 if (incCall != null) {
 
+                    mRingtone.stop();
                     try {
                         incCall.answerCall(30);
                         st.setText("On Call..");
@@ -595,6 +613,7 @@ public class BaseActivity extends AppCompatActivity {
                 Log.d(TAG, "onClick: hang up clikced");
                 mydialog.dismiss();
 
+                mRingtone.stop();
                 if (incCall != null) {
                     try {
                         incCall.endCall();
