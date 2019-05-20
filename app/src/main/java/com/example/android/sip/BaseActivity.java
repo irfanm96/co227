@@ -556,7 +556,10 @@ public class BaseActivity extends AppCompatActivity {
 
         hangUp = (ImageButton) mydialog.findViewById(R.id.btnHangUpIncoming);
         accept = (ImageButton) mydialog.findViewById(R.id.btnAnswerIncoming);
+        final TextView st = (TextView) mydialog.findViewById(R.id.tvStatusIncoming);
+        final Chronometer chronometer = (Chronometer) mydialog.findViewById(R.id.cmTimerIncoming);
 
+        chronometer.setVisibility(View.INVISIBLE);
         accept.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -566,6 +569,9 @@ public class BaseActivity extends AppCompatActivity {
 
                     try {
                         incCall.answerCall(30);
+                        st.setText("On Call..");
+                        chronometer.setVisibility(View.VISIBLE);
+                        chronometer.start();
                         incCall.startAudio();
                         incCall.setSpeakerMode(true);
 
