@@ -386,7 +386,7 @@ public class BaseActivity extends AppCompatActivity {
                         Log.d(TAG, "onCallEstablished: call was muted");
                         call.toggleMute();
                     }
-                    updateStatus(call);
+//                    updateStatus(call);
                     Log.d("APP_DEBUG", "onCallEstablished: ");
 
                 }

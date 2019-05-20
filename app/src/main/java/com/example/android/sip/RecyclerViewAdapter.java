@@ -87,9 +87,6 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                 btnDialogCall.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Log.d(TAG, "onClick: clicked call icon");
-                        //TODO make this as the sip number which has this
-                        BaseActivity.setSipAddress(contactList.get(viewHolder.getAdapterPosition()).getPhone());
                         baseActivity.initiateCall(contactList.get(viewHolder.getAdapterPosition()));
                     }
                 });
