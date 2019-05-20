@@ -503,12 +503,8 @@ public class BaseActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Log.d(TAG, "onClick: hang up clikced");
-                try {
-                    call.endCall();
-                } catch (SipException e) {
-                    e.printStackTrace();
-                }
                 mydialog.dismiss();
+                    call.close();
 
             }
         });
