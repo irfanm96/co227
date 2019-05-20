@@ -495,6 +495,12 @@ public class BaseActivity extends AppCompatActivity {
         mydialog = new Dialog(this, android.R.style.Widget_DeviceDefault_ActionBar);
         mydialog.setContentView(R.layout.outgoing_call);
         mydialog.show();
+        TextView tvCallName=(TextView)mydialog.findViewById(R.id.tvCallName);
+        TextView tvCallNumber=(TextView)mydialog.findViewById(R.id.tvCallNumber);
+
+        tvCallName.setText(c.getName());
+        tvCallNumber.setText(c.getPhone());
+
         hangUp = (ImageButton) mydialog.findViewById(R.id.btnHangUp);
 
         hangUp.setOnClickListener(new View.OnClickListener() {
