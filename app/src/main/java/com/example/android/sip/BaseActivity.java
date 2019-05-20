@@ -32,6 +32,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.Chronometer;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.text.ParseException;
@@ -265,6 +266,9 @@ public class BaseActivity extends AppCompatActivity {
         final TextView c = (TextView) mydialog.findViewById(R.id.tvStatusOutgoing);
         final Chronometer chronometer = (Chronometer) mydialog.findViewById(R.id.cmTimerOutgoing);
 
+        final ImageView mic=(ImageView)mydialog.findViewById(R.id.ivMicOut);
+        final ImageView speaker=(ImageView)mydialog.findViewById(R.id.ivSpeakerOut);
+        final ImageView pause=(ImageView)mydialog.findViewById(R.id.ivPauseOut);
         this.runOnUiThread(new Runnable() {
             public void run() {
 
@@ -279,6 +283,9 @@ public class BaseActivity extends AppCompatActivity {
                         break;
                     case ON_CALL_ESTABLISHED:
                         c.setText("On Call..");
+                        mic.setVisibility(View.INVISIBLE);
+                        speaker.setVisibility(View.INVISIBLE);
+                        pause.setVisibility(View.INVISIBLE);
                         chronometer.setVisibility(View.VISIBLE);
                         chronometer.start();
                         Log.d(TAG, "on call established ");
@@ -539,7 +546,13 @@ public class BaseActivity extends AppCompatActivity {
         mydialog.show();
         TextView tvCallName = (TextView) mydialog.findViewById(R.id.tvCallNameOutgoing);
 
+        ImageView mic=(ImageView)mydialog.findViewById(R.id.ivMicOut);
+        ImageView speaker=(ImageView)mydialog.findViewById(R.id.ivSpeakerOut);
+        ImageView pause=(ImageView)mydialog.findViewById(R.id.ivPauseOut);
 
+        mic.setVisibility(View.INVISIBLE);
+        speaker.setVisibility(View.INVISIBLE);
+        pause.setVisibility(View.INVISIBLE);
 
         tvCallName.setText("to : " + c.getName() + " -> "+c.getPhone());
         Chronometer chronometer = (Chronometer) mydialog.findViewById(R.id.cmTimerOutgoing);
