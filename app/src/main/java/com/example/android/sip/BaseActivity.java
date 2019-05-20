@@ -321,6 +321,7 @@ public class BaseActivity extends AppCompatActivity {
 
         showIncomingCallDialog(contact);
 //
+
 //        AlertDialog.Builder builder = new AlertDialog.Builder(this);
 //
 //        builder.setTitle("Incoming Call from")
@@ -430,13 +431,14 @@ public class BaseActivity extends AppCompatActivity {
 
                 @Override
                 public void onCallEnded(SipAudioCall call) {
-                    updateStatus("Ready.");
+                   updateOutgoingCallDialog(ON_CALL_ENDED);
                     Log.d("APP_DEBUG", "onCallEnded: ");
                 }
 
                 @Override
                 public void onError(SipAudioCall call, int errorCode, String errorMessage) {
                     super.onError(call, errorCode, errorMessage);
+                    updateOutgoingCallDialog(ON_CALL_ERROR);
                     Log.d(TAG, "onError: " + errorMessage + " code " + errorCode);
                 }
 
@@ -458,6 +460,7 @@ public class BaseActivity extends AppCompatActivity {
                 @Override
                 public void onCallBusy(SipAudioCall call) {
                     super.onCallBusy(call);
+                    updateOutgoingCallDialog(ON_CALL_BUSY);
                     Log.d(TAG, "onCallBusy: ");
                 }
 
@@ -581,7 +584,7 @@ public class BaseActivity extends AppCompatActivity {
 
         Log.d(TAG, "call to  " + c.getPhone() + " name " + c.getName());
         mydialog = new Dialog(this, android.R.style.Widget_DeviceDefault_ActionBar);
-        mydialog.setContentView(R.layout.outgoing_call);
+        mydialog.setContentView(R.layout.incoming_call);
         mydialog.show();
         TextView tvCallName = (TextView) mydialog.findViewById(R.id.tvCallNameIncoming);
         TextView tvCallNumber = (TextView) mydialog.findViewById(R.id.tvCallNumberIncoming);
