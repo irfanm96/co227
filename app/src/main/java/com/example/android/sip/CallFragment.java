@@ -36,10 +36,11 @@ public class CallFragment extends Fragment {
     private Dialog dialog;
     private ImageButton hangUp;
     Dialog mydialog;
-    private Contact toBeCalled=new Contact("","","");
+    private Contact toBeCalled=new Contact("Unknown","","");
 
     private RecyclerView recyclerView;
     private ArrayList<Contact> contactList=new ArrayList<>();
+    private BaseActivity baseActivity;
 
 
     public CallFragment() {
@@ -53,39 +54,7 @@ public class CallFragment extends Fragment {
         newContact = (TextView) view.findViewById(R.id.tvNewContcat);
         callButton = (ImageButton) view.findViewById(R.id.imgbtnNewCall);
         editText = (EditText) view.findViewById(R.id.etPhoneNumber);
-
-        callButton.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                mydialog = new Dialog(v.getContext(), android.R.style.Widget_DeviceDefault_ActionBar);
-                mydialog.setContentView(R.layout.outgoing_call);
-                mydialog.show();
-                hangUp = (ImageButton) mydialog.findViewById(R.id.btnHangUp);
-
-                hangUp.setOnClickListener(new View.OnClickListener() {
-                    private static final String TAG = "APP_DEBUG";
-
-                    @Override
-                    public void onClick(View v) {
-                        Log.d(TAG, "onClick: hang up clikced");
-                        mydialog.dismiss();
-
-                    }
-                });
-
-
-            }
-        });
-
-
-//        ContactFragment contactFragment;
-//
-//        contactFragment = ((ContactFragment) getActivity()
-//                .getSupportFragmentManager().getFragments().get(1)
-//        );
-//
-//        contactFragment.test();
+         baseActivity=(BaseActivity)getActivity();
 
 
         recyclerView = (RecyclerView) view.findViewById(R.id.rv_contact_call);
@@ -93,6 +62,32 @@ public class CallFragment extends Fragment {
 
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setAdapter(recyclerViewAdapter);
+
+
+        callButton.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+//                mydialog = new Dialog(v.getContext(), android.R.style.Widget_DeviceDefault_ActionBar);
+//                mydialog.setContentView(R.layout.outgoing_call);
+//                mydialog.show();
+//                hangUp = (ImageButton) mydialog.findViewById(R.id.btnHangUp);
+//
+//                hangUp.setOnClickListener(new View.OnClickListener() {
+//                    private static final String TAG = "APP_DEBUG";
+//
+//                    @Override
+//                    public void onClick(View v) {
+//                        Log.d(TAG, "onClick: hang up clikced");
+//                        mydialog.dismiss();
+//
+//                    }
+//                });
+
+                baseActivity.initiateCall(toBeCalled);
+
+            }
+        });
 
 
         //edited
@@ -137,7 +132,7 @@ public class CallFragment extends Fragment {
                 }
                 recyclerViewAdapter.getPhoneFilter().filter(s);
                 if(recyclerViewAdapter.isMatching()){
-                    toBeCalled=recyclerViewAdapter.getMatch();
+                    toBeCalled=recyclerViewAdapter.getMatch(s.toString());
                     Log.d(TAG, "got the match "+toBeCalled.getPhone());
                 }
 

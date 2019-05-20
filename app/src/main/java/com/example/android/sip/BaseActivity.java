@@ -2,6 +2,7 @@ package com.example.android.sip;
 
 import android.Manifest;
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.PendingIntent;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -24,6 +25,7 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.ImageButton;
 import android.widget.TableLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -54,6 +56,8 @@ public class BaseActivity extends AppCompatActivity {
     private CallFragment callFragment;
     private ContactFragment contactFragment;
     private SettingsFragment settingsFragment;
+    private Dialog mydialog;
+    private ImageButton hangUp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -341,13 +345,14 @@ public class BaseActivity extends AppCompatActivity {
     /**
      * Make an outgoing call.
      */
-    public void initiateCall() {
+    public void initiateCall(Contact c) {
 
+        showOutgoingCallDialog(c);
 
         sipAddress += "@" + ((App) getApplication()).getPrefManager().getDomain();
 
 
-        updateStatus(sipAddress);
+//        updateStatus(sipAddress);
 
         try {
             SipAudioCall.Listener listener = new SipAudioCall.Listener() {
@@ -482,4 +487,28 @@ public class BaseActivity extends AppCompatActivity {
     public static void setSipAddress(String sipAddress) {
         BaseActivity.sipAddress = sipAddress;
     }
+
+
+    public void showOutgoingCallDialog(Contact c){
+
+        Log.d(TAG, "call to  "+c.getPhone() + " name "+c.getName());
+        mydialog = new Dialog(this, android.R.style.Widget_DeviceDefault_ActionBar);
+        mydialog.setContentView(R.layout.outgoing_call);
+        mydialog.show();
+        hangUp = (ImageButton) mydialog.findViewById(R.id.btnHangUp);
+
+        hangUp.setOnClickListener(new View.OnClickListener() {
+            private static final String TAG = "APP_DEBUG";
+
+            @Override
+            public void onClick(View v) {
+                Log.d(TAG, "onClick: hang up clikced");
+                mydialog.dismiss();
+
+            }
+        });
+
+
+    }
+
 }

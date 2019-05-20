@@ -89,8 +89,8 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                     public void onClick(View v) {
                         Log.d(TAG, "onClick: clicked call icon");
                         //TODO make this as the sip number which has this
-                        BaseActivity.setSipAddress("4001");
-                        baseActivity.initiateCall();
+                        BaseActivity.setSipAddress(contactList.get(viewHolder.getAdapterPosition()).getPhone());
+                        baseActivity.initiateCall(contactList.get(viewHolder.getAdapterPosition()));
                     }
                 });
 
@@ -253,8 +253,19 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     };
 
 
-    public Contact getMatch() {
-        return contactList.get(0);
+    public Contact getMatch(String s) {
+
+        for (Contact c:contactListFull) {
+            if(c.getPhone().equalsIgnoreCase(s)){
+                return c;
+            }
+        }
+        for (Contact c:contactList) {
+            if(c.getPhone().equalsIgnoreCase(s)){
+                return c;
+            }
+        }
+        return new Contact("Unkown","",s);
     }
 
     public boolean isMatching(){
