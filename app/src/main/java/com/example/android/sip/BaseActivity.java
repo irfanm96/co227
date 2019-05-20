@@ -320,43 +320,6 @@ public class BaseActivity extends AppCompatActivity {
         Contact contact = callFragment.getRecyclerViewAdapter().getMatch(caller.getUserName());
 
         showIncomingCallDialog(contact);
-//
-//        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-//
-//        builder.setTitle("Incoming Call from")
-//                .setMessage(caller.getUriString())
-//                .setPositiveButton("Accept", new DialogInterface.OnClickListener() {
-//                    @Override
-//                    public void onClick(DialogInterface dialog, int which) {
-//
-//                        try {
-//                            incCall.answerCall(30);
-//                            incCall.startAudio();
-//                            incCall.setSpeakerMode(true);
-//
-//                            if (incCall.isMuted()) {
-//                                Log.d(TAG, "call was muted ");
-//                                incCall.toggleMute();
-//                            }
-//                        } catch (SipException e) {
-//                            e.printStackTrace();
-//                        }
-//                    }
-//                })
-//                .setNegativeButton("Decline", new DialogInterface.OnClickListener() {
-//                    @Override
-//                    public void onClick(DialogInterface dialog, int which) {
-//                        try {
-//                            incCall.endCall();
-//                        } catch (SipException e) {
-//                            e.printStackTrace();
-//                        }
-//                        incCall.close();
-//                        incCall = null;
-//                    }
-//                });
-//        builder.show();
-
     }
 
 
@@ -423,20 +386,21 @@ public class BaseActivity extends AppCompatActivity {
                         Log.d(TAG, "onCallEstablished: call was muted");
                         call.toggleMute();
                     }
-                    updateStatus(call);
+//                    updateStatus(call);
                     Log.d("APP_DEBUG", "onCallEstablished: ");
 
                 }
 
                 @Override
                 public void onCallEnded(SipAudioCall call) {
-                    updateStatus("Ready.");
+                   updateOutgoingCallDialog(ON_CALL_ENDED);
                     Log.d("APP_DEBUG", "onCallEnded: ");
                 }
 
                 @Override
                 public void onError(SipAudioCall call, int errorCode, String errorMessage) {
                     super.onError(call, errorCode, errorMessage);
+                    updateOutgoingCallDialog(ON_CALL_ERROR);
                     Log.d(TAG, "onError: " + errorMessage + " code " + errorCode);
                 }
 
@@ -458,6 +422,7 @@ public class BaseActivity extends AppCompatActivity {
                 @Override
                 public void onCallBusy(SipAudioCall call) {
                     super.onCallBusy(call);
+                    updateOutgoingCallDialog(ON_CALL_BUSY);
                     Log.d(TAG, "onCallBusy: ");
                 }
 
@@ -581,7 +546,7 @@ public class BaseActivity extends AppCompatActivity {
 
         Log.d(TAG, "call to  " + c.getPhone() + " name " + c.getName());
         mydialog = new Dialog(this, android.R.style.Widget_DeviceDefault_ActionBar);
-        mydialog.setContentView(R.layout.outgoing_call);
+        mydialog.setContentView(R.layout.incoming_call);
         mydialog.show();
         TextView tvCallName = (TextView) mydialog.findViewById(R.id.tvCallNameIncoming);
         TextView tvCallNumber = (TextView) mydialog.findViewById(R.id.tvCallNumberIncoming);
@@ -591,7 +556,10 @@ public class BaseActivity extends AppCompatActivity {
 
         hangUp = (ImageButton) mydialog.findViewById(R.id.btnHangUpIncoming);
         accept = (ImageButton) mydialog.findViewById(R.id.btnAnswerIncoming);
+        final TextView st = (TextView) mydialog.findViewById(R.id.tvStatusIncoming);
+        final Chronometer chronometer = (Chronometer) mydialog.findViewById(R.id.cmTimerIncoming);
 
+        chronometer.setVisibility(View.INVISIBLE);
         accept.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -601,6 +569,9 @@ public class BaseActivity extends AppCompatActivity {
 
                     try {
                         incCall.answerCall(30);
+                        st.setText("On Call..");
+                        chronometer.setVisibility(View.VISIBLE);
+                        chronometer.start();
                         incCall.startAudio();
                         incCall.setSpeakerMode(true);
 
