@@ -562,7 +562,7 @@ public class BaseActivity extends AppCompatActivity {
         speaker.setVisibility(View.INVISIBLE);
         pause.setVisibility(View.INVISIBLE);
 
-        tvCallName.setText("to : " + c.getName() + " -> " + c.getPhone());
+        tvCallName.setText("To : " + c.getName() + " - " + c.getPhone());
         Chronometer chronometer = (Chronometer) mydialog.findViewById(R.id.cmTimerOutgoing);
         chronometer.setVisibility(View.INVISIBLE);
 
@@ -664,7 +664,7 @@ public class BaseActivity extends AppCompatActivity {
         mydialog.show();
         TextView tvCallName = (TextView) mydialog.findViewById(R.id.tvCallNameIncoming);
 
-        tvCallName.setText("from: " + c.getName() + " -> " + c.getName());
+        tvCallName.setText("From: " + c.getName() + " - " + c.getPhone());
 
         hangUp = (ImageButton) mydialog.findViewById(R.id.btnHangUpIncoming);
         accept = (ImageButton) mydialog.findViewById(R.id.btnAnswerIncoming);
@@ -804,5 +804,38 @@ public class BaseActivity extends AppCompatActivity {
 
 
     }
+
+
+    private static final int ON_CALL_ENDED_IN = 1;
+    private static final int ON_CALL_ERROR_IN = 2;
+
+
+    public void updateIncomingCallDialog(final int mode) {
+        // Be a good citizen.  Make sure UI changes fire on the UI thread.
+        this.runOnUiThread(new Runnable() {
+            public void run() {
+
+                switch (mode) {
+                    case ON_CALL_ENDED_IN:
+                        mRingtone.stop();
+                        mydialog.dismiss();
+                        break;
+                    case ON_CALL_ERROR_IN:
+                        mRingtone.stop();
+                        final Handler h = new Handler();
+                        h.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                mydialog.dismiss();
+                            }
+                        }, 5000);
+
+                        break;
+
+                }
+            }
+        });
+    }
+
 
 }

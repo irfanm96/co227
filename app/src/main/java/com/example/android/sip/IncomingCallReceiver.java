@@ -34,9 +34,17 @@ public class IncomingCallReceiver extends BroadcastReceiver {
      * @param context The context under which the receiver is running.
      * @param intent The intent being received.
      */
+
+    private static final String TAG = "APP_DEBUG";
+
+    private static final int ON_CALL_ENDED_IN = 1;
+    private static final int ON_CALL_ERROR_IN = 2;
+
     @Override
     public void onReceive(Context context, Intent intent) {
         SipAudioCall incomingCall = null;
+        final BaseActivity va=(BaseActivity) context;
+
         try {
 
             SipAudioCall.Listener listener = new SipAudioCall.Listener() {
@@ -48,11 +56,26 @@ public class IncomingCallReceiver extends BroadcastReceiver {
                         e.printStackTrace();
                     }
                 }
+
+                @Override
+                public void onCallEnded(SipAudioCall call) {
+//                    super.onCallEnded(call);
+                    Log.d(TAG, "imconing call ended ");
+                    va.updateIncomingCallDialog(ON_CALL_ENDED_IN);
+
+                }
+
+                @Override
+                public void onError(SipAudioCall call, int errorCode, String errorMessage) {
+//                    super.onError(call, errorCode, errorMessage);
+                    Log.d(TAG, "incoming call error");
+                    va.updateIncomingCallDialog(ON_CALL_ERROR_IN);
+
+                }
             };
 
 
 
-            BaseActivity va=(BaseActivity) context;
             try {
                 incomingCall=va.manager.takeAudioCall(intent,listener);
                 va.incomingCall(incomingCall);
@@ -64,7 +87,8 @@ public class IncomingCallReceiver extends BroadcastReceiver {
 
             BaseActivity wtActivity = (BaseActivity) context;
 
-            incomingCall = wtActivity.manager.takeAudioCall(intent, listener);
+            incomingCall = wtActivity.manager.takeAudioCall(intent,null);
+            incomingCall.setListener(listener,true);
 //            incomingCall.answerCall(30);
 //            incomingCall.startAudio();
 //            incomingCall.setSpeakerMode(true);
