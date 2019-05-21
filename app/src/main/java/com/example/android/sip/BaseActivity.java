@@ -1,6 +1,7 @@
 package com.example.android.sip;
 
 import android.Manifest;
+import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.app.PendingIntent;
@@ -269,9 +270,9 @@ public class BaseActivity extends AppCompatActivity {
         final TextView c = (TextView) mydialog.findViewById(R.id.tvStatusOutgoing);
         final Chronometer chronometer = (Chronometer) mydialog.findViewById(R.id.cmTimerOutgoing);
 
-        final ImageView mic=(ImageView)mydialog.findViewById(R.id.ivMicIn);
-        final ImageView speaker=(ImageView)mydialog.findViewById(R.id.ivSpeakerIn);
-        final ImageView pause=(ImageView)mydialog.findViewById(R.id.ivPauseOut);
+        final ImageView mic = (ImageView) mydialog.findViewById(R.id.ivMicIn);
+        final ImageView speaker = (ImageView) mydialog.findViewById(R.id.ivSpeakerIn);
+        final ImageView pause = (ImageView) mydialog.findViewById(R.id.ivPauseOut);
         this.runOnUiThread(new Runnable() {
             public void run() {
 
@@ -535,9 +536,9 @@ public class BaseActivity extends AppCompatActivity {
     }
 
 
-    private boolean isOutMuted=false;
-    private boolean isHold=false;
-    private boolean isSpeaker=false;
+    private boolean isOutMuted = false;
+    private boolean isHold = false;
+    private boolean isSpeaker = false;
 
     public static void setSipAddress(String sipAddress) {
         BaseActivity.sipAddress = sipAddress;
@@ -553,17 +554,17 @@ public class BaseActivity extends AppCompatActivity {
         mydialog.show();
         TextView tvCallName = (TextView) mydialog.findViewById(R.id.tvCallNameOutgoing);
 
-        final ImageView mic=(ImageView)mydialog.findViewById(R.id.ivMicIn);
-        final ImageView speaker=(ImageView)mydialog.findViewById(R.id.ivSpeakerIn);
-        final ImageView pause=(ImageView)mydialog.findViewById(R.id.ivPauseOut);
+        final ImageView mic = (ImageView) mydialog.findViewById(R.id.ivMicIn);
+        final ImageView speaker = (ImageView) mydialog.findViewById(R.id.ivSpeakerIn);
+        final ImageView pause = (ImageView) mydialog.findViewById(R.id.ivPauseOut);
 
         mic.setVisibility(View.INVISIBLE);
         speaker.setVisibility(View.INVISIBLE);
         pause.setVisibility(View.INVISIBLE);
 
-        tvCallName.setText("to : " + c.getName() + " -> "+c.getPhone());
+        tvCallName.setText("to : " + c.getName() + " -> " + c.getPhone());
         Chronometer chronometer = (Chronometer) mydialog.findViewById(R.id.cmTimerOutgoing);
-         chronometer.setVisibility(View.INVISIBLE);
+        chronometer.setVisibility(View.INVISIBLE);
 
         hangUp = (ImageButton) mydialog.findViewById(R.id.btnHangUp);
 
@@ -588,16 +589,16 @@ public class BaseActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 //mute the call
-                if(!isOutMuted){
-                    isOutMuted=true;
-                    if(!call.isMuted()){
+                if (!isOutMuted) {
+                    isOutMuted = true;
+                    if (!call.isMuted()) {
                         call.toggleMute();
                     }
                     mic.setImageResource(R.drawable.microphone_off);
-                }else {
+                } else {
 
-                    isOutMuted=false;
-                    if(call.isMuted()){
+                    isOutMuted = false;
+                    if (call.isMuted()) {
                         call.toggleMute();
                     }
                     mic.setImageResource(R.drawable.microphone_on);
@@ -605,21 +606,21 @@ public class BaseActivity extends AppCompatActivity {
                 }
             }
         });
-       pause.setOnClickListener(new View.OnClickListener() {
+        pause.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //mute the call
-                if(!isHold){
-                    isHold=true;
+                if (!isHold) {
+                    isHold = true;
                     try {
                         call.holdCall(30);
                     } catch (SipException e) {
                         e.printStackTrace();
                     }
                     pause.setImageResource(R.drawable.ic_pause_on);
-                }else {
+                } else {
 
-                    isHold=false;
+                    isHold = false;
                     try {
                         call.continueCall(30);
                     } catch (SipException e) {
@@ -630,17 +631,17 @@ public class BaseActivity extends AppCompatActivity {
                 }
             }
         });
-      speaker.setOnClickListener(new View.OnClickListener() {
+        speaker.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //mute the call
-                if(!isSpeaker){
-                    isSpeaker=true;
+                if (!isSpeaker) {
+                    isSpeaker = true;
                     call.setSpeakerMode(true);
                     speaker.setImageResource(R.drawable.speaker_mode_on);
-                }else {
-                    isSpeaker=false;
-                     call.setSpeakerMode(false);
+                } else {
+                    isSpeaker = false;
+                    call.setSpeakerMode(false);
                     speaker.setImageResource(R.drawable.speaker_mode_off);
 
                 }
@@ -650,9 +651,9 @@ public class BaseActivity extends AppCompatActivity {
 
     }
 
-    private boolean isInMuted=false;
-    private boolean isHoldIn=false;
-    private boolean isSpeakerIn=false;
+    private boolean isInMuted = false;
+    private boolean isHoldIn = false;
+    private boolean isSpeakerIn = false;
 
     @SuppressLint("SetTextI18n")
     public void showIncomingCallDialog(Contact c) {
@@ -663,21 +664,20 @@ public class BaseActivity extends AppCompatActivity {
         mydialog.show();
         TextView tvCallName = (TextView) mydialog.findViewById(R.id.tvCallNameIncoming);
 
-        tvCallName.setText("from: "+c.getName()+" -> "+c.getName());
+        tvCallName.setText("from: " + c.getName() + " -> " + c.getName());
 
         hangUp = (ImageButton) mydialog.findViewById(R.id.btnHangUpIncoming);
         accept = (ImageButton) mydialog.findViewById(R.id.btnAnswerIncoming);
         final TextView st = (TextView) mydialog.findViewById(R.id.tvStatusIncoming);
         final Chronometer chronometer = (Chronometer) mydialog.findViewById(R.id.cmTimerIncoming);
 
-        final ImageView mic=(ImageView)mydialog.findViewById(R.id.ivMicIn);
-        final ImageView speaker=(ImageView)mydialog.findViewById(R.id.ivSpeakerIn);
-        final ImageView pause=(ImageView)mydialog.findViewById(R.id.ivPauseIn);
+        final ImageView mic = (ImageView) mydialog.findViewById(R.id.ivMicIn);
+        final ImageView speaker = (ImageView) mydialog.findViewById(R.id.ivSpeakerIn);
+        final ImageView pause = (ImageView) mydialog.findViewById(R.id.ivPauseIn);
 
         mic.setVisibility(View.INVISIBLE);
         speaker.setVisibility(View.INVISIBLE);
         pause.setVisibility(View.INVISIBLE);
-
 
 
         chronometer.setVisibility(View.INVISIBLE);
@@ -698,13 +698,13 @@ public class BaseActivity extends AppCompatActivity {
                         speaker.setVisibility(View.VISIBLE);
                         pause.setVisibility(View.VISIBLE);
                         accept.setVisibility(View.INVISIBLE);
-//                        Animation animation1 =
-//                                AnimationUtils.loadAnimation(getApplicationContext(), R.anim.move);
-//                        hangUp.startAnimation(animation1);
+
+                        ObjectAnimator mover = ObjectAnimator.ofFloat(hangUp, "translationX", 0, 150);
+                        mover.start();
 
                         chronometer.start();
                         incCall.startAudio();
-                        incCall.setSpeakerMode(true);
+//                        incCall.setSpeakerMode(true);
 
                         if (incCall.isMuted()) {
                             Log.d(TAG, "call was muted ");
@@ -727,34 +727,32 @@ public class BaseActivity extends AppCompatActivity {
                 mydialog.dismiss();
                 mRingtone.stop();
 //                if (incCall != null) {
-                    try {
-                        incCall.endCall();
-                    } catch (SipException e) {
-                        e.printStackTrace();
-                    }
-                    incCall.close();
-                    incCall = null;
+                try {
+                    incCall.endCall();
+                } catch (SipException e) {
+                    e.printStackTrace();
+                }
+                incCall.close();
+                incCall = null;
 //                }
             }
         });
-
-
 
 
         mic.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //mute the call
-                if(!isInMuted){
-                    isInMuted=true;
-                    if(!incCall.isMuted()){
+                if (!isInMuted) {
+                    isInMuted = true;
+                    if (!incCall.isMuted()) {
                         call.toggleMute();
                     }
                     mic.setImageResource(R.drawable.microphone_off);
-                }else {
+                } else {
 
-                    isInMuted=false;
-                    if(incCall.isMuted()){
+                    isInMuted = false;
+                    if (incCall.isMuted()) {
                         incCall.toggleMute();
                     }
                     mic.setImageResource(R.drawable.microphone_on);
@@ -766,17 +764,17 @@ public class BaseActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 //mute the call
-                if(!isHoldIn){
-                    isHoldIn=true;
+                if (!isHoldIn) {
+                    isHoldIn = true;
                     try {
                         incCall.holdCall(30);
                     } catch (SipException e) {
                         e.printStackTrace();
                     }
                     pause.setImageResource(R.drawable.ic_pause_on);
-                }else {
+                } else {
 
-                    isHoldIn=false;
+                    isHoldIn = false;
                     try {
                         incCall.continueCall(30);
                     } catch (SipException e) {
@@ -791,12 +789,12 @@ public class BaseActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 //mute the call
-                if(!isSpeakerIn){
-                    isSpeakerIn=true;
+                if (!isSpeakerIn) {
+                    isSpeakerIn = true;
                     incCall.setSpeakerMode(true);
                     speaker.setImageResource(R.drawable.speaker_mode_on);
-                }else {
-                    isSpeakerIn=false;
+                } else {
+                    isSpeakerIn = false;
                     incCall.setSpeakerMode(false);
                     speaker.setImageResource(R.drawable.speaker_mode_off);
 

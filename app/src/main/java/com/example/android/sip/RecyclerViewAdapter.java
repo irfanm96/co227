@@ -83,10 +83,13 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
                 Button btnDialogCall = myDialog.findViewById(R.id.btnDialogCall);
                 Button btnDialogDetails = myDialog.findViewById(R.id.btnDialogDetails);
-
+                dialog_name.setText(contactList.get(viewHolder.getAdapterPosition()).getName());
+                dialog_phone.setText(contactList.get(viewHolder.getAdapterPosition()).getPhone());
+                myDialog.show();
                 btnDialogCall.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        myDialog.dismiss();
                         baseActivity.initiateCall(contactList.get(viewHolder.getAdapterPosition()));
                     }
                 });
@@ -94,6 +97,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                 btnDialogDetails.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        myDialog.dismiss();
                         Intent intent = new Intent(context, ContactDetails.class);
                         intent.putExtra("STATUS", "EXISTING");
                         intent.putExtra("NAME", contactList.get(viewHolder.getAdapterPosition()).getName());
@@ -101,10 +105,6 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                         context.startActivity(intent);
                     }
                 });
-//
-                dialog_name.setText(contactList.get(viewHolder.getAdapterPosition()).getName());
-                dialog_phone.setText(contactList.get(viewHolder.getAdapterPosition()).getPhone());
-                myDialog.show();
 
             }
         });
