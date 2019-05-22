@@ -164,20 +164,9 @@ public class BaseActivity extends AppCompatActivity {
             closeLocalProfile();
         }
 
-//        String username = ((App)getApplication()).getPrefManager().getUSER_Phone();
-        String username = "3006";
-//        Log.d(TAG, "initializeLocalProfile: username "+username);
+        String username = ((App)getApplication()).getPrefManager().getUSER_Phone();
         String domain = ((App) getApplication()).getPrefManager().getDomain();
-//        String username="3006";
-//        String password="aaaa";
-//        String password = ((App)getApplication()).getPrefManager().getUSER_Password();
-//        Log.d(TAG, "initializeLocalProfile: password "+password);
-//        if (username.length() == 0 || domain.length() == 0 || password.length() == 0) {
-//            showDialog(UPDATE_SETTINGS_DIALOG);
-//            return;
-//        }
-
-        String password = "aaaa";
+        String password = ((App)getApplication()).getPrefManager().getUSER_Password();
 
         try {
             SipProfile.Builder builder = new SipProfile.Builder(username, domain);

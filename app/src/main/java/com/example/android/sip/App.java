@@ -11,7 +11,7 @@ public class App extends Application {
 //    public static String deviceID;
     public static boolean isLoggedIn;
     public static String accessToken;
-    public PrefManager prefManager;
+    public  PrefManager prefManager;
     public static String ip="10.30.7.43";
     public static String restApi="http://"+ip+":8000/api/";
     public static String channelAuth="http://"+ip+":8000/api/broadcast/auth";
@@ -48,4 +48,17 @@ public class App extends Application {
     }
 
 
+    public static String getDomain(){
+        return domain;
+    }
+
+    private static String domain="192.168.1.3";
+
+    public static String getAccessToken(){
+        return accessToken;
+    }
+
+    public static void setAccessToken(String accessToken) {
+        App.accessToken = accessToken;
+    }
 }

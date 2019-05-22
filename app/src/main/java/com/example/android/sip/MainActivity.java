@@ -85,7 +85,7 @@ public class MainActivity extends AppCompatActivity {
 //        ((App) getApplication()).getPrefManager().setIsLoggedIn(false);
         if (((App) getApplication()).getPrefManager().isLoggedIn()) {
             //check if session is valid and if valid
-            Intent intent = new Intent(MainActivity.this, WalkieTalkieActivity.class);
+            Intent intent = new Intent(MainActivity.this, BaseActivity.class);
             startActivity(intent);
             finish();
 
@@ -122,12 +122,13 @@ public class MainActivity extends AppCompatActivity {
                     return;
                 } else {
 
+                    App.setAccessToken(response.body().getApi_token());
                     ((App) getApplication()).getPrefManager().setIsLoggedIn(true);
                     ((App) getApplication()).getPrefManager().setUserAccessToken(response.body().getApi_token());
                     ((App) getApplication()).getPrefManager().setUSER_Phone(response.body().getPhone());
                     ((App) getApplication()).getPrefManager().setUSER_Password(password);
                     ((App) getApplication()).getPrefManager().setUserEmail(email);
-                    Intent intent = new Intent(MainActivity.this, WalkieTalkieActivity.class);
+                    Intent intent = new Intent(MainActivity.this, BaseActivity.class);
                     startActivity(intent);
                     finish();
                 }

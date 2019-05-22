@@ -12,7 +12,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class RetrofitClient {
 
-    private static String baseUrl = App.restApi;
+    private static String baseUrl = "http://"+App.getDomain()+":8000/api/";
     //        private static String baseUrl = "http://d061db10.ngrok.io/api/v1/";
     private static Retrofit retrofit = null;
 
@@ -32,7 +32,7 @@ public class RetrofitClient {
                         ongoing.addHeader("Accept", "application/json;versions=1");
 
                         if (App.isLoggedIn) {
-                            ongoing.addHeader("Authorization","Bearer "+App.accessToken);
+                            ongoing.addHeader("Authorization","Bearer "+App.getAccessToken());
                         }
                         return chain.proceed(ongoing.build());
                     }
