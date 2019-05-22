@@ -90,6 +90,13 @@ public class MainActivity extends AppCompatActivity {
             finish();
 
         }
+
+        if(getIntent().getStringExtra("email")!=null){
+            Toast.makeText(this,"Registration Successful",Toast.LENGTH_SHORT).show();
+            etEmail.setText(getIntent().getStringExtra("email"));
+            etPassword.setText(getIntent().getStringExtra("password"));
+        }
+
     }
 
     @OnClick(R.id.tvRegsiter)

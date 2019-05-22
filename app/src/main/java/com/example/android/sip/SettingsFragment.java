@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.sql.BatchUpdateException;
@@ -30,6 +31,9 @@ public class SettingsFragment extends Fragment {
 
     Button btnLogout;
 
+    TextView tvUserName;
+    TextView tvUserPhone;
+
     private View view;
 
     public SettingsFragment() {
@@ -47,6 +51,9 @@ public class SettingsFragment extends Fragment {
                 logoutClicked();
             }
         });
+//
+//        tvUserName.setText((((App) getActivity().getApplication()).getPrefManager().getUSER_Name()));
+//        tvUserPhone.setText((((App) getActivity().getApplication()).getPrefManager().getUSER_Phone()));
 
         return view;
     }

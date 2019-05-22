@@ -44,7 +44,7 @@ public class Validator {
 
     public boolean isNameValid(String name) {
 
-        return name.length() > 6;
+        return name.length() > 3;
     }
 
 

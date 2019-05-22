@@ -2,6 +2,7 @@ package com.example.android.sip;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -64,9 +65,9 @@ public class SignupActivity extends AppCompatActivity implements TextWatcher {
     public void signupButtonClicked() {
 
 
-        String password = etPasswordSignup.getText().toString();
+        final String password = etPasswordSignup.getText().toString();
         String confirm_password = etConfirmPassowordSignup.getText().toString();
-        String email = etEmailSigup.getText().toString();
+        final String email = etEmailSigup.getText().toString();
         String name = etNameSignup.getText().toString();
 
         int valid = 0;
@@ -82,11 +83,11 @@ public class SignupActivity extends AppCompatActivity implements TextWatcher {
             valid++;
 
         }
-
-        if (!validator.isPasswordValid(password)) {
-            etPasswordSignup.setError("enter strong password");
-            valid++;
-        }
+//
+//        if (!validator.isPasswordValid(password)) {
+//            etPasswordSignup.setError("enter strong password");
+//            valid++;
+//        }
         if (valid != 0) {
             return;
         }
@@ -112,13 +113,24 @@ public class SignupActivity extends AppCompatActivity implements TextWatcher {
                         return;
                     } else if (response.code() == 200) {
 
-                        Log.d("APP_DEBUG", "onResponse: "+"response ok");
-                        ((App) getApplication()).getPrefManager().setIsLoggedIn(true);
-                        ((App) getApplication()).getPrefManager().setUserAccessToken(response.body().getApi_token());
-                        ((App) getApplication()).getPrefManager().setUSER_Phone(response.body().getPhone());
-                        Intent intent = new Intent(SignupActivity.this, WalkieTalkieActivity.class);
-                        startActivity(intent);
-                        finish();
+
+                       final ApiToken a=response.body();
+                        Handler handler = new Handler();
+                        handler.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                Log.d("APP_DEBUG", "onResponse: "+"response ok");
+//                                App.setAccessToken(a.getApi_token());
+//                                ((App) getApplication()).getPrefManager().setIsLoggedIn(true);
+//                                ((App) getApplication()).getPrefManager().setUserAccessToken(a.getApi_token());
+//                                ((App) getApplication()).getPrefManager().setUSER_Phone(a.getPhone());
+                                Intent intent = new Intent(SignupActivity.this, MainActivity.class);
+                                intent.putExtra("email",email);
+                                intent.putExtra("password",password);
+                                startActivity(intent);
+                                finish();                            }
+                        }, 2000);
+
 
                     } else {
                         Toast.makeText(getApplicationContext(), "Something went wrong,Try again", Toast.LENGTH_SHORT).show();
@@ -130,6 +142,7 @@ public class SignupActivity extends AppCompatActivity implements TextWatcher {
 
                 @Override
                 public void onFailure(Call<ApiToken> call, Throwable t) {
+                    Toast.makeText(getApplicationContext(), "Something went wrong,Try again", Toast.LENGTH_SHORT).show();
 
                 }
             });
