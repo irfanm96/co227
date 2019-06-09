@@ -5,6 +5,7 @@ import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
@@ -34,6 +35,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Chronometer;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -120,7 +122,7 @@ public class BaseActivity extends AppCompatActivity {
 
     }
 
-    private void make() {
+    public void make() {
 //        ToggleButton pushToTalkButton = (ToggleButton) findViewById(R.id.pushToTalk);
 //        pushToTalkButton.setOnTouchListener(this);
 
@@ -164,9 +166,9 @@ public class BaseActivity extends AppCompatActivity {
             closeLocalProfile();
         }
 
-        String username = ((App)getApplication()).getPrefManager().getUSER_Phone();
+        String username = ((App) getApplication()).getPrefManager().getUSER_Phone();
         String domain = ((App) getApplication()).getPrefManager().getDomain();
-        String password = ((App)getApplication()).getPrefManager().getUSER_Password();
+        String password = ((App) getApplication()).getPrefManager().getUSER_Password();
 
         try {
             SipProfile.Builder builder = new SipProfile.Builder(username, domain);
@@ -285,6 +287,7 @@ public class BaseActivity extends AppCompatActivity {
                         break;
                     case ON_CALL_ENDED:
                         mydialog.dismiss();
+                        chronometer.start();
                         break;
                     case ON_CALL_ERROR:
 
@@ -293,8 +296,9 @@ public class BaseActivity extends AppCompatActivity {
                             @Override
                             public void run() {
                                 mydialog.dismiss();
+                                chronometer.stop();
                             }
-                        }, 5000);
+                        }, 2000);
 
                         break;
                     case ON_CALL_BUSY:
@@ -304,7 +308,7 @@ public class BaseActivity extends AppCompatActivity {
                             public void run() {
                                 mydialog.dismiss();
                             }
-                        }, 5000);
+                        }, 2000);
                         break;
 
                 }
@@ -397,8 +401,8 @@ public class BaseActivity extends AppCompatActivity {
                 // forget to set up a listener to set things up once the call is established.
                 @Override
                 public void onCallEstablished(SipAudioCall call) {
-                    updateOutgoingCallDialog(ON_CALL_ESTABLISHED);
                     call.startAudio();
+                    updateOutgoingCallDialog(ON_CALL_ESTABLISHED);
 //                    call.setSpeakerMode(true);
                     if (call.isMuted()) {
                         Log.d(TAG, "onCallEstablished: call was muted");
@@ -413,6 +417,24 @@ public class BaseActivity extends AppCompatActivity {
                 public void onCallEnded(SipAudioCall call) {
                     updateOutgoingCallDialog(ON_CALL_ENDED);
                     Log.d("APP_DEBUG", "onCallEnded: ");
+                    if (call != null) {
+                        call.close();
+                        try {
+                            call.endCall();
+                        } catch (SipException e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                    if (incCall != null) {
+                        incCall.close();
+                        try {
+                            incCall.endCall();
+                        } catch (SipException e) {
+                            e.printStackTrace();
+                        }
+                    }
+
                 }
 
                 @Override
@@ -420,6 +442,24 @@ public class BaseActivity extends AppCompatActivity {
                     super.onError(call, errorCode, errorMessage);
                     updateOutgoingCallDialog(ON_CALL_ERROR);
                     Log.d(TAG, "onError: " + errorMessage + " code " + errorCode);
+                    if (call != null) {
+                        call.close();
+                        try {
+                            call.endCall();
+                        } catch (SipException e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                    if (incCall != null) {
+                        incCall.close();
+                        try {
+                            incCall.endCall();
+                        } catch (SipException e) {
+                            e.printStackTrace();
+                        }
+                    }
+
                 }
 
                 @Override
@@ -442,6 +482,24 @@ public class BaseActivity extends AppCompatActivity {
                     super.onCallBusy(call);
                     updateOutgoingCallDialog(ON_CALL_BUSY);
                     Log.d(TAG, "onCallBusy: ");
+                    if (call != null) {
+                        call.close();
+                        try {
+                            call.endCall();
+                        } catch (SipException e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                    if (incCall != null) {
+                        incCall.close();
+                        try {
+                            incCall.endCall();
+                        } catch (SipException e) {
+                            e.printStackTrace();
+                        }
+                    }
+
                 }
 
                 @Override
@@ -515,7 +573,22 @@ public class BaseActivity extends AppCompatActivity {
         super.onDestroy();
         if (call != null) {
             call.close();
+            try {
+                call.endCall();
+            } catch (SipException e) {
+                e.printStackTrace();
+            }
         }
+
+        if (incCall != null) {
+            incCall.close();
+            try {
+                incCall.endCall();
+            } catch (SipException e) {
+                e.printStackTrace();
+            }
+        }
+
 
         closeLocalProfile();
 
@@ -536,6 +609,11 @@ public class BaseActivity extends AppCompatActivity {
 
     @SuppressLint("SetTextI18n")
     public void showOutgoingCallDialog(final Contact c) {
+
+
+        final InputMethodManager imm = (InputMethodManager) this.getSystemService(Context.INPUT_METHOD_SERVICE);
+
+        imm.hideSoftInputFromWindow(getWindow().getDecorView().getRootView().getWindowToken(), 0);
 
         Log.d(TAG, "call to  " + c.getPhone() + " name " + c.getName());
         mydialog = new Dialog(this, android.R.style.Widget_DeviceDefault_ActionBar);
@@ -647,6 +725,11 @@ public class BaseActivity extends AppCompatActivity {
     @SuppressLint("SetTextI18n")
     public void showIncomingCallDialog(Contact c) {
 
+
+        final InputMethodManager imm = (InputMethodManager) this.getSystemService(Context.INPUT_METHOD_SERVICE);
+
+        imm.hideSoftInputFromWindow(getWindow().getDecorView().getRootView().getWindowToken(), 0);
+
 //        Log.d(TAG, "call to  " + c.getPhone() + " name " + c.getName());
         mydialog = new Dialog(this, android.R.style.Widget_DeviceDefault_ActionBar);
         mydialog.setContentView(R.layout.incoming_call);
@@ -693,6 +776,7 @@ public class BaseActivity extends AppCompatActivity {
 
                         chronometer.start();
                         incCall.startAudio();
+
 //                        incCall.setSpeakerMode(true);
 
                         if (incCall.isMuted()) {
@@ -714,6 +798,7 @@ public class BaseActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Log.d(TAG, "onClick: hang up clikced");
                 mydialog.dismiss();
+                mydialog.cancel();
                 mRingtone.stop();
 //                if (incCall != null) {
                 try {
@@ -827,4 +912,33 @@ public class BaseActivity extends AppCompatActivity {
     }
 
 
+    @Override
+    protected void onStop() {
+        super.onStop();
+
+        if (call != null) {
+            call.close();
+            try {
+                call.endCall();
+            } catch (SipException e) {
+                e.printStackTrace();
+            }
+        }
+
+        if (incCall != null) {
+            incCall.close();
+            try {
+                incCall.endCall();
+            } catch (SipException e) {
+                e.printStackTrace();
+            }
+        }
+
+
+        closeLocalProfile();
+
+//        if (callReceiver != null) {
+//            this.unregisterReceiver(callReceiver);
+//        }
+    }
 }

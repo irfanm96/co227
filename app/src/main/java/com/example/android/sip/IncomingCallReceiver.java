@@ -43,6 +43,8 @@ public class IncomingCallReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         SipAudioCall incomingCall = null;
+        final BaseActivity wtActivity = (BaseActivity) context;
+
         final BaseActivity va=(BaseActivity) context;
 
         try {
@@ -62,15 +64,49 @@ public class IncomingCallReceiver extends BroadcastReceiver {
 //                    super.onCallEnded(call);
                     Log.d(TAG, "imconing call ended ");
                     va.updateIncomingCallDialog(ON_CALL_ENDED_IN);
+                    call.close();
+                    try {
+                        call.endCall();
+                    } catch (SipException e) {
+                        e.printStackTrace();
+                    }
+
+
+
+//                    wtActivity.closeLocalProfile();
+//                    wtActivity.make();
 
                 }
 
                 @Override
                 public void onError(SipAudioCall call, int errorCode, String errorMessage) {
 //                    super.onError(call, errorCode, errorMessage);
-                    Log.d(TAG, "incoming call error");
+                    Log.d(TAG, "incoming call error "+ errorMessage+ " code "+errorCode);
                     va.updateIncomingCallDialog(ON_CALL_ERROR_IN);
+                    call.close();
+                    try {
+                        call.endCall();
+                    } catch (SipException e) {
+                        e.printStackTrace();
+                    }
+//
+//                    wtActivity.closeLocalProfile();
+//                    wtActivity.make();
 
+                }
+
+                @Override
+                public void onCallBusy(SipAudioCall call) {
+                    super.onCallBusy(call);
+//                    wtActivity.closeLocalProfile();
+//                    wtActivity.make();
+                }
+
+                @Override
+                public void onChanged(SipAudioCall call) {
+                    super.onChanged(call);
+//                    wtActivity.closeLocalProfile();
+//                    wtActivity.make();
                 }
             };
 
@@ -85,8 +121,6 @@ public class IncomingCallReceiver extends BroadcastReceiver {
             }
 
 
-            BaseActivity wtActivity = (BaseActivity) context;
-
             incomingCall = wtActivity.manager.takeAudioCall(intent,null);
             incomingCall.setListener(listener,true);
 //            incomingCall.answerCall(30);
@@ -95,7 +129,7 @@ public class IncomingCallReceiver extends BroadcastReceiver {
 //            if(incomingCall.isMuted()) {
 //                incomingCall.toggleMute();
 //            }
-            wtActivity.call = incomingCall;
+//            wtActivity.call = incomingCall;
 
             wtActivity.updateStatus(incomingCall);
 
