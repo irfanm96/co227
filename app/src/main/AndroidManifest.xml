@@ -30,9 +30,6 @@
             android:theme="@style/Theme.AppCompat">
         </activity>
         <activity
-            android:name=".WalkieTalkieActivity"
-            android:configChanges="orientation|keyboardHidden" />
-        <activity
             android:name=".SipSettings"
             android:label="set_preferences" />
         <activity android:name=".ContactActivity" />

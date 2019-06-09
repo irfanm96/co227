@@ -174,7 +174,7 @@ public class ContactActivity extends AppCompatActivity {
                 int i=0;
 
                 for (Contact p:contacts) {
-                    if(p.getEmail().equals(c.getEmail())){
+                    if(p.getPhone().equals(c.getPhone())){
                         contacts.remove(i);
                         recyclerViewAdapter.notifyDataSetChanged();
                         recyclerViewAdapter.setContactListFull(contacts);

@@ -260,7 +260,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 //                return c;
 //            }
 //        }
-        return new Contact("Unkown","",s);
+        return new Contact("Unkown",s);
     }
 
     public boolean isMatching(){

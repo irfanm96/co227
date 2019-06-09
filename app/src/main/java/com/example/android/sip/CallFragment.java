@@ -36,7 +36,7 @@ public class CallFragment extends Fragment {
     private Dialog dialog;
     private ImageButton hangUp;
     Dialog mydialog;
-    private Contact toBeCalled = new Contact("Unknown", "", "");
+    private Contact toBeCalled = new Contact("Unknown",  "");
 
     private RecyclerView recyclerView;
     private ArrayList<Contact> contactList = new ArrayList<>();

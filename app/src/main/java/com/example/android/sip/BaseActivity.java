@@ -113,10 +113,10 @@ public class BaseActivity extends AppCompatActivity {
     public void fetchContacts() {
 
         contactList = new ArrayList<>();
-        contactList.add(new Contact("demo", "200@ping.com", "200"));
-        contactList.add(new Contact("Irfan", "3000@ping.com", "3000"));
-        contactList.add(new Contact("Wishma", "3001@ping.com", "3001"));
-        contactList.add(new Contact("Rishi", "3002@ping.com", "3002"));
+        contactList.add(new Contact("demo",  "200"));
+        contactList.add(new Contact("Irfan",  "3000"));
+        contactList.add(new Contact("Wishma",  "3001"));
+        contactList.add(new Contact("Rishi", "3002"));
         callFragment.setContactList(contactList);
         contactFragment.setContactList(contactList);
 
