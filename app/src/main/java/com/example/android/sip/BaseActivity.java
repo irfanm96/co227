@@ -40,9 +40,17 @@ import android.widget.Chronometer;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.example.myapplication.ContactDetails;
 
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class BaseActivity extends AppCompatActivity {
 
@@ -61,7 +69,16 @@ public class BaseActivity extends AppCompatActivity {
     public SipProfile me = null;
     public SipAudioCall call = null;
     public IncomingCallReceiver callReceiver;
-    private ArrayList<Contact> contactList;
+    private ArrayList<Contact> contactList=new ArrayList<>();
+
+    public void setContactList(List<Contact> contactList) {
+        this.contactList.clear();
+        this.contactList.addAll(contactList);
+        callFragment.setContactList(this.contactList);
+        contactFragment.setContactList(this.contactList);
+
+    }
+
     private CallFragment callFragment;
     private ContactFragment contactFragment;
     private SettingsFragment settingsFragment;
@@ -112,15 +129,40 @@ public class BaseActivity extends AppCompatActivity {
 
     public void fetchContacts() {
 
-        contactList = new ArrayList<>();
-        contactList.add(new Contact("demo",  "200"));
-        contactList.add(new Contact("Irfan",  "3000"));
-        contactList.add(new Contact("Wishma",  "3001"));
-        contactList.add(new Contact("Rishi", "3002"));
-        callFragment.setContactList(contactList);
-        contactFragment.setContactList(contactList);
+//         contactList = new ArrayList<>();
+        ArrayList<Contact> contacts;
 
+
+
+
+        RestApi restApi = RetrofitClient.getClient().create(RestApi.class);
+        Call<List<Contact>> call = restApi.contacts();
+        call.enqueue(new Callback<List<Contact>>()  {
+            @Override
+            public void onResponse(Call<List<Contact>> call, Response<List<Contact>> response) {
+//
+
+                Log.d("APP_DEBUG", "RESPONSE IS " + response.code());
+                if (response.code()!=200 && response.code()!=201 ) {
+                    Toast.makeText(getApplicationContext(), "Oops Try again later", Toast.LENGTH_SHORT).show();
+                    return;
+                } else {
+                    setContactList(response.body());
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Contact>> call, Throwable t) {
+
+                Log.d("APP_DEBUG", "ERROR IS " + t.getMessage());
+                Toast.makeText(getApplicationContext(), "Oops Try again later", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
+
+
+
 
     public void make() {
 //        ToggleButton pushToTalkButton = (ToggleButton) findViewById(R.id.pushToTalk);
