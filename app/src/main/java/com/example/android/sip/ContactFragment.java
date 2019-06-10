@@ -29,7 +29,8 @@ public class ContactFragment extends Fragment {
     private FloatingActionButton floatingActionButton;
 
     private RecyclerView recyclerView;
-    private ArrayList<Contact> contactList =new ArrayList<>();
+    private ArrayList<Contact> contactList = new ArrayList<>();
+    private  RecyclerViewAdapter recyclerViewAdapter;
 
 
     public ContactFragment() {
@@ -41,7 +42,7 @@ public class ContactFragment extends Fragment {
         view = inflater.inflate(R.layout.contact_fragment, container, false);
 
         etSearch = (EditText) view.findViewById(R.id.etSearch);
-        floatingActionButton=(FloatingActionButton)view.findViewById(R.id.fabNewContact);
+        floatingActionButton = (FloatingActionButton) view.findViewById(R.id.fabNewContact);
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -52,7 +53,7 @@ public class ContactFragment extends Fragment {
             }
         });
         recyclerView = (RecyclerView) view.findViewById(R.id.rv_contact);
-        final RecyclerViewAdapter recyclerViewAdapter = new RecyclerViewAdapter(getContext(), contactList);
+         recyclerViewAdapter = new RecyclerViewAdapter(getContext(), contactList);
 
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setAdapter(recyclerViewAdapter);
@@ -77,7 +78,7 @@ public class ContactFragment extends Fragment {
         return view;
     }
 
-    public  void  test(){
+    public void test() {
         Log.d(TAG, "test: ok");
     }
 
@@ -85,4 +86,7 @@ public class ContactFragment extends Fragment {
         this.contactList.clear();
         this.contactList.addAll(contactList);
     }
+
+
+
 }
