@@ -168,6 +168,14 @@ public class CallFragment extends Fragment {
         this.contactList.addAll(contactList);
     }
 
+    public void updateList(ArrayList<Contact> list){
+        if(recyclerViewAdapter != null) {
+            Log.d(TAG, "updateList: updting list");
+            recyclerViewAdapter.updateList(list);
+        }
+    }
+
+
     public RecyclerViewAdapter getRecyclerViewAdapter() {
         return recyclerViewAdapter;
     }

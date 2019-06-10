@@ -76,6 +76,8 @@ public class BaseActivity extends AppCompatActivity {
         this.contactList.addAll(contactList);
         callFragment.setContactList(this.contactList);
         contactFragment.setContactList(this.contactList);
+        contactFragment.updateList(this.contactList);
+        callFragment.updateList(this.contactList);
 
     }
 

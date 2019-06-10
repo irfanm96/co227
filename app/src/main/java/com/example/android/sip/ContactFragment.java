@@ -88,5 +88,12 @@ public class ContactFragment extends Fragment {
     }
 
 
+    public void updateList(ArrayList<Contact> list){
+        if(recyclerViewAdapter != null) {
+            Log.d(TAG, "updateList: updting list");
+            recyclerViewAdapter.updateList(list);
+        }
+    }
+
 
 }

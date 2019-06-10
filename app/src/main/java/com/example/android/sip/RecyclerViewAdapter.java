@@ -200,6 +200,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 //            System.out.println("filter list size"+contactListFull.size());
 //            System.out.println("original list size"+contactListFull.size());
 
+            Log.d(TAG, "performFiltering: in phone filter");
             if (constraint == null || constraint.length() == 0) {
                 filteredList.addAll(contactListFull);
             } else {
@@ -299,5 +300,13 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         }
     }
 
+
+    public void updateList(ArrayList<Contact> itemList){
+        contactList.clear();
+        contactListFull.clear();
+        this.contactList.addAll(itemList);
+        this.contactListFull.addAll(itemList);
+        notifyDataSetChanged();
+    }
 
 }
