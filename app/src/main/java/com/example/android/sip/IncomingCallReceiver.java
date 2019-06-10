@@ -50,14 +50,6 @@ public class IncomingCallReceiver extends BroadcastReceiver {
         try {
 
             SipAudioCall.Listener listener = new SipAudioCall.Listener() {
-                @Override
-                public void onRinging(SipAudioCall call, SipProfile caller) {
-                    try {
-                        call.answerCall(30);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
 
                 @Override
                 public void onCallEnded(SipAudioCall call) {

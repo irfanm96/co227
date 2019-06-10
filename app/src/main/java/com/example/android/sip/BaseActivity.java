@@ -985,4 +985,14 @@ public class BaseActivity extends AppCompatActivity {
 //            this.unregisterReceiver(callReceiver);
 //        }
     }
+
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        final InputMethodManager imm = (InputMethodManager) this.getSystemService(Context.INPUT_METHOD_SERVICE);
+
+        imm.hideSoftInputFromWindow(getWindow().getDecorView().getRootView().getWindowToken(), 0);
+
+    }
 }
