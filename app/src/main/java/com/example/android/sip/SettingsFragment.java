@@ -51,9 +51,12 @@ public class SettingsFragment extends Fragment {
                 logoutClicked();
             }
         });
-//
-//        tvUserName.setText((((App) getActivity().getApplication()).getPrefManager().getUSER_Name()));
-//        tvUserPhone.setText((((App) getActivity().getApplication()).getPrefManager().getUSER_Phone()));
+
+        tvUserPhone=(TextView) view.findViewById(R.id.tvUserPhone);
+        tvUserName=(TextView) view.findViewById(R.id.tvUserName);
+
+        tvUserName.setText((((App) getActivity().getApplication()).getPrefManager().getUSER_Phone()));
+        tvUserPhone.setText((((App) getActivity().getApplication()).getPrefManager().getUserEmail()));
 
         return view;
     }
