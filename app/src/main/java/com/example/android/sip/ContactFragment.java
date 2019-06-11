@@ -96,4 +96,10 @@ public class ContactFragment extends Fragment {
     }
 
 
+    public RecyclerViewAdapter getRecyclerViewAdapter() {
+        return recyclerViewAdapter;
+    }
+
+
+
 }

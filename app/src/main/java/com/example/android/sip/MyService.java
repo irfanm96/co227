@@ -34,6 +34,9 @@ public class MyService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId){
 
         // do your jobs here
+//        Intent i=new Intent(this,BaseActivity.class);
+//        i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//        startActivity(i);
 
         IntentFilter filter = new IntentFilter();
         filter.addAction("android.SipDemo.INCOMING_CALL");
@@ -48,6 +51,7 @@ public class MyService extends Service {
     }
 
     private void startForeground() {
+//        this.unregisterReceiver(callReceiver);
         Intent notificationIntent = new Intent(this, BaseActivity.class);
 
 

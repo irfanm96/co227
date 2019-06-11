@@ -124,6 +124,12 @@ public class BaseActivity extends AppCompatActivity {
             //TODO
             make();
             fetchContacts();
+//            if(getIntent().getStringExtra("status")!=null){
+//                Log.d(TAG, "onCreate: reciedv an intent");
+//                receivedIntent(getIntent());
+//
+//            }
+
 //            connectToPusher();
         }
 
@@ -416,20 +422,6 @@ public class BaseActivity extends AppCompatActivity {
     }
 
     /**
-     * Updates the status box with the SIP address of the current call.
-     *
-     * @param call The current, active call.
-     */
-    public void updateStatus(SipAudioCall call) {
-        String useName = call.getPeerProfile().getDisplayName();
-        if (useName == null) {
-            useName = call.getPeerProfile().getUserName();
-        }
-        updateStatus(useName + "@" + call.getPeerProfile().getSipDomain());
-    }
-
-
-    /**
      * Make an outgoing call.
      */
     public void initiateCall(Contact c) {
@@ -636,9 +628,9 @@ public class BaseActivity extends AppCompatActivity {
         }
 
 //        moveTaskToBack(true);
-
+//
 //        closeLocalProfile();
-
+//
 //        if (callReceiver != null) {
 //            this.unregisterReceiver(callReceiver);
 //        }
@@ -1002,5 +994,72 @@ public class BaseActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+    }
+
+
+
+
+    private void receivedIntent(Intent intent){
+        SipAudioCall incomingCall = null;
+        final BaseActivity c=this;
+        try {
+
+            SipAudioCall.Listener listener = new SipAudioCall.Listener() {
+
+                @Override
+                public void onCallEnded(SipAudioCall call) {
+//                    super.onCallEnded(call);
+                    Log.d(TAG, "imconing call ended ");
+                    c.updateIncomingCallDialog(ON_CALL_ENDED_IN);
+                    call.close();
+                    try {
+                        call.endCall();
+                    } catch (SipException e) {
+                        e.printStackTrace();
+                    }
+
+                }
+
+                @Override
+                public void onError(SipAudioCall call, int errorCode, String errorMessage) {
+//                    super.onError(call, errorCode, errorMessage);
+                    Log.d(TAG, "incoming call error "+ errorMessage+ " code "+errorCode);
+                    c.updateIncomingCallDialog(ON_CALL_ERROR_IN);
+                    call.close();
+                    try {
+                        call.endCall();
+                    } catch (SipException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                @Override
+                public void onCallBusy(SipAudioCall call) {
+                    super.onCallBusy(call);
+                }
+
+                @Override
+                public void onChanged(SipAudioCall call) {
+                    super.onChanged(call);
+                }
+            };
+
+
+
+            try {
+                incomingCall=c.manager.takeAudioCall(intent,listener);
+                c.incomingCall(incomingCall);
+            } catch (SipException e) {
+                e.printStackTrace();
+                Log.d(TAG, "onReceive: "+e.getMessage());
+            }
+
+            incomingCall = c.manager.takeAudioCall(intent,null);
+            incomingCall.setListener(listener,true);
+        } catch (Exception e) {
+            if (incomingCall != null) {
+                incomingCall.close();
+            }
+        }
     }
 }
