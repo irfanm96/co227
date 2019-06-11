@@ -69,13 +69,20 @@ public class IncomingCallActivity extends AppCompatActivity {
     private Dialog mydialog;
     private ImageButton hangUp;
     private ImageButton accept;
+
+    public void setContact(Contact contact) {
+        this.contact = contact;
+        Log.d(TAG, "setContact: "+ contact.getPhone());
+    }
+
     private Context context;
+    private Contact contact;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_base);
-
+        fetchContacts();
 //        tabLayout = findViewById(R.id.tb_layout);
 //        viewPager = findViewById(R.id.view_pager);
 //        adapter = new ViewPageAdapter(getSupportFragmentManager());
@@ -232,8 +239,8 @@ public class IncomingCallActivity extends AppCompatActivity {
         SipProfile caller = incCall.getPeerProfile();
 
         Log.d(TAG, "incomingCall: " + caller.getUserName());
-        Contact contact = getMatch(caller.getUserName());
-        showIncomingCallDialog(new Contact("sdsd","5656"));
+         contact = getMatch(caller.getUserName());
+        showIncomingCallDialog(contact);
     }
 
 
@@ -517,6 +524,9 @@ public class IncomingCallActivity extends AppCompatActivity {
                 } else {
                     setContactList(response.body());
 
+                   Contact c= getMatch(incCall.getPeerProfile().getUserName());
+                   setContact(c);
+
                 }
             }
 
@@ -532,11 +542,18 @@ public class IncomingCallActivity extends AppCompatActivity {
     public void setContactList(List<Contact> contactList) {
         this.contactList.clear();
         this.contactList.addAll(contactList);
+        Log.d(TAG, "setContactList: list setted");
     }
+
 
     public Contact getMatch(String s) {
 
-        for (Contact c:contactList) {
+        if(this.contactList.isEmpty()){
+            Log.d(TAG, "getMatch: list is empty");
+
+        }        
+        for (Contact c:this.contactList) {
+            Log.d(TAG, "getMatch: "+c.getPhone());
             if(c.getPhone().equalsIgnoreCase(s)){
                 Log.d(TAG, "getMatch: got the match");
                 return c;
@@ -544,6 +561,7 @@ public class IncomingCallActivity extends AppCompatActivity {
         }
         return new Contact("Unkown",s);
     }
+
 
 
 
