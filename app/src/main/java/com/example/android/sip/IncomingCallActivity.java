@@ -32,9 +32,15 @@ import android.widget.Chronometer;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class IncomingCallActivity extends AppCompatActivity {
 
@@ -226,11 +232,8 @@ public class IncomingCallActivity extends AppCompatActivity {
         SipProfile caller = incCall.getPeerProfile();
 
         Log.d(TAG, "incomingCall: " + caller.getUserName());
-//        Contact contact = contactFragment.getRecyclerViewAdapter().getMatch(caller.getUserName());
-
-
-
-        showIncomingCallDialog(new Contact("1212","sdsd"));
+        Contact contact = getMatch(caller.getUserName());
+        showIncomingCallDialog(new Contact("sdsd","5656"));
     }
 
 
@@ -315,9 +318,9 @@ public class IncomingCallActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Log.d(TAG, "onClick: hang up clikced");
-//                mydialog.dismiss();
-//                mydialog.cancel();
+//                finishActivity(0);
                 mRingtone.stop();
+//                finish();
 //                if (incCall != null) {
                 try {
                     incCall.endCall();
@@ -328,8 +331,9 @@ public class IncomingCallActivity extends AppCompatActivity {
                 incCall = null;
 //                }
 
-                
+            finish();
             }
+
         });
 
 
@@ -469,18 +473,6 @@ public class IncomingCallActivity extends AppCompatActivity {
                     }
                     
                 }
-
-                @Override
-                public void onCallBusy(SipAudioCall call) {
-                    super.onCallBusy(call);
-                    
-                }
-
-                @Override
-                public void onChanged(SipAudioCall call) {
-                    super.onChanged(call);
-                    
-                }
             };
 
 
@@ -501,6 +493,59 @@ public class IncomingCallActivity extends AppCompatActivity {
             }
         }
     }
+
+
+    public void fetchContacts() {
+
+//         contactList = new ArrayList<>();
+        ArrayList<Contact> contacts;
+
+
+
+
+        RestApi restApi = RetrofitClient.getClient().create(RestApi.class);
+        Call<List<Contact>> call = restApi.contacts();
+        call.enqueue(new Callback<List<Contact>>()  {
+            @Override
+            public void onResponse(Call<List<Contact>> call, Response<List<Contact>> response) {
+//
+
+                Log.d("APP_DEBUG", "RESPONSE IS " + response.code());
+                if (response.code()!=200 && response.code()!=201 ) {
+                    Toast.makeText(getApplicationContext(), "Oops Try again later", Toast.LENGTH_SHORT).show();
+                    return;
+                } else {
+                    setContactList(response.body());
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Contact>> call, Throwable t) {
+
+                Log.d("APP_DEBUG", "ERROR IS " + t.getMessage());
+                Toast.makeText(getApplicationContext(), "Oops Try again later", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    public void setContactList(List<Contact> contactList) {
+        this.contactList.clear();
+        this.contactList.addAll(contactList);
+    }
+
+    public Contact getMatch(String s) {
+
+        for (Contact c:contactList) {
+            if(c.getPhone().equalsIgnoreCase(s)){
+                Log.d(TAG, "getMatch: got the match");
+                return c;
+            }
+        }
+        return new Contact("Unkown",s);
+    }
+
+
 
 
 }

@@ -182,11 +182,11 @@ public class BaseActivity extends AppCompatActivity {
         // application.
 
         Log.d(TAG, "make: function is called");
-        IntentFilter filter = new IntentFilter();
-        filter.addAction("android.SipDemo.INCOMING_CALL");
-        callReceiver = new IncomingCallReceiver();
-        callReceiver.setActivity(this);
-        this.registerReceiver(callReceiver, filter);
+//        IntentFilter filter = new IntentFilter();
+//        filter.addAction("android.SipDemo.INCOMING_CALL");
+//        callReceiver = new IncomingCallReceiver();
+//        callReceiver.setActivity(this);
+//        this.registerReceiver(callReceiver, filter);
 
         // "Push to talk" can be a serious pain when the screen keeps turning off.
         // Let's prevent that.
