@@ -240,7 +240,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         if(s.isEmpty()){
             return true;
         }
-        for (Contact c:contactListFull) {
+        for (Contact c:contactList) {
             if(c.getPhone().equalsIgnoreCase(s)){
                 return  true;
             }
@@ -251,7 +251,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
     public Contact getMatch(String s) {
 
-        for (Contact c:contactListFull) {
+        for (Contact c:contactList) {
             if(c.getPhone().equalsIgnoreCase(s)){
                 return c;
             }

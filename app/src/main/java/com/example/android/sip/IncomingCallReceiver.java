@@ -16,11 +16,14 @@
 
 package com.example.android.sip;
 
+import android.app.ActivityManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.net.sip.*;
 import android.util.Log;
+
+import java.util.List;
 
 import static android.support.constraint.Constraints.TAG;
 
@@ -39,13 +42,21 @@ public class IncomingCallReceiver extends BroadcastReceiver {
 
     private static final int ON_CALL_ENDED_IN = 1;
     private static final int ON_CALL_ERROR_IN = 2;
+    private BaseActivity basicActivity;
 
     @Override
     public void onReceive(Context context, Intent intent) {
         SipAudioCall incomingCall = null;
-        final BaseActivity wtActivity = (BaseActivity) context;
+        Log.d(TAG, "onReceive: recieved something");
+        
+        if(this.basicActivity==null){
+            Log.d(TAG, "onReceive: the activity is null");
+//            context.startActivity(new Intent(context, BaseActivity.class)
+//                    .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
+        }
 
-        final BaseActivity va=(BaseActivity) context;
+
+        final BaseActivity base=(BaseActivity) this.basicActivity;
 
         try {
 
@@ -55,18 +66,13 @@ public class IncomingCallReceiver extends BroadcastReceiver {
                 public void onCallEnded(SipAudioCall call) {
 //                    super.onCallEnded(call);
                     Log.d(TAG, "imconing call ended ");
-                    va.updateIncomingCallDialog(ON_CALL_ENDED_IN);
+                    base.updateIncomingCallDialog(ON_CALL_ENDED_IN);
                     call.close();
                     try {
                         call.endCall();
                     } catch (SipException e) {
                         e.printStackTrace();
                     }
-
-
-
-//                    wtActivity.closeLocalProfile();
-//                    wtActivity.make();
 
                 }
 
@@ -74,62 +80,52 @@ public class IncomingCallReceiver extends BroadcastReceiver {
                 public void onError(SipAudioCall call, int errorCode, String errorMessage) {
 //                    super.onError(call, errorCode, errorMessage);
                     Log.d(TAG, "incoming call error "+ errorMessage+ " code "+errorCode);
-                    va.updateIncomingCallDialog(ON_CALL_ERROR_IN);
+                    base.updateIncomingCallDialog(ON_CALL_ERROR_IN);
                     call.close();
                     try {
                         call.endCall();
                     } catch (SipException e) {
                         e.printStackTrace();
                     }
-//
-//                    wtActivity.closeLocalProfile();
-//                    wtActivity.make();
-
                 }
 
                 @Override
                 public void onCallBusy(SipAudioCall call) {
                     super.onCallBusy(call);
-//                    wtActivity.closeLocalProfile();
-//                    wtActivity.make();
-                }
+              }
 
                 @Override
                 public void onChanged(SipAudioCall call) {
                     super.onChanged(call);
-//                    wtActivity.closeLocalProfile();
-//                    wtActivity.make();
-                }
+              }
             };
 
 
 
             try {
-                incomingCall=va.manager.takeAudioCall(intent,listener);
-                va.incomingCall(incomingCall);
+                incomingCall=base.manager.takeAudioCall(intent,listener);
+                base.incomingCall(incomingCall);
             } catch (SipException e) {
                 e.printStackTrace();
                 Log.d(TAG, "onReceive: "+e.getMessage());
             }
-
-
-            incomingCall = wtActivity.manager.takeAudioCall(intent,null);
+            
+            incomingCall = base.manager.takeAudioCall(intent,null);
             incomingCall.setListener(listener,true);
-//            incomingCall.answerCall(30);
-//            incomingCall.startAudio();
-//            incomingCall.setSpeakerMode(true);
-//            if(incomingCall.isMuted()) {
-//                incomingCall.toggleMute();
-//            }
-//            wtActivity.call = incomingCall;
-
-            wtActivity.updateStatus(incomingCall);
-
         } catch (Exception e) {
             if (incomingCall != null) {
                 incomingCall.close();
             }
         }
     }
+
+
+
+
+    public void setActivity(BaseActivity baseActivity){
+        this.basicActivity=baseActivity;
+    }
+
+
 
 }

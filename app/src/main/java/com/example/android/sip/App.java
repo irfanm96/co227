@@ -2,6 +2,7 @@ package com.example.android.sip;
 
 import android.annotation.SuppressLint;
 import android.app.Application;
+import android.content.Intent;
 
 import com.facebook.stetho.Stetho;
 
@@ -28,7 +29,7 @@ public class App extends Application {
         prefManager = new PrefManager(this);
 //        FirebaseApp.initializeApp(this);
 //        RetrofitClient.initialize(this);
-
+        startService(new Intent(this, MyService.class));
         isLoggedIn = prefManager.isLoggedIn();
         accessToken = prefManager.getUserAccessToken();
 
@@ -61,4 +62,6 @@ public class App extends Application {
     public static void setAccessToken(String accessToken) {
         App.accessToken = accessToken;
     }
+
+
 }

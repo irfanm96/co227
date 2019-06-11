@@ -8,8 +8,10 @@
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
-    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS"/>
-
+    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
     <uses-feature
         android:name="android.hardware.sip.voip"
         android:required="true" />
@@ -23,12 +25,19 @@
     <application
         android:name=".App"
         android:icon="@mipmap/ic_launcher_round"
-        android:label="Ping">
-        <activity android:name="com.example.myapplication.ContactDetails" android:theme="@style/Theme.AppCompat"></activity>
+        android:label="Ping"
+        >
+        <service
+            android:name=".MyService"
+            android:enabled="true"
+            android:exported="true"></service>
+
+        <activity
+            android:name="com.example.myapplication.ContactDetails"
+            android:theme="@style/Theme.AppCompat" />
         <activity
             android:name=".BaseActivity"
-            android:theme="@style/Theme.AppCompat">
-        </activity>
+            android:theme="@style/Theme.AppCompat"></activity>
         <activity
             android:name=".SipSettings"
             android:label="set_preferences" />
@@ -38,18 +47,23 @@
             android:theme="@style/Theme.AppCompat.NoActionBar" />
         <activity
             android:name=".MainActivity"
-            android:theme="@style/Theme.AppCompat.NoActionBar" >
+            android:theme="@style/Theme.AppCompat.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
         </activity>
 
         <receiver
             android:name=".IncomingCallReceiver"
-            android:label="Call Receiver" />
+            android:label="Call Receiver" >
+            <intent-filter>
+                <action android:name="android.intent.action.PHONE_STATE" >
+                </action>
+            </intent-filter>
+        </receiver>
+
     </application>
 
 </manifest>

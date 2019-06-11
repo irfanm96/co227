@@ -87,6 +87,7 @@ public class BaseActivity extends AppCompatActivity {
     private Dialog mydialog;
     private ImageButton hangUp;
     private ImageButton accept;
+    private Context context;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -178,6 +179,7 @@ public class BaseActivity extends AppCompatActivity {
         IntentFilter filter = new IntentFilter();
         filter.addAction("android.SipDemo.INCOMING_CALL");
         callReceiver = new IncomingCallReceiver();
+        callReceiver.setActivity(this);
         this.registerReceiver(callReceiver, filter);
 
         // "Push to talk" can be a serious pain when the screen keeps turning off.
@@ -633,12 +635,13 @@ public class BaseActivity extends AppCompatActivity {
             }
         }
 
+//        moveTaskToBack(true);
 
-        closeLocalProfile();
+//        closeLocalProfile();
 
-        if (callReceiver != null) {
-            this.unregisterReceiver(callReceiver);
-        }
+//        if (callReceiver != null) {
+//            this.unregisterReceiver(callReceiver);
+//        }
     }
 
 
@@ -979,7 +982,7 @@ public class BaseActivity extends AppCompatActivity {
         }
 
 
-        closeLocalProfile();
+//        closeLocalProfile();
 
 //        if (callReceiver != null) {
 //            this.unregisterReceiver(callReceiver);
@@ -994,5 +997,10 @@ public class BaseActivity extends AppCompatActivity {
 
         imm.hideSoftInputFromWindow(getWindow().getDecorView().getRootView().getWindowToken(), 0);
 
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
     }
 }
