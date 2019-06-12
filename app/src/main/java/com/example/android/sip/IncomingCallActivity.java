@@ -276,6 +276,7 @@ public class IncomingCallActivity extends AppCompatActivity {
 //        Log.d(TAG, "call to  " + c.getPhone() + " name " + c.getName());
         mydialog = new Dialog(this, android.R.style.Widget_DeviceDefault_ActionBar);
         mydialog.setContentView(R.layout.incoming_call);
+        mydialog.setCancelable(false);
         mydialog.show();
         TextView tvCallName = (TextView) mydialog.findViewById(R.id.tvCallNameIncoming);
 
