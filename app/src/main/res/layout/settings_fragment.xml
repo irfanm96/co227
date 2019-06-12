@@ -19,7 +19,7 @@
         app:layout_constraintTop_toBottomOf="@+id/tvUserPhone" />
 
     <Button
-        android:id="@+id/button4"
+        android:id="@+id/btnContactUs"
         android:layout_width="0dp"
         android:layout_height="70dp"
         android:layout_marginTop="8dp"
@@ -27,10 +27,10 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button5" />
+        app:layout_constraintTop_toBottomOf="@+id/btnTerms" />
 
     <Button
-        android:id="@+id/button5"
+        android:id="@+id/btnTerms"
         android:layout_width="0dp"
         android:layout_height="70dp"
         android:layout_marginTop="8dp"
