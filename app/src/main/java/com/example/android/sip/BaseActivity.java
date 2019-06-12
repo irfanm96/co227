@@ -339,7 +339,7 @@ public class BaseActivity extends AppCompatActivity {
                         break;
                     case ON_CALL_ENDED:
                         mydialog.dismiss();
-                        chronometer.start();
+                        chronometer.stop();
                         break;
                     case ON_CALL_ERROR:
 
@@ -443,12 +443,9 @@ public class BaseActivity extends AppCompatActivity {
                     updateOutgoingCallDialog(ON_CALL_ESTABLISHED);
 //                    call.setSpeakerMode(true);
                     if (call.isMuted()) {
-                        Log.d(TAG, "onCallEstablished: call was muted");
                         call.toggleMute();
                     }
-//                    updateStatus(call);
-                    Log.d("APP_DEBUG", "onCallEstablished: ");
-
+                    Log.d(TAG, "onCallEstablished: ");
                 }
 
                 @Override
@@ -561,6 +558,7 @@ public class BaseActivity extends AppCompatActivity {
                 @Override
                 public void onRingingBack(SipAudioCall call) {
                     super.onRingingBack(call);
+                    updateOutgoingCallDialog(ON_RINGING);
                     Log.d(TAG, "onRingingBack: ");
                 }
 
