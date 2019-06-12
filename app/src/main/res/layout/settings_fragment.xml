@@ -8,26 +8,15 @@
     android:background="@color/backgroundFragment">
 
     <Button
-        android:id="@+id/button2"
-        android:layout_width="0dp"
-        android:layout_height="70dp"
-        android:layout_marginTop="8dp"
-        android:text="my Profile"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvUserPhone" />
-
-    <Button
         android:id="@+id/btnLogout"
         android:layout_width="0dp"
         android:layout_height="70dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="32dp"
         android:text="Logout"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button2" />
+        app:layout_constraintTop_toBottomOf="@+id/tvUserPhone" />
 
     <Button
         android:id="@+id/button4"

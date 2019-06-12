@@ -299,7 +299,7 @@ public class IncomingCallActivity extends AppCompatActivity {
                         pause.setVisibility(View.VISIBLE);
                         accept.setVisibility(View.INVISIBLE);
 
-                        ObjectAnimator mover = ObjectAnimator.ofFloat(hangUp, "translationX", 0, 150);
+                        ObjectAnimator mover = ObjectAnimator.ofFloat(hangUp, "translationX", 0, 200);
                         mover.start();
 
                         chronometer.start();
