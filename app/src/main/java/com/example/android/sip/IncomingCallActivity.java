@@ -82,7 +82,7 @@ public class IncomingCallActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_base);
-        fetchContacts();
+//        fetchContacts();
 //        tabLayout = findViewById(R.id.tb_layout);
 //        viewPager = findViewById(R.id.view_pager);
 //        adapter = new ViewPageAdapter(getSupportFragmentManager());
@@ -102,8 +102,11 @@ public class IncomingCallActivity extends AppCompatActivity {
 //        ActionBar actionBar = getSupportActionBar();
 //        actionBar.setElevation(0);
 
+
         make();
         receivedIntent(getIntent());
+        fetchContacts();
+
     }
 
 
@@ -239,8 +242,8 @@ public class IncomingCallActivity extends AppCompatActivity {
         SipProfile caller = incCall.getPeerProfile();
 
         Log.d(TAG, "incomingCall: " + caller.getUserName());
-         contact = getMatch(caller.getUserName());
-        showIncomingCallDialog(contact);
+//         contact = getMatch(caller.getUserName());
+        showIncomingCallDialog(new Contact("zdzd",caller.getUserName()));
     }
 
 
@@ -523,10 +526,6 @@ public class IncomingCallActivity extends AppCompatActivity {
                     return;
                 } else {
                     setContactList(response.body());
-
-                   Contact c= getMatch(incCall.getPeerProfile().getUserName());
-                   setContact(c);
-
                 }
             }
 
@@ -546,13 +545,16 @@ public class IncomingCallActivity extends AppCompatActivity {
     }
 
 
-    public Contact getMatch(String s) {
+    public Contact getMatch(List<Contact> contactList) {
 
-        if(this.contactList.isEmpty()){
+
+        String s=incCall.getPeerProfile().getUserName();
+
+        if(contactList.isEmpty()){
             Log.d(TAG, "getMatch: list is empty");
 
         }        
-        for (Contact c:this.contactList) {
+        for (Contact c:contactList) {
             Log.d(TAG, "getMatch: "+c.getPhone());
             if(c.getPhone().equalsIgnoreCase(s)){
                 Log.d(TAG, "getMatch: got the match");
