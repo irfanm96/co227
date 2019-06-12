@@ -103,6 +103,9 @@ public class SettingsFragment extends Fragment {
                     ((App) getActivity().getApplication()).getPrefManager().setUSER_Phone("");
                     ((App) getActivity().getApplication()).getPrefManager().setUSER_Password("");
                     ((App) getActivity().getApplication()).getPrefManager().setUserEmail("");
+
+                    BaseActivity context=(BaseActivity) getContext();
+                    context.closeLocalProfile();
                     Intent intent = new Intent(getContext(), MainActivity.class);
                     getActivity().startActivity(intent);
                     getActivity().finish();
