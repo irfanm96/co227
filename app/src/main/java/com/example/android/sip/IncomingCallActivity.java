@@ -105,7 +105,7 @@ public class IncomingCallActivity extends AppCompatActivity {
 
         make();
         receivedIntent(getIntent());
-        fetchContacts();
+//        fetchContacts();
 
     }
 
@@ -243,7 +243,19 @@ public class IncomingCallActivity extends AppCompatActivity {
 
         Log.d(TAG, "incomingCall: " + caller.getUserName());
 //         contact = getMatch(caller.getUserName());
-        showIncomingCallDialog(new Contact("zdzd",caller.getUserName()));
+
+        final Handler h = new Handler();
+        h.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                showIncomingCallDialog(contact);
+
+            }
+
+        }, 50);
+
+
+
     }
 
 
@@ -489,6 +501,7 @@ public class IncomingCallActivity extends AppCompatActivity {
 
             try {
                 incomingCall=c.manager.takeAudioCall(intent,listener);
+                fetchContacts(incomingCall.getPeerProfile().getUserName());
                 c.incomingCall(incomingCall);
             } catch (SipException e) {
                 e.printStackTrace();
@@ -505,67 +518,24 @@ public class IncomingCallActivity extends AppCompatActivity {
     }
 
 
-    public void fetchContacts() {
-
-//         contactList = new ArrayList<>();
-        ArrayList<Contact> contacts;
-
-
-
+    public void fetchContacts(String s) {
 
         RestApi restApi = RetrofitClient.getClient().create(RestApi.class);
-        Call<List<Contact>> call = restApi.contacts();
-        call.enqueue(new Callback<List<Contact>>()  {
+        Call<Contact> call = restApi.checkContact(new Contact("asasa",s));
+        call.enqueue(new Callback<Contact>() {
             @Override
-            public void onResponse(Call<List<Contact>> call, Response<List<Contact>> response) {
-//
+            public void onResponse(Call<Contact> call, Response<Contact> response) {
 
-                Log.d("APP_DEBUG", "RESPONSE IS " + response.code());
-                if (response.code()!=200 && response.code()!=201 ) {
-                    Toast.makeText(getApplicationContext(), "Oops Try again later", Toast.LENGTH_SHORT).show();
-                    return;
-                } else {
-                    setContactList(response.body());
-                }
+                setContact(response.body());
+
             }
 
             @Override
-            public void onFailure(Call<List<Contact>> call, Throwable t) {
+            public void onFailure(Call<Contact> call, Throwable t) {
 
-                Log.d("APP_DEBUG", "ERROR IS " + t.getMessage());
-                Toast.makeText(getApplicationContext(), "Oops Try again later", Toast.LENGTH_SHORT).show();
             }
         });
     }
-
-    public void setContactList(List<Contact> contactList) {
-        this.contactList.clear();
-        this.contactList.addAll(contactList);
-        Log.d(TAG, "setContactList: list setted");
-    }
-
-
-    public Contact getMatch(List<Contact> contactList) {
-
-
-        String s=incCall.getPeerProfile().getUserName();
-
-        if(contactList.isEmpty()){
-            Log.d(TAG, "getMatch: list is empty");
-
-        }        
-        for (Contact c:contactList) {
-            Log.d(TAG, "getMatch: "+c.getPhone());
-            if(c.getPhone().equalsIgnoreCase(s)){
-                Log.d(TAG, "getMatch: got the match");
-                return c;
-            }
-        }
-        return new Contact("Unkown",s);
-    }
-
-
-
 
 
 }

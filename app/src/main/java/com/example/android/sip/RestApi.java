@@ -1,6 +1,7 @@
 package com.example.android.sip;
 
 import java.util.List;
+import java.util.zip.CheckedOutputStream;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
@@ -25,6 +26,9 @@ public interface RestApi {
 
     @POST("contacts")
     Call<List<Contact>> contacts();
+
+    @POST("check-contact")
+    Call<Contact> checkContact(@Body Contact c);
 
 
 }
