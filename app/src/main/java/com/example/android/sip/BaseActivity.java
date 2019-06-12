@@ -993,6 +993,8 @@ public class BaseActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        make();
+        fetchContacts();
     }
 
 
@@ -1061,4 +1063,6 @@ public class BaseActivity extends AppCompatActivity {
             }
         }
     }
+
+
 }
