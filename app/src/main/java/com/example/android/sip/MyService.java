@@ -63,7 +63,7 @@ public class MyService extends Service {
                 NOTIF_CHANNEL_ID) // don't forget create a notification channel first
                 .setOngoing(true)
                 .setSmallIcon(R.drawable.ic_call)
-                .setContentTitle(getString(R.string.app_name))
+                .setContentTitle("Ping")
                 .setContentText("Service is running background")
                 .setContentIntent(pendingIntent)
                 .build());
