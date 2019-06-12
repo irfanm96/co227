@@ -102,18 +102,13 @@
         android:id="@+id/ivSpeakerIn"
         android:layout_width="48dp"
         android:layout_height="56dp"
-        android:layout_marginStart="24dp"
-        android:layout_marginLeft="24dp"
         android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
+        android:background="@color/backgroundFragment"
         app:layout_constraintEnd_toEndOf="@+id/cmTimerIncoming"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toEndOf="@+id/ivMicIn"
+        app:layout_constraintStart_toStartOf="@+id/cmTimerIncoming"
         app:layout_constraintTop_toBottomOf="@+id/cmTimerIncoming"
         app:srcCompat="@drawable/speaker_mode_off"
-        tools:ignore="MissingConstraints"
-        android:background="@color/backgroundFragment"/>
+        tools:ignore="MissingConstraints" />
 
     <ImageView
         android:id="@+id/ivPauseIn"
@@ -124,13 +119,13 @@
         android:layout_marginTop="8dp"
         android:layout_marginEnd="88dp"
         android:layout_marginRight="88dp"
+        android:background="@color/backgroundFragment"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.574"
+        app:layout_constraintHorizontal_bias="0.27"
         app:layout_constraintStart_toEndOf="@+id/ivSpeakerIn"
         app:layout_constraintTop_toBottomOf="@+id/cmTimerIncoming"
         app:srcCompat="@drawable/ic_pause_off"
-        tools:ignore="MissingConstraints"
-        android:background="@color/backgroundFragment"/>
+        tools:ignore="MissingConstraints" />
 
 
     <Chronometer
