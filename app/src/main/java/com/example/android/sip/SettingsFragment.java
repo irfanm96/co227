@@ -49,28 +49,28 @@ public class SettingsFragment extends Fragment {
         view = inflater.inflate(R.layout.settings_fragment, container, false);
 
         btnLogout=(Button)view.findViewById(R.id.btnLogout);
-        btnTerms=(Button)view.findViewById(R.id.btnTerms);
+//        btnTerms=(Button)view.findViewById(R.id.btnTerms);
         btnContactUs=(Button)view.findViewById(R.id.btnContactUs);
-        btnTerms.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                AlertDialog.Builder builder1 = new AlertDialog.Builder(getContext());
-                builder1.setMessage("Write your message here.");
-                builder1.setCancelable(true);
-
-                builder1.setPositiveButton(
-                        "Ok",
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-                                dialog.cancel();
-                            }
-                        });
-
-
-                AlertDialog alert11 = builder1.create();
-                alert11.show();
-            }
-        });
+//        btnTerms.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                AlertDialog.Builder builder1 = new AlertDialog.Builder(getContext());
+//                builder1.setMessage("Write your message here.");
+//                builder1.setCancelable(true);
+//
+//                builder1.setPositiveButton(
+//                        "Ok",
+//                        new DialogInterface.OnClickListener() {
+//                            public void onClick(DialogInterface dialog, int id) {
+//                                dialog.cancel();
+//                            }
+//                        });
+//
+//
+//                AlertDialog alert11 = builder1.create();
+//                alert11.show();
+//            }
+//        });
 
         btnContactUs.setOnClickListener(new View.OnClickListener() {
             @Override

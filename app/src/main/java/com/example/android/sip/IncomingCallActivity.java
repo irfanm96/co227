@@ -69,6 +69,7 @@ public class IncomingCallActivity extends AppCompatActivity {
     private Dialog mydialog;
     private ImageButton hangUp;
     private ImageButton accept;
+    private ImageButton hangUpNew;
 
     public void setContact(Contact contact) {
         this.contact = contact;
@@ -82,43 +83,14 @@ public class IncomingCallActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_base);
-//        fetchContacts();
-//        tabLayout = findViewById(R.id.tb_layout);
-//        viewPager = findViewById(R.id.view_pager);
-//        adapter = new ViewPageAdapter(getSupportFragmentManager());
-
-//        callFragment = new CallFragment();
-//        contactFragment = new ContactFragment();
-//        settingsFragment = new SettingsFragment();
-//        adapter.addFragment(callFragment, "");
-//        adapter.addFragment(contactFragment, "");
-//        adapter.addFragment(settingsFragment, "");
-
-//        viewPager.setAdapter(adapter);
-//        tabLayout.setupWithViewPager(viewPager);
-//        tabLayout.getTabAt(0).setIcon(R.drawable.ic_call);
-//        tabLayout.getTabAt(0).setIcon(R.drawable.ic_contact);
-//        tabLayout.getTabAt(1).setIcon(R.drawable.ic_settings);
-//        ActionBar actionBar = getSupportActionBar();
-//        actionBar.setElevation(0);
-
-
         make();
         receivedIntent(getIntent());
-//        fetchContacts();
 
     }
 
 
 
     public void make() {
-//        ToggleButton pushToTalkButton = (ToggleButton) findViewById(R.id.pushToTalk);
-//        pushToTalkButton.setOnTouchListener(this);
-
-        // Set up the intent filter.  This will be used to fire an
-        // IncomingCallReceiver when someone calls the SIP address used by this
-        // application.
-
         Log.d(TAG, "make: function is called");
         IntentFilter filter = new IntentFilter();
         filter.addAction("android.SipDemo.INCOMING_CALL");
@@ -283,6 +255,8 @@ public class IncomingCallActivity extends AppCompatActivity {
         tvCallName.setText("From: " + c.getName() + " - " + c.getPhone());
 
         hangUp = (ImageButton) mydialog.findViewById(R.id.btnHangUpIncoming);
+        hangUpNew = (ImageButton) mydialog.findViewById(R.id.btnHangUpIncomingNew);
+        hangUpNew.setVisibility(View.INVISIBLE);
         accept = (ImageButton) mydialog.findViewById(R.id.btnAnswerIncoming);
         final TextView st = (TextView) mydialog.findViewById(R.id.tvStatusIncoming);
         final Chronometer chronometer = (Chronometer) mydialog.findViewById(R.id.cmTimerIncoming);
@@ -314,10 +288,8 @@ public class IncomingCallActivity extends AppCompatActivity {
                         speaker.setVisibility(View.VISIBLE);
                         pause.setVisibility(View.VISIBLE);
                         accept.setVisibility(View.INVISIBLE);
-
-                        ObjectAnimator mover = ObjectAnimator.ofFloat(hangUp, "translationX", 0, 150);
-                        mover.start();
-
+                        hangUp.setVisibility(View.INVISIBLE);
+                        hangUpNew.setVisibility(View.VISIBLE);
                         chronometer.start();
                         incCall.startAudio();
 
@@ -336,6 +308,29 @@ public class IncomingCallActivity extends AppCompatActivity {
         });
 
         hangUp.setOnClickListener(new View.OnClickListener() {
+            private static final String TAG = "APP_DEBUG";
+
+            @Override
+            public void onClick(View v) {
+                Log.d(TAG, "onClick: hang up clikced");
+//                finishActivity(0);
+                mRingtone.stop();
+//                finish();
+//                if (incCall != null) {
+                try {
+                    incCall.endCall();
+                } catch (SipException e) {
+                    e.printStackTrace();
+                }
+                incCall.close();
+                incCall = null;
+//                }
+
+            finish();
+            }
+
+        });
+        hangUpNew.setOnClickListener(new View.OnClickListener() {
             private static final String TAG = "APP_DEBUG";
 
             @Override
@@ -538,5 +533,9 @@ public class IncomingCallActivity extends AppCompatActivity {
         });
     }
 
-
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        this.unregisterReceiver(callReceiver);
+    }
 }

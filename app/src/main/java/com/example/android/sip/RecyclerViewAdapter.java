@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.Filter;
 import android.widget.Filterable;
@@ -86,6 +87,10 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                 dialog_name.setText(contactList.get(viewHolder.getAdapterPosition()).getName());
                 dialog_phone.setText(contactList.get(viewHolder.getAdapterPosition()).getPhone());
                 myDialog.show();
+                final InputMethodManager imm = (InputMethodManager) v.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+
+                imm.hideSoftInputFromWindow(v.getRootView().getWindowToken(), 0);
+
                 btnDialogCall.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -230,29 +235,28 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         }
 
 
-
-
-
     };
 
-    public  boolean isInList(String s){
+    public boolean isInList(String s) {
 
-        if(s.isEmpty()){
+        if (s.isEmpty()) {
             return true;
         }
-        for (Contact c:contactList) {
-            if(c.getPhone().equalsIgnoreCase(s)){
-                return  true;
+        for (Contact c : contactList) {
+            if (c.getPhone().equalsIgnoreCase(s)) {
+                return true;
             }
         }
         return false;
-    };
+    }
+
+    ;
 
 
     public Contact getMatch(String s) {
 
-        for (Contact c:contactList) {
-            if(c.getPhone().equalsIgnoreCase(s)){
+        for (Contact c : contactList) {
+            if (c.getPhone().equalsIgnoreCase(s)) {
                 return c;
             }
         }
@@ -261,20 +265,20 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 //                return c;
 //            }
 //        }
-        return new Contact("Unkown",s);
+        return new Contact("Unkown", s);
     }
 
-    public boolean isMatching(){
+    public boolean isMatching() {
 //        Log.d(TAG, "isMatching: size is"+contactListFull.size());
-        return contactList.size()==1;
+        return contactList.size() == 1;
     }
 
     public Filter getPhoneFilter() {
         return phoneFilter;
     }
 
-    public boolean isEmpty(){
-        return this.contactList.size()==0;
+    public boolean isEmpty() {
+        return this.contactList.size() == 0;
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
@@ -301,7 +305,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     }
 
 
-    public void updateList(ArrayList<Contact> itemList){
+    public void updateList(ArrayList<Contact> itemList) {
         contactList.clear();
         contactListFull.clear();
         this.contactList.addAll(itemList);

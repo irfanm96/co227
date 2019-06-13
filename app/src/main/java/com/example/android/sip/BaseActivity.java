@@ -368,35 +368,6 @@ public class BaseActivity extends AppCompatActivity {
         });
     }
 
-
-    private SipAudioCall incCall = null;
-
-    public void incomingCall(SipAudioCall c) {
-        if (c == null) {
-            return;
-        }
-        if (c.isInCall()) {
-            return;
-        }
-        if (incCall != null) {
-            return;
-        }
-        incCall = c;
-        String ringtoneUri =
-                Settings.System.DEFAULT_RINGTONE_URI.toString();
-        mRingtone = RingtoneManager.getRingtone(getBaseContext(),
-                Uri.parse(ringtoneUri));
-        mRingtone.play();
-
-        SipProfile caller = incCall.getPeerProfile();
-
-        Log.d(TAG, "incomingCall: " + caller.getUserName());
-        Contact contact = callFragment.getRecyclerViewAdapter().getMatch(caller.getUserName());
-
-        showIncomingCallDialog(contact);
-    }
-
-
     @Override
     public void onRequestPermissionsResult(int requestCode,
                                            String[] permissions, int[] grantResults) {
@@ -461,15 +432,6 @@ public class BaseActivity extends AppCompatActivity {
                         }
                     }
 
-                    if (incCall != null) {
-                        incCall.close();
-                        try {
-                            incCall.endCall();
-                        } catch (SipException e) {
-                            e.printStackTrace();
-                        }
-                    }
-
                 }
 
                 @Override
@@ -486,14 +448,6 @@ public class BaseActivity extends AppCompatActivity {
                         }
                     }
 
-                    if (incCall != null) {
-                        incCall.close();
-                        try {
-                            incCall.endCall();
-                        } catch (SipException e) {
-                            e.printStackTrace();
-                        }
-                    }
 
                 }
 
@@ -526,14 +480,6 @@ public class BaseActivity extends AppCompatActivity {
                         }
                     }
 
-                    if (incCall != null) {
-                        incCall.close();
-                        try {
-                            incCall.endCall();
-                        } catch (SipException e) {
-                            e.printStackTrace();
-                        }
-                    }
 
                 }
 
@@ -616,14 +562,6 @@ public class BaseActivity extends AppCompatActivity {
             }
         }
 
-        if (incCall != null) {
-            incCall.close();
-            try {
-                incCall.endCall();
-            } catch (SipException e) {
-                e.printStackTrace();
-            }
-        }
 
 //        moveTaskToBack(true);
 //
@@ -638,10 +576,6 @@ public class BaseActivity extends AppCompatActivity {
     private boolean isOutMuted = false;
     private boolean isHold = false;
     private boolean isSpeaker = false;
-
-    public static void setSipAddress(String sipAddress) {
-        BaseActivity.sipAddress = sipAddress;
-    }
 
 
     @SuppressLint("SetTextI18n")
@@ -756,200 +690,6 @@ public class BaseActivity extends AppCompatActivity {
 
     }
 
-    private boolean isInMuted = false;
-    private boolean isHoldIn = false;
-    private boolean isSpeakerIn = false;
-
-    @SuppressLint("SetTextI18n")
-    public void showIncomingCallDialog(Contact c) {
-
-
-        final InputMethodManager imm = (InputMethodManager) this.getSystemService(Context.INPUT_METHOD_SERVICE);
-
-        imm.hideSoftInputFromWindow(getWindow().getDecorView().getRootView().getWindowToken(), 0);
-
-//        Log.d(TAG, "call to  " + c.getPhone() + " name " + c.getName());
-        mydialog = new Dialog(this, android.R.style.Widget_DeviceDefault_ActionBar);
-        mydialog.setContentView(R.layout.incoming_call);
-        mydialog.show();
-        TextView tvCallName = (TextView) mydialog.findViewById(R.id.tvCallNameIncoming);
-
-        tvCallName.setText("From: " + c.getName() + " - " + c.getPhone());
-
-        hangUp = (ImageButton) mydialog.findViewById(R.id.btnHangUpIncoming);
-        accept = (ImageButton) mydialog.findViewById(R.id.btnAnswerIncoming);
-        final TextView st = (TextView) mydialog.findViewById(R.id.tvStatusIncoming);
-        final Chronometer chronometer = (Chronometer) mydialog.findViewById(R.id.cmTimerIncoming);
-
-        final ImageView mic = (ImageView) mydialog.findViewById(R.id.ivMicIn);
-        final ImageView speaker = (ImageView) mydialog.findViewById(R.id.ivSpeakerIn);
-        final ImageView pause = (ImageView) mydialog.findViewById(R.id.ivPauseIn);
-
-        mic.setVisibility(View.INVISIBLE);
-        speaker.setVisibility(View.INVISIBLE);
-        pause.setVisibility(View.INVISIBLE);
-
-
-        chronometer.setVisibility(View.INVISIBLE);
-        accept.setOnClickListener(new View.OnClickListener() {
-            @RequiresApi(api = Build.VERSION_CODES.M)
-            @Override
-            public void onClick(View v) {
-
-
-                if (incCall != null) {
-
-                    mRingtone.stop();
-                    try {
-                        incCall.answerCall(30);
-                        st.setText("On Call..");
-                        chronometer.setVisibility(View.VISIBLE);
-                        mic.setVisibility(View.VISIBLE);
-                        speaker.setVisibility(View.VISIBLE);
-                        pause.setVisibility(View.VISIBLE);
-                        accept.setVisibility(View.INVISIBLE);
-
-                        ObjectAnimator mover = ObjectAnimator.ofFloat(hangUp, "translationX", 0, 150);
-                        mover.start();
-
-                        chronometer.start();
-                        incCall.startAudio();
-
-//                        incCall.setSpeakerMode(true);
-
-                        if (incCall.isMuted()) {
-                            Log.d(TAG, "call was muted ");
-                            incCall.toggleMute();
-                        }
-                    } catch (SipException e) {
-                        e.printStackTrace();
-                    }
-
-                }
-            }
-        });
-
-        hangUp.setOnClickListener(new View.OnClickListener() {
-            private static final String TAG = "APP_DEBUG";
-
-            @Override
-            public void onClick(View v) {
-                Log.d(TAG, "onClick: hang up clikced");
-                mydialog.dismiss();
-                mydialog.cancel();
-                mRingtone.stop();
-//                if (incCall != null) {
-                try {
-                    incCall.endCall();
-                } catch (SipException e) {
-                    e.printStackTrace();
-                }
-                incCall.close();
-                incCall = null;
-//                }
-            }
-        });
-
-
-        mic.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //mute the call
-                if (!isInMuted) {
-                    isInMuted = true;
-                    if (!incCall.isMuted()) {
-                        call.toggleMute();
-                    }
-                    mic.setImageResource(R.drawable.microphone_off);
-                } else {
-
-                    isInMuted = false;
-                    if (incCall.isMuted()) {
-                        incCall.toggleMute();
-                    }
-                    mic.setImageResource(R.drawable.microphone_on);
-
-                }
-            }
-        });
-        pause.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //mute the call
-                if (!isHoldIn) {
-                    isHoldIn = true;
-                    try {
-                        incCall.holdCall(30);
-                    } catch (SipException e) {
-                        e.printStackTrace();
-                    }
-                    pause.setImageResource(R.drawable.ic_pause_on);
-                } else {
-
-                    isHoldIn = false;
-                    try {
-                        incCall.continueCall(30);
-                    } catch (SipException e) {
-                        e.printStackTrace();
-                    }
-                    pause.setImageResource(R.drawable.ic_pause_off);
-
-                }
-            }
-        });
-        speaker.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //mute the call
-                if (!isSpeakerIn) {
-                    isSpeakerIn = true;
-                    incCall.setSpeakerMode(true);
-                    speaker.setImageResource(R.drawable.speaker_mode_on);
-                } else {
-                    isSpeakerIn = false;
-                    incCall.setSpeakerMode(false);
-                    speaker.setImageResource(R.drawable.speaker_mode_off);
-
-                }
-            }
-        });
-
-
-    }
-
-
-    private static final int ON_CALL_ENDED_IN = 1;
-    private static final int ON_CALL_ERROR_IN = 2;
-
-
-    public void updateIncomingCallDialog(final int mode) {
-        // Be a good citizen.  Make sure UI changes fire on the UI thread.
-        this.runOnUiThread(new Runnable() {
-            public void run() {
-
-                switch (mode) {
-                    case ON_CALL_ENDED_IN:
-                        mRingtone.stop();
-                        mydialog.dismiss();
-                        break;
-                    case ON_CALL_ERROR_IN:
-                        mRingtone.stop();
-                        final Handler h = new Handler();
-                        h.postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                mydialog.dismiss();
-                            }
-                        }, 5000);
-
-                        break;
-
-                }
-            }
-        });
-    }
-
-
     @Override
     protected void onStop() {
         super.onStop();
@@ -958,15 +698,6 @@ public class BaseActivity extends AppCompatActivity {
             call.close();
             try {
                 call.endCall();
-            } catch (SipException e) {
-                e.printStackTrace();
-            }
-        }
-
-        if (incCall != null) {
-            incCall.close();
-            try {
-                incCall.endCall();
             } catch (SipException e) {
                 e.printStackTrace();
             }
@@ -997,72 +728,6 @@ public class BaseActivity extends AppCompatActivity {
         fetchContacts();
     }
 
-
-
-
-    private void receivedIntent(Intent intent){
-        SipAudioCall incomingCall = null;
-        final BaseActivity c=this;
-        try {
-
-            SipAudioCall.Listener listener = new SipAudioCall.Listener() {
-
-                @Override
-                public void onCallEnded(SipAudioCall call) {
-//                    super.onCallEnded(call);
-                    Log.d(TAG, "imconing call ended ");
-                    c.updateIncomingCallDialog(ON_CALL_ENDED_IN);
-                    call.close();
-                    try {
-                        call.endCall();
-                    } catch (SipException e) {
-                        e.printStackTrace();
-                    }
-
-                }
-
-                @Override
-                public void onError(SipAudioCall call, int errorCode, String errorMessage) {
-//                    super.onError(call, errorCode, errorMessage);
-                    Log.d(TAG, "incoming call error "+ errorMessage+ " code "+errorCode);
-                    c.updateIncomingCallDialog(ON_CALL_ERROR_IN);
-                    call.close();
-                    try {
-                        call.endCall();
-                    } catch (SipException e) {
-                        e.printStackTrace();
-                    }
-                }
-
-                @Override
-                public void onCallBusy(SipAudioCall call) {
-                    super.onCallBusy(call);
-                }
-
-                @Override
-                public void onChanged(SipAudioCall call) {
-                    super.onChanged(call);
-                }
-            };
-
-
-
-            try {
-                incomingCall=c.manager.takeAudioCall(intent,listener);
-                c.incomingCall(incomingCall);
-            } catch (SipException e) {
-                e.printStackTrace();
-                Log.d(TAG, "onReceive: "+e.getMessage());
-            }
-
-            incomingCall = c.manager.takeAudioCall(intent,null);
-            incomingCall.setListener(listener,true);
-        } catch (Exception e) {
-            if (incomingCall != null) {
-                incomingCall.close();
-            }
-        }
-    }
 
 
 }
