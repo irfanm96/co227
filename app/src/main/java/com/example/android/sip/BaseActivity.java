@@ -576,6 +576,8 @@ public class BaseActivity extends AppCompatActivity {
     private boolean isOutMuted = false;
     private boolean isHold = false;
     private boolean isSpeaker = false;
+    public static boolean shouldRestart=true;
+
 
 
     @SuppressLint("SetTextI18n")

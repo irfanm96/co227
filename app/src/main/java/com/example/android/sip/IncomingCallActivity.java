@@ -326,7 +326,10 @@ public class IncomingCallActivity extends AppCompatActivity {
                 incCall = null;
 //                }
 
-            finish();
+                mydialog.dismiss();
+                Intent intent=new Intent(v.getContext(),BaseActivity.class);
+                startActivity(intent);
+                finish();
             }
 
         });
@@ -340,6 +343,7 @@ public class IncomingCallActivity extends AppCompatActivity {
                 mRingtone.stop();
 //                finish();
 //                if (incCall != null) {
+                mydialog.dismiss();
                 try {
                     incCall.endCall();
                 } catch (SipException e) {
@@ -349,7 +353,14 @@ public class IncomingCallActivity extends AppCompatActivity {
                 incCall = null;
 //                }
 
-            finish();
+                mydialog.dismiss();
+
+
+//
+                Intent intent=new Intent(v.getContext(),BaseActivity.class);
+                startActivity(intent);
+                finish();
+
             }
 
         });
@@ -536,6 +547,6 @@ public class IncomingCallActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        this.unregisterReceiver(callReceiver);
+//        this.unregisterReceiver(callReceiver);
     }
 }

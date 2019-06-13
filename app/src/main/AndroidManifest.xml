@@ -27,7 +27,12 @@
         android:name=".App"
         android:icon="@mipmap/ic_launcher_round"
         android:label="Ping">
-        <activity android:name=".IncomingCallActivity" android:theme="@style/Theme.AppCompat"></activity>
+        <activity android:name=".IncomingCallActivity" android:theme="@style/Theme.AppCompat">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
 
         <service
             android:name=".MyService"

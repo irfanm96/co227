@@ -53,6 +53,7 @@ public class IncomingCallReceiver extends BroadcastReceiver {
         SipAudioCall incomingCall = null;
         Log.d(TAG, "onReceive: recieved something");
         intent.setClass(context,IncomingCallActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         context.startActivity(intent);
 //
 //        final BaseActivity base=(BaseActivity) this.basicActivity;
