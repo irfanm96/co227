@@ -5,8 +5,7 @@
     android:id="@+id/incomingCall"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_gravity="center"
-    >
+    android:layout_gravity="center">
 
     <TextView
         android:id="@+id/tvStatusIncoming"
@@ -22,8 +21,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imageView4"
         tools:layout_conversion_wrapHeight="129"
-        tools:layout_conversion_wrapWidth="363"
-        />
+        tools:layout_conversion_wrapWidth="363" />
 
     <ImageButton
         android:id="@+id/btnHangUpIncoming"
@@ -36,8 +34,20 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/ivMicIn"
         app:srcCompat="@drawable/ic_call_hangup"
-        tools:ignore="MissingConstraints"
-        />
+        tools:ignore="MissingConstraints" />
+
+    <ImageButton
+        android:id="@+id/btnHangUpIncomingNew"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        android:background="@drawable/rounded_btn_red"
+        app:layout_constraintEnd_toStartOf="@+id/btnAnswerIncoming"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toEndOf="@+id/btnHangUpIncoming"
+        app:layout_constraintTop_toBottomOf="@+id/ivSpeakerIn"
+        app:srcCompat="@drawable/ic_call_hangup"
+        tools:ignore="MissingConstraints" />
 
     <ImageButton
         android:id="@+id/btnAnswerIncoming"
@@ -64,8 +74,7 @@
         app:srcCompat="@drawable/ic_person"
         tools:ignore="MissingConstraints"
         tools:layout_conversion_wrapHeight="281"
-        tools:layout_conversion_wrapWidth="305"
-        />
+        tools:layout_conversion_wrapWidth="305" />
 
     <TextView
         android:id="@+id/tvCallNameIncoming"
@@ -77,8 +86,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvStatusIncoming"
-        />
+        app:layout_constraintTop_toBottomOf="@+id/tvStatusIncoming" />
 
 
     <ImageView
@@ -95,15 +103,14 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/cmTimerIncoming"
         app:srcCompat="@drawable/microphone_on"
-        tools:ignore="MissingConstraints"
-        />
+        tools:ignore="MissingConstraints" />
 
     <ImageView
         android:id="@+id/ivSpeakerIn"
         android:layout_width="48dp"
         android:layout_height="56dp"
         android:layout_marginTop="8dp"
-        
+
         app:layout_constraintEnd_toEndOf="@+id/cmTimerIncoming"
         app:layout_constraintStart_toStartOf="@+id/cmTimerIncoming"
         app:layout_constraintTop_toBottomOf="@+id/cmTimerIncoming"
@@ -119,7 +126,7 @@
         android:layout_marginTop="8dp"
         android:layout_marginEnd="88dp"
         android:layout_marginRight="88dp"
-        
+
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.27"
         app:layout_constraintStart_toEndOf="@+id/ivSpeakerIn"
@@ -137,8 +144,7 @@
         android:textSize="30dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvCallNameIncoming"
-        />
+        app:layout_constraintTop_toBottomOf="@+id/tvCallNameIncoming" />
 
 
 </android.support.constraint.ConstraintLayout>
