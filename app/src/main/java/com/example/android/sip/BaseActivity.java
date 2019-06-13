@@ -858,7 +858,7 @@ public class BaseActivity extends AppCompatActivity {
                 if (!isInMuted) {
                     isInMuted = true;
                     if (!incCall.isMuted()) {
-                        call.toggleMute();
+                        incCall.toggleMute();
                     }
                     mic.setImageResource(R.drawable.microphone_off);
                 } else {
